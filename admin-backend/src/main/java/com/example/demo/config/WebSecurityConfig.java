@@ -101,6 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// zbog jednostavnosti primera ne koristimo Anti-CSRF token (https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 		http.csrf().disable();
 
+		
 		// Aktiviramo ugrađenu zaštitu od XSS napada da browser ne bi izvršavao maliciozne skripte
 		http
 			.headers()
