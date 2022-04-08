@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -131,6 +132,33 @@ public class KeystoreServiceImpl implements com.example.demo.service.KeystoreSer
                 System.out.println(keyStore.getCertificate(alias));
             }
         } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeKeyEntry(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
+        try {
+            keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeCertificate(String alias, Certificate certificate) {
+        try {
+            keyStore.setCertificateEntry(alias, certificate);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void saveKeyStore(String fileName, char[] password) {
+        try {
+            keyStore.store(new FileOutputStream(fileName), password);
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
             e.printStackTrace();
         }
     }

@@ -17,4 +17,10 @@ public interface KeystoreService {
     void loadKeystore(String fileName, char[] password);
 
     void listContent(String fileName, char[] password);
+
+    void writeKeyEntry(String alias, PrivateKey privateKey, char[] password, Certificate certificate);
+
+    void writeCertificate(String alias, Certificate certificate);
+
+    void saveKeyStore(String fileName, char[] password);
 }

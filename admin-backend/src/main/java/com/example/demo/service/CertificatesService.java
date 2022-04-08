@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
-public interface CertificatesService {
+import java.io.InputStream;
 
+public interface CertificatesService {
     void showKeyStoreContent();
+    String readCertificateSigningRequest(InputStream stream);
+
 }
