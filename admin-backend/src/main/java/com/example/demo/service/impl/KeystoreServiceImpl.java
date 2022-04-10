@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.IssuerData;
+import com.example.demo.service.KeystoreService;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.springframework.stereotype.Service;
@@ -13,19 +15,41 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Objects;
 
 @Service
-public class KeystoreServiceImpl implements com.example.demo.service.KeystoreService {
-
+@Slf4j
+public class KeystoreServiceImpl implements KeystoreService {
     private KeyStore keyStore;
 
     public KeystoreServiceImpl() {
         try {
             keyStore = KeyStore.getInstance("JKS", "SUN");
+            loadKeystore("src/main/resources/static/proba", "proba".toCharArray());
         } catch (KeyStoreException | NoSuchProviderException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<X509Certificate> readCertificates() {
+        if (Objects.isNull(keyStore)) {
+            return List.of();
+        }
+        var certificates = new ArrayList<X509Certificate>();
+        try {
+            var aliases = keyStore.aliases();
+            while (aliases.hasMoreElements()) {
+                var certificate = keyStore.getCertificate(aliases.nextElement());
+                log.info(certificate.toString());
+                certificates.add((X509Certificate) certificate);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return certificates;
     }
 
 
@@ -41,8 +65,7 @@ public class KeystoreServiceImpl implements com.example.demo.service.KeystoreSer
 
             X500Name issuerName = new JcaX509CertificateHolder((X509Certificate) cert).getSubject();
             return new IssuerData(issuerName, privateKey);
-        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException |
-                UnrecoverableKeyException | IOException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | UnrecoverableKeyException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -60,8 +83,7 @@ public class KeystoreServiceImpl implements com.example.demo.service.KeystoreSer
             if (ks.isKeyEntry(alias)) {
                 return ks.getCertificate(alias);
             }
-        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException |
-                CertificateException | IOException e) {
+        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException | CertificateException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -80,8 +102,7 @@ public class KeystoreServiceImpl implements com.example.demo.service.KeystoreSer
                 }
             }
 
-        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException |
-                CertificateException | IOException e) {
+        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException | CertificateException | IOException e) {
             e.printStackTrace();
         }
         return new Certificate[0];
@@ -102,8 +123,7 @@ public class KeystoreServiceImpl implements com.example.demo.service.KeystoreSer
                 }
             }
 
-        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException |
-                CertificateException | IOException | UnrecoverableKeyException e) {
+        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException | CertificateException | IOException | UnrecoverableKeyException e) {
             e.printStackTrace();
         }
         return null;

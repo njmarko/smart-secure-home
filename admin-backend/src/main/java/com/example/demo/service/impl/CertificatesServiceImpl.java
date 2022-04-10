@@ -26,18 +26,23 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 @Service
 public class CertificatesServiceImpl implements CertificatesService {
-
-
-	private final KeystoreService reader;
+	private final KeystoreService keystoreService;
 
 	@Autowired
-	public CertificatesServiceImpl(KeystoreService reader) {
-		this.reader = reader;
+	public CertificatesServiceImpl(KeystoreService keystoreService) {
+		this.keystoreService = keystoreService;
+	}
+
+	@Override
+	public List<X509Certificate> read() {
+		// TODO: Eventualno izmeniti da se password i keystore name citaju iz ENV varijabli
+		return keystoreService.readCertificates();
 	}
 
 	public void showKeyStoreContent() {
@@ -49,7 +54,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 		System.out.println("===== Unesite password za keystore =====");
 		keystorePassword = keyboard.nextLine();
 
-		reader.listContent("src/main/resources/static/" + keystoreName, keystorePassword.toCharArray());
+		keystoreService.listContent("src/main/resources/static/" + keystoreName, keystorePassword.toCharArray());
 		System.out.println("Kraj");
 	}
 
@@ -90,7 +95,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 			String alias = "self";
 			String privateKeyPass = "self";
 
-			IssuerData issuerData = reader.readIssuerFromStore("src/main/resources/static/" + keystoreName, alias, keystorePassword.toCharArray(), privateKeyPass.toCharArray());
+			IssuerData issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreName, alias, keystorePassword.toCharArray(), privateKeyPass.toCharArray());
 			PrivateKey privateKey = issuerData.getPrivateKey();
 
 			X509Certificate newCert = null;
@@ -113,9 +118,9 @@ public class CertificatesServiceImpl implements CertificatesService {
 				e.printStackTrace();
 			}
 
-			reader.loadKeystore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
-			reader.writeCertificate("codal", newCert);
-			reader.saveKeyStore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
+			keystoreService.loadKeystore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
+			keystoreService.writeCertificate("codal", newCert);
+			keystoreService.saveKeyStore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
 
 		}
 		return compname;
@@ -179,7 +184,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 		X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
 				issuerData.getX500name(), new BigInteger("1"), new Date(
 				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis() + 30 * 365 * 24 * 60 * 60
+				System.currentTimeMillis() + 30L * 365 * 24 * 60 * 60
 						* 1000), inputCSR.getSubject(), inputCSR.getSubjectPublicKeyInfo());
 		X509CertificateHolder holder = certificateBuilder.build(contentSigner);
 

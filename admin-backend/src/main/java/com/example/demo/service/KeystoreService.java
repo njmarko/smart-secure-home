@@ -4,8 +4,12 @@ import com.example.demo.model.IssuerData;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.List;
 
 public interface KeystoreService {
+    List<X509Certificate> readCertificates();
+
     IssuerData readIssuerFromStore(String keyStoreFile, String alias, char[] password, char[] keyPass);
 
     Certificate readCertificate(String keyStoreFile, String keyStorePass, String alias);
