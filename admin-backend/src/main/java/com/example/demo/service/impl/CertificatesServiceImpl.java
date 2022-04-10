@@ -41,8 +41,14 @@ public class CertificatesServiceImpl implements CertificatesService {
 
 	@Override
 	public List<X509Certificate> read() {
-		// TODO: Eventualno izmeniti da se password i keystore name citaju iz ENV varijabli
 		return keystoreService.readCertificates();
+	}
+
+	@Override
+	public X509Certificate read(String alias) {
+		return keystoreService.readOne(alias).orElseThrow(
+				() -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
+		);
 	}
 
 	public void showKeyStoreContent() {

@@ -18,7 +18,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -35,9 +35,6 @@ public class KeystoreServiceImpl implements KeystoreService {
     }
 
     public List<X509Certificate> readCertificates() {
-        if (Objects.isNull(keyStore)) {
-            return List.of();
-        }
         var certificates = new ArrayList<X509Certificate>();
         try {
             var aliases = keyStore.aliases();
@@ -46,10 +43,24 @@ public class KeystoreServiceImpl implements KeystoreService {
                 log.info(certificate.toString());
                 certificates.add((X509Certificate) certificate);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return certificates;
+    }
+
+    @Override
+    public Optional<X509Certificate> readOne(String alias) {
+        try {
+            var certificate = keyStore.getCertificate(alias);
+            if (certificate == null) {
+                return Optional.empty();
+            }
+            return Optional.of((X509Certificate) certificate);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
 

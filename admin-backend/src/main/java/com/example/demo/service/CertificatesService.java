@@ -8,6 +8,8 @@ public interface CertificatesService {
 
     List<X509Certificate> read();
 
+    X509Certificate read(String alias);
+
     // TODO: Obrisati ovo kad se sredi kod
     void showKeyStoreContent();
 
