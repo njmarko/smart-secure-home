@@ -1,24 +1,29 @@
 package com.example.demo;
 
+import com.example.demo.model.CertificateData;
+import com.example.demo.repository.CertificateDataRepository;
 import com.example.demo.service.CertificatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class AdminApplication {
 
 	private final CertificatesService certificatesService;
+	private final CertificateDataRepository certificateDataRepository;
 
 	@Autowired
-	public AdminApplication(CertificatesService certificatesService) {
+	public AdminApplication(CertificatesService certificatesService, CertificateDataRepository certificateDataRepository) {
 		this.certificatesService = certificatesService;
+		this.certificateDataRepository = certificateDataRepository;
 	}
 
 	public static void main(String[] args) {
@@ -29,6 +34,7 @@ public class AdminApplication {
 	public ApplicationRunner test() {
 
 		return args -> {
+			prepareTestMapping();
 //			String csrPEM = "-----BEGIN CERTIFICATE REQUEST-----\n"
 //					+ "MIICxDCCAawCAQAwfzELMAkGA1UEBhMCVVMxETAPBgNVBAgMCElsbGlub2lzMRAw\n"
 //					+ "DgYDVQQHDAdDaGljYWdvMQ4wDAYDVQQKDAVDb2RhbDELMAkGA1UECwwCTkExDjAM\n"
@@ -53,5 +59,12 @@ public class AdminApplication {
 
 			certificatesService.showKeyStoreContent();
 		};
+	}
+
+	public void prepareTestMapping() {
+		var e1 = new CertificateData("pera", BigInteger.valueOf(1), false);
+		var e2 = new CertificateData("marko", BigInteger.valueOf(2), false);
+		var e3 = new CertificateData("steva", BigInteger.valueOf(3), false);
+		certificateDataRepository.saveAllAndFlush(List.of(e1, e2, e3));
 	}
 }

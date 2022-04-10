@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.IssuerData;
+import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.service.KeystoreService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -33,10 +34,12 @@ import java.util.logging.Logger;
 @Service
 public class CertificatesServiceImpl implements CertificatesService {
 	private final KeystoreService keystoreService;
+	private final CertificateDataService certificateDataService;
 
 	@Autowired
-	public CertificatesServiceImpl(KeystoreService keystoreService) {
+	public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService) {
 		this.keystoreService = keystoreService;
+		this.certificateDataService = certificateDataService;
 	}
 
 	@Override
@@ -45,10 +48,17 @@ public class CertificatesServiceImpl implements CertificatesService {
 	}
 
 	@Override
-	public X509Certificate read(String alias) {
+	public X509Certificate read(BigInteger serialNumber) {
+		var data = certificateDataService.readNonCancelled(serialNumber);
+		var alias = data.getAlias();
 		return keystoreService.readOne(alias).orElseThrow(
 				() -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
 		);
+	}
+
+	@Override
+	public void invalidate(BigInteger serialNumber) {
+		certificateDataService.invalidate(serialNumber);
 	}
 
 	public void showKeyStoreContent() {
