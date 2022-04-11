@@ -1,0 +1,106 @@
+<app-toolbar></app-toolbar>
+<div class="mainContainer">
+  <mat-tab-group class="tabNav" mat-align-tabs="center">
+    <mat-tab label="PEM Format" class="centeringContainer">
+      <div class="centeringContainer">
+        <form class="csrForm">
+          <mat-form-field class="pemField" appearance="outline">
+            <mat-label>CSR in PEM format</mat-label>
+            <textarea matInput class="pemInput"></textarea>
+            <mat-hint>Input your CSR</mat-hint>
+          </mat-form-field>
+          <button
+            mat-stroked-button
+            (click)="sendGeneratedCSR()"
+            color="primary"
+          >
+            Send
+          </button>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="X500 form">
+      <form class="x500Form">
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Country</mat-label>
+          <input
+            [(ngModel)]="csr.country"
+            name="country"
+            matInput
+            class="x500Input"
+            placeholder="RS"
+          />
+          <mat-hint>Input your Country name</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>State</mat-label>
+          <input
+            [(ngModel)]="csr.state"
+            name="state"
+            matInput
+            class="x500Input"
+            placeholder="Juznobacki okrug"
+          />
+          <mat-hint>Input your State name</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Locality</mat-label>
+          <input
+            [(ngModel)]="csr.locality"
+            name="locality"
+            matInput
+            class="x500Input"
+            placeholder="Novi Sad"
+          />
+          <mat-hint>Input your Locality</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Organization</mat-label>
+          <input
+            [(ngModel)]="csr.organization"
+            name="organization"
+            matInput
+            class="x500Input"
+            placeholder="Fakultet tehnickih nauka"
+          />
+          <mat-hint>Input your Organization</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Organizational Unit</mat-label>
+          <input
+            [(ngModel)]="csr.organizationalUnit"
+            name="organizationalUnit"
+            matInput
+            class="x500Input"
+            placeholder="Departman za elektroteniku i racunarstvo"
+          />
+          <mat-hint>Input your Organizational Unit</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Common Name</mat-label>
+          <input
+            [(ngModel)]="csr.commonName"
+            name="commonName"
+            matInput
+            class="x500Input"
+            placeholder="Dusan Hajduk"
+          />
+          <mat-hint>Input your Common Name</mat-hint>
+        </mat-form-field>
+        <label id="radioLabelId">Key Size:</label>
+        <mat-radio-group
+          [(ngModel)]="csr.keySize"
+          class="keySizeRadio"
+          aria-labelledby="radioLabelId"
+          name="keySize"
+        >
+          <mat-radio-button class="radio" [value]="2048">2048</mat-radio-button>
+          <mat-radio-button class="radio" [value]="4096">4096</mat-radio-button>
+        </mat-radio-group>
+        <button mat-stroked-button (click)="generateCSR()" color="primary">
+          Send
+        </button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</div>
