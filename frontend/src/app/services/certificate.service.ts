@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
 import X500Name from '../model/Csr';
 import Csr from '../model/Csr';
+import ReadCertificateResponse from '../model/ReadCertificateResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,11 @@ export class CertificateService {
   }
 
   constructor(private http: HttpClient) { }
+
+  getCertificates() {
+    // TODO: Ko ima volje nek podesi onaj proxy i/ili putanju u env xD
+    return this.http.get<ReadCertificateResponse[]>('http://localhost:8082/api/certificates'); 
+  }
 
   loadAllCsrs() {
     // TO:DO

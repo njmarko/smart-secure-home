@@ -4,8 +4,8 @@ import com.example.demo.model.IssuerData;
 import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.service.KeystoreService;
+import com.example.demo.service.X500DetailsService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -35,11 +35,13 @@ import java.util.logging.Logger;
 public class CertificatesServiceImpl implements CertificatesService {
 	private final KeystoreService keystoreService;
 	private final CertificateDataService certificateDataService;
+	private final X500DetailsService x500DetailsService;
 
 	@Autowired
-	public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService) {
+	public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService, X500DetailsService x500DetailsService) {
 		this.keystoreService = keystoreService;
 		this.certificateDataService = certificateDataService;
+		this.x500DetailsService = x500DetailsService;
 	}
 
 	@Override
@@ -77,14 +79,6 @@ public class CertificatesServiceImpl implements CertificatesService {
 	public String readCertificateSigningRequest(InputStream csrStream) {
 		Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
 
-		final String COUNTRY = "2.5.4.6";
-		final String STATE = "2.5.4.8";
-		final String LOCALE = "2.5.4.7";
-		final String ORGANIZATION = "2.5.4.10";
-		final String ORGANIZATION_UNIT = "2.5.4.11";
-		final String COMMON_NAME = "2.5.4.3";
-		final String EMAIL = "2.5.4.9";
-
 		PKCS10CertificationRequest csr = convertPemToPKCS10CertificationRequest(csrStream);
 		String compname = null;
 
@@ -98,13 +92,13 @@ public class CertificatesServiceImpl implements CertificatesService {
 			RDN cn = x500Name.getRDNs(BCStyle.EmailAddress)[0];
 			System.out.println(cn.getFirst().getValue().toString());
 			System.out.println(x500Name.getRDNs(BCStyle.EmailAddress)[0]);
-			System.out.println("COUNTRY: " + getX500Field(COUNTRY, x500Name));
-			System.out.println("STATE: " + getX500Field(STATE, x500Name));
-			System.out.println("LOCALE: " + getX500Field(LOCALE, x500Name));
-			System.out.println("ORGANIZATION: " + getX500Field(ORGANIZATION, x500Name));
-			System.out.println("ORGANIZATION_UNIT: " + getX500Field(ORGANIZATION_UNIT, x500Name));
-			System.out.println("COMMON_NAME: " + getX500Field(COMMON_NAME, x500Name));
-			System.out.println("EMAIL: " + getX500Field(EMAIL, x500Name));
+			System.out.println("COUNTRY: " + x500DetailsService.getCountry(x500Name));
+			System.out.println("STATE: " + x500DetailsService.getState(x500Name));
+			System.out.println("LOCALE: " + x500DetailsService.getLocale(x500Name));
+			System.out.println("ORGANIZATION: " + x500DetailsService.getOrganization(x500Name));
+			System.out.println("ORGANIZATION_UNIT: " + x500DetailsService.getOrganizationUnit(x500Name));
+			System.out.println("COMMON_NAME: " + x500DetailsService.getCommonName(x500Name));
+			System.out.println("EMAIL: " + x500DetailsService.getEmail(x500Name));
 
 			String keystoreName = "proba";
 			String keystorePassword = "proba";
@@ -143,15 +137,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 	}
 
 
-	private String getX500Field(String asn1ObjectIdentifier, X500Name x500Name) {
-		RDN[] rdnArray = x500Name.getRDNs(new ASN1ObjectIdentifier(asn1ObjectIdentifier));
 
-		String retVal = null;
-		for (RDN item : rdnArray) {
-			retVal = item.getFirst().getValue().toString();
-		}
-		return retVal;
-	}
 
 	private PKCS10CertificationRequest convertPemToPKCS10CertificationRequest(InputStream pem) {
 		Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
