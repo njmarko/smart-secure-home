@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,6 +32,11 @@ public class CertificateDataServiceImpl implements CertificateDataService {
         return certificateDataRepository.readBySerialNumberNonCancelled(serialNumber).orElseThrow(
                 () -> new RuntimeException(String.format("Cannot find certificate with serial number: %s", serialNumber))
         );
+    }
+
+    @Override
+    public List<CertificateData> readNonInvalidated() {
+        return certificateDataRepository.readNonInvalidated();
     }
 
     @Override

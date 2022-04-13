@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,7 @@ public interface CertificateDataRepository extends JpaRepository<CertificateData
 
     @Query("select c from CertificateData c where c.serialNumber = :serialNumber and c.isCancelled = false")
     Optional<CertificateData> readBySerialNumberNonCancelled(@Param(value = "serialNumber") BigInteger serialNumber);
+
+    @Query("select c from CertificateData c where c.isCancelled = false")
+    List<CertificateData> readNonInvalidated();
 }

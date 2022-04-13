@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.model.CertificateData;
 import com.example.demo.model.IssuerData;
 import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.CertificatesService;
@@ -28,8 +29,10 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class CertificatesServiceImpl implements CertificatesService {
@@ -46,7 +49,13 @@ public class CertificatesServiceImpl implements CertificatesService {
 
 	@Override
 	public List<X509Certificate> read() {
-		return keystoreService.readCertificates();
+		return certificateDataService.readNonInvalidated()
+				.stream()
+				.map(CertificateData::getAlias)
+				.map(keystoreService::readOne)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 @Data @Builder
 public class ReadCertificateResponse {
-    private BigInteger sertialNumber;
+    private BigInteger serialNumber;
     private X500PrincipalData issuer;
     private X500PrincipalData subject;
 }

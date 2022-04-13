@@ -27,6 +27,7 @@ public class X500PrincipalToX500PrincipalData extends BaseConverter<X500Principa
                 .state(detailsService.getState(x500Name))
                 .organization(detailsService.getOrganization(x500Name))
                 .organizationUnit(detailsService.getOrganizationUnit(x500Name))
+                .locale(detailsService.getLocale(x500Name))
                 .build();
     }
 }

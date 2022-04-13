@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatGridListModule} from "@angular/material/grid-list";
 import {MatRadioModule} from '@angular/material/radio';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatTableModule} from '@angular/material/table';
@@ -59,6 +60,7 @@ import { CertificatesViewComponent } from './pages/certificates-view/certificate
     MatRadioModule,
     MatButtonToggleModule,
     MatTableModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

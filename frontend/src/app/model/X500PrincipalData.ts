@@ -5,4 +5,5 @@ export default interface X500PrincipalData {
     commonName?: string;
     organization?: string;
     organizationUnit?: string;
+    locale?: string;
 };
