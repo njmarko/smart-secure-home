@@ -46,12 +46,12 @@
                         </button>
                     </mat-grid-tile>
                     <mat-grid-tile>
-                        <button mat-mini-fab color="primary" matTooltip="Check certificate's validity">
+                        <button mat-mini-fab color="primary" matTooltip="Check certificate's validity" (click)="onCheckValidity(cert)">
                             <mat-icon>check_circle</mat-icon>
                         </button>
                     </mat-grid-tile>
                     <mat-grid-tile>
-                        <button mat-mini-fab color="primary" matTooltip="Cancel certificate">
+                        <button mat-mini-fab color="primary" matTooltip="Invalidate certificate" (click)="onInvalidate(cert)">
                             <mat-icon>cancel</mat-icon>
                         </button>
                     </mat-grid-tile>

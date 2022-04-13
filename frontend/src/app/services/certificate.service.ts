@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import X500Name from '../model/Csr';
 import Csr from '../model/Csr';
 import ReadCertificateResponse from '../model/ReadCertificateResponse';
+import CheckValidityResponse from '../model/CheckValidityResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,15 @@ export class CertificateService {
 
   getCertificates() {
     // TODO: Ko ima volje nek podesi onaj proxy i/ili putanju u env xD
-    return this.http.get<ReadCertificateResponse[]>('http://localhost:8082/api/certificates'); 
+    return this.http.get<ReadCertificateResponse[]>('http://localhost:8082/api/certificates');
+  }
+
+  checkValidity(id: number) {
+    return this.http.get<CheckValidityResponse>(`http://localhost:8082/api/certificates/${id}/validity`);
+  }
+
+  invalidate(id: number) {
+    return this.http.post(`http://localhost:8082/api/certificates/${id}/invalidate`, {});
   }
 
   loadAllCsrs() {
