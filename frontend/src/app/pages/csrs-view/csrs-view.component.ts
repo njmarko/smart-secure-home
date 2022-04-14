@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import Csr from 'src/app/model/Csr';
+import Csr from 'src/app/model/certificates/Csr';
 import { CertificateService } from 'src/app/services/certificate.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { CertificateService } from 'src/app/services/certificate.service';
 export class CsrsViewComponent implements OnInit {
 
   csrs!: Csr[];
-  displayedColumns: string[] = ['CommonName', 'OrganizationalUnit', 'Organization', 'Locality', 'State', 'Country', 'KeySize', 'Sign', 'Delete'];
+  displayedColumns: string[] = ['CommonName', 'OrganizationalUnit', 'Organization', 'Locality', 'State', 'Country', 'Purpose', 'Sign', 'Delete'];
 
   constructor(private certificateService: CertificateService,) { }
 

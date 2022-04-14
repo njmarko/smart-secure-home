@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import ReadCertificateResponse from 'src/app/model/ReadCertificateResponse';
+import ReadCertificateResponse from 'src/app/model/certificates/ReadCertificateResponse';
 import { CertificateService } from 'src/app/services/certificate.service';
 
 @Component({

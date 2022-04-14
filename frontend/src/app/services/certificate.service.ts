@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import X500Name from '../model/Csr';
-import Csr from '../model/Csr';
-import ReadCertificateResponse from '../model/ReadCertificateResponse';
-import CheckValidityResponse from '../model/CheckValidityResponse';
+import Csr from '../model/certificates/Csr';
+import ReadCertificateResponse from '../model/certificates/ReadCertificateResponse';
+import CheckValidityResponse from '../model/certificates/CheckValidityResponse';
+import CertificatePurpose from '../model/certificates/enum/CerificatePurpose';
+import CertificateData from '../model/certificates/CertificateData';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,10 @@ export class CertificateService {
     return this.http.post(`http://localhost:8082/api/certificates/${id}/invalidate`, {});
   }
 
+  signCsr(csr: Csr, newCert: CertificateData) {
+    throw new Error('Method not implemented.');
+  }
+
   loadAllCsrs() {
     // TO:DO
     // this.http.get(environment.adminAppUrl + 'certificates/all').subscribe((data : any) => {
@@ -46,15 +51,15 @@ export class CertificateService {
 
     //dummy
     this._setCsrs([
-      {commonName: "Dusan Hajduk", country: "RS", keySize:2048, locality: "Sid", state: "Sremski okrug", organization: "FTN", organizationalUnit: "SW"},
-      {commonName: "Filip Zivanac", country: "RS", keySize:2048, locality: "Titel", state: "Juznobacki okrug", organization: "FTN", organizationalUnit: "SW"},
-      {commonName: "Matija Pojatar", country: "RS", keySize:2048, locality: "Kikinda", state: "Severnobanatski okrug", organization: "FTN", organizationalUnit: "SW"},
+      { id:0, x500Name: { commonName: "Dusan Hajduk", country: "RS", locale: "Sid", state: "Sremski okrug", organization: "FTN", organizationUnit: "SW" }, purpose: CertificatePurpose.STANDARD_USER },
+      { id:1, x500Name: { commonName: "Filip Zivanac", country: "RS", locale: "Titel", state: "Juznobacki okrug", organization: "FTN", organizationUnit: "SW" }, purpose: CertificatePurpose.STANDARD_USER },
+      { id:2, x500Name: { commonName: "Matija Pojatar", country: "RS", locale: "Kikinda", state: "Severnobanatski okrug", organization: "FTN", organizationUnit: "SW" }, purpose: CertificatePurpose.ADVANCED_USER },
     ])
   }
 
-  async generateCSR(x500Name: X500Name | null, alertCallback: CallableFunction) {
-    if (x500Name) {
-      const httpResponse = await this.http.post(environment.adminAppUrl + "certificates/generateCSR", x500Name, { responseType: 'json', "observe": 'response' }).toPromise()
+  async generateCSR(csr: Csr | null, alertCallback: CallableFunction) {
+    if (csr) {
+      const httpResponse = await this.http.post(environment.adminAppUrl + "certificates/generateCSR", csr, { responseType: 'json', "observe": 'response' }).toPromise()
         .then((response: any) => {
           alertCallback(response);
         })

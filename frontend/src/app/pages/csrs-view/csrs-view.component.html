@@ -4,57 +4,57 @@
     <!-- Common name Column -->
     <ng-container matColumnDef="CommonName">
       <th mat-header-cell *matHeaderCellDef>Common Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.commonName }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.x500Name.commonName }}</td>
     </ng-container>
 
     <!-- Organizational Unit Column -->
     <ng-container matColumnDef="OrganizationalUnit">
       <th mat-header-cell *matHeaderCellDef>Organizational Unit</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.organizationalUnit }}
+        {{ element.x500Name.organizationalUnit }}
       </td>
     </ng-container>
 
     <!-- Organization Column -->
     <ng-container matColumnDef="Organization">
       <th mat-header-cell *matHeaderCellDef>Organization</th>
-      <td mat-cell *matCellDef="let element">{{ element.organization }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.x500Name.organization }}</td>
     </ng-container>
 
     <!-- Locality Column -->
     <ng-container matColumnDef="Locality">
       <th mat-header-cell *matHeaderCellDef>Locality</th>
-      <td mat-cell *matCellDef="let element">{{ element.locality }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.x500Name.locality }}</td>
     </ng-container>
 
     <!-- State Column -->
     <ng-container matColumnDef="State">
       <th mat-header-cell *matHeaderCellDef>State</th>
-      <td mat-cell *matCellDef="let element">{{ element.state }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.x500Name.state }}</td>
     </ng-container>
 
     <!-- Country Column -->
     <ng-container matColumnDef="Country">
       <th mat-header-cell *matHeaderCellDef>Country</th>
-      <td mat-cell *matCellDef="let element">{{ element.country }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.x500Name.country }}</td>
     </ng-container>
 
-    <!-- KeySize Column -->
-    <ng-container matColumnDef="KeySize">
-      <th mat-header-cell *matHeaderCellDef>Key Size</th>
-      <td mat-cell *matCellDef="let element">{{ element.keySize }}</td>
+    <!-- purpose Column -->
+    <ng-container matColumnDef="Purpose">
+      <th mat-header-cell *matHeaderCellDef>Certificate Purpose</th>
+      <td mat-cell *matCellDef="let element">{{ element.purpose }}</td>
     </ng-container>
 
     <!-- signAction Column -->
     <ng-container matColumnDef="Sign">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element"><button mat-stroked-button>Sign</button></td>
+      <td mat-cell *matCellDef="let element"><a [routerLink]="'sign-csr/' + element.id" mat-stroked-button>Sign</a></td>
     </ng-container>
 
     <!-- deleteAction Column -->
     <ng-container matColumnDef="Delete">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element"><button mat-stroked-button color="warn">Delete</button></td>
+      <td mat-cell *matCellDef="let element"><button mat-stroked-button>Delete</button></td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

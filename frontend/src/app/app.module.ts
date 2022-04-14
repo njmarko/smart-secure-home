@@ -17,7 +17,7 @@ import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import { CsrFormComponent } from './pages/csr-form/csr-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatRadioModule} from '@angular/material/radio';
@@ -25,6 +25,12 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatTableModule} from '@angular/material/table';
 import { CsrsViewComponent } from './pages/csrs-view/csrs-view.component';
 import { CertificatesViewComponent } from './pages/certificates-view/certificates-view.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SignCsrComponent } from './pages/sign-csr/sign-csr.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -36,6 +42,7 @@ import { CertificatesViewComponent } from './pages/certificates-view/certificate
     CsrFormComponent,
     CsrsViewComponent,
     CertificatesViewComponent,
+    SignCsrComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +50,7 @@ import { CertificatesViewComponent } from './pages/certificates-view/certificate
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    ReactiveFormsModule,
 
     // cdk imports
     LayoutModule,
@@ -60,7 +68,12 @@ import { CertificatesViewComponent } from './pages/certificates-view/certificate
     MatRadioModule,
     MatButtonToggleModule,
     MatTableModule,
-    MatGridListModule
+    MatGridListModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatMomentDateModule,
+    MatDatepickerModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -24,7 +24,7 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Country</mat-label>
           <input
-            [(ngModel)]="csr.country"
+            [(ngModel)]="csr.x500Name.country"
             name="country"
             matInput
             class="x500Input"
@@ -35,7 +35,7 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>State</mat-label>
           <input
-            [(ngModel)]="csr.state"
+            [(ngModel)]="csr.x500Name.state"
             name="state"
             matInput
             class="x500Input"
@@ -46,7 +46,7 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Locality</mat-label>
           <input
-            [(ngModel)]="csr.locality"
+            [(ngModel)]="csr.x500Name.locale"
             name="locality"
             matInput
             class="x500Input"
@@ -57,7 +57,7 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Organization</mat-label>
           <input
-            [(ngModel)]="csr.organization"
+            [(ngModel)]="csr.x500Name.organization"
             name="organization"
             matInput
             class="x500Input"
@@ -68,7 +68,7 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Organizational Unit</mat-label>
           <input
-            [(ngModel)]="csr.organizationalUnit"
+            [(ngModel)]="csr.x500Name.organizationUnit"
             name="organizationalUnit"
             matInput
             class="x500Input"
@@ -79,7 +79,7 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Common Name</mat-label>
           <input
-            [(ngModel)]="csr.commonName"
+            [(ngModel)]="csr.x500Name.commonName"
             name="commonName"
             matInput
             class="x500Input"
@@ -87,16 +87,12 @@
           />
           <mat-hint>Input your Common Name</mat-hint>
         </mat-form-field>
-        <label id="radioLabelId">Key Size:</label>
-        <mat-radio-group
-          [(ngModel)]="csr.keySize"
-          class="keySizeRadio"
-          aria-labelledby="radioLabelId"
-          name="keySize"
-        >
-          <mat-radio-button class="radio" [value]="2048">2048</mat-radio-button>
-          <mat-radio-button class="radio" [value]="4096">4096</mat-radio-button>
-        </mat-radio-group>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Certificate Purpose</mat-label>
+          <mat-select class="x500Input" [(ngModel)]="csr.purpose" name="purpose">
+            <mat-option *ngFor="let purpose of certificatePurposes" [value]="purpose">{{purpose}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <button mat-stroked-button (click)="generateCSR()" color="primary">
           Send
         </button>
