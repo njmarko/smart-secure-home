@@ -90,8 +90,19 @@
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Certificate Purpose</mat-label>
           <mat-select class="x500Input" [(ngModel)]="csr.purpose" name="purpose">
-            <mat-option *ngFor="let purpose of certificatePurposes" [value]="purpose">{{purpose}}</mat-option>
+            <mat-option *ngFor="let purpose of certificatePurposes; let i = index" [value]="i">{{purpose}}</mat-option>
           </mat-select>
+        </mat-form-field>
+        <mat-form-field class="x500Field" appearance="standard">
+          <mat-label>Locality</mat-label>
+          <input
+            [(ngModel)]="csr.x500Name.email"
+            name="email"
+            matInput
+            class="x500Input"
+            placeholder="hajduk.dusan@yahoo.com"
+          />
+          <mat-hint>Enter the email</mat-hint>
         </mat-form-field>
         <button mat-stroked-button (click)="generateCSR()" color="primary">
           Send

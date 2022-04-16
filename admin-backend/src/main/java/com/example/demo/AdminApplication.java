@@ -57,7 +57,7 @@ public class AdminApplication {
 //
 //			certificatesService.readCertificateSigningRequest(stream);
 
-			certificatesService.showKeyStoreContent();
+//			certificatesService.showKeyStoreContent();
 		};
 	}
 

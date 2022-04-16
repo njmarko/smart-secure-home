@@ -73,7 +73,7 @@
     </div>
 
     <!-- Basic Constraints -->
-    <div *ngIf="showbc" class="newCertField" appearance="standard">
+    <div class="newCertField" appearance="standard">
       <label id="kilabel">Basic Constraints</label>
       <section aria-labelledby="kilabel">
         <mat-checkbox
@@ -100,7 +100,7 @@
     </div>
 
     <!-- eku data -->
-    <div *ngIf="showeku" class="newCertField" appearance="standard">
+    <div class="newCertField" appearance="standard">
       <label id="ekilabel">Extended Key usage</label>
       <section aria-labelledby="ekilabel">
         <mat-checkbox
@@ -124,7 +124,7 @@
     </div>
 
     <!-- san -->
-    <mat-form-field *ngIf="showsan" class="newCertField" appearance="standard">
+    <mat-form-field class="newCertField" appearance="standard">
       <mat-label>Subject Alternative Name</mat-label>
       <input [(ngModel)]="newCert.extensions.subjectAlternativeName.name" name="name" matInput class="newCertInput" />
       <mat-hint>Identifier</mat-hint>

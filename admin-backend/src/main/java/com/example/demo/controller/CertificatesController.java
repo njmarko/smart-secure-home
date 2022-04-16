@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.dto.CheckValidityResponse;
+import com.example.demo.dto.CsrDTO;
 import com.example.demo.dto.ReadCertificateResponse;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.support.EntityConverter;
@@ -47,6 +48,13 @@ public class CertificatesController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void invalidate(@PathVariable BigInteger serialNumber) {
         certificatesService.invalidate(serialNumber);
+    }
+
+    @PostMapping(value = "/generateCSR")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void generateCSR(@RequestBody CsrDTO csrDTO){
+        System.out.println(csrDTO.getX500Name());
+        System.out.println(csrDTO.getPurpose());
     }
 
 }
