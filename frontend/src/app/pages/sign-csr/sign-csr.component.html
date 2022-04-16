@@ -66,7 +66,7 @@
     <div class="akiskiDiv">
       <mat-form-field class="akiskiField" appearance="standard">
         <mat-label>Authority Key Identifier</mat-label>
-        <input matInput class="newCertInput" />
+        <input [(ngModel)]="newCert.extensions.authorityKeyIdentifier.keyIdentifier" name="keyIdentifier" matInput class="newCertInput" />
         <mat-hint>Identifier</mat-hint>
       </mat-form-field>
       <button class="generateBtn" mat-button>Generate</button>
@@ -117,7 +117,7 @@
     <div class="akiskiDiv">
       <mat-form-field class="akiskiField" appearance="standard">
         <mat-label>Subject Key Identifier</mat-label>
-        <input matInput class="newCertInput" />
+        <input [(ngModel)]="newCert.extensions.subjectKeyIdentifier.keyIdentifier" name="keyIdentifier" matInput class="newCertInput" />
         <mat-hint>Identifier</mat-hint>
       </mat-form-field>
       <button class="generateBtn" mat-button>Generate</button>
@@ -126,7 +126,7 @@
     <!-- san -->
     <mat-form-field *ngIf="showsan" class="newCertField" appearance="standard">
       <mat-label>Subject Alternative Name</mat-label>
-      <input matInput class="newCertInput" />
+      <input [(ngModel)]="newCert.extensions.subjectAlternativeName.name" name="name" matInput class="newCertInput" />
       <mat-hint>Identifier</mat-hint>
     </mat-form-field>
   </form>
