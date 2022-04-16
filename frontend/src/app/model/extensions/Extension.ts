@@ -1,1 +1,3 @@
-export default interface Extension {}
+export default interface Extension {
+  isUsed: boolean,
+}

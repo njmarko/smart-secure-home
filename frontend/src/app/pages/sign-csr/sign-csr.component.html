@@ -48,152 +48,89 @@
       >
     </mat-form-field>
   </form>
-  <mat-tab-group class="tabNav" mat-align-tabs="center">
-    <mat-tab label="CA" class="centeringContainer">
-      <div class="centeringContainer">
-        <form class="newCertForm">
-          <!-- aki data -->
-          <mat-form-field class="newCertField" appearance="standard">
-            <mat-label>Authority Key Identifier</mat-label>
-            <input matInput class="newCertInput" />
-            <mat-hint>Identifier</mat-hint>
-          </mat-form-field>
-
-          <!-- bc data -->
-          <div class="newCertField" appearance="standard">
-            <label id="bclabel">Basic Constraints</label>
-            <section aria-labelledby="bclabel" class="example-section">
-              <mat-checkbox class="margins">Subject is CA</mat-checkbox>
-            </section>
-          </div>
-
-          <!-- Key Usage -->
-          <div class="newCertField" appearance="standard">
-            <label id="ki1label">Key usage</label>
-            <section aria-labelledby="ki1label" class="example-section">
-              <mat-checkbox class="margins">Certificate Signing</mat-checkbox>
-              <mat-checkbox class="margins">CRL Signing</mat-checkbox>
-            </section>
-          </div>
-
-          <!-- ski -->
-          <mat-form-field class="newCertField" appearance="standard">
-            <mat-label>Subject Key Identifier</mat-label>
-            <input matInput class="newCertInput" />
-            <mat-hint>Identifier</mat-hint>
-          </mat-form-field>
-        </form>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="SSL Client" class="centeringContainer">
-      <form class="newCertForm">
-        <!-- aki data -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Authority Key Identifier</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-
-        <!-- Key Usage -->
-        <div class="newCertField" appearance="standard">
-          <label id="ki2label">Key usage</label>
-          <section aria-labelledby="ki2label" class="example-section">
-            <mat-checkbox class="margins">Digital Signature</mat-checkbox>
-            <mat-checkbox class="margins">Key Encipherment</mat-checkbox>
-          </section>
-        </div>
-
-        <!-- eku data -->
-        <div class="newCertField" appearance="standard">
-          <label id="ekilabel">Extended Key usage</label>
-          <section aria-labelledby="ekilabel" class="example-section">
-            <mat-checkbox class="margins">TLS Web Client Authentication</mat-checkbox>
-          </section>
-        </div>
-        <!-- ski -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Subject Key Identifier</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-      </form>
-    </mat-tab>
-
-    <mat-tab label="SSL Server" class="centeringContainer">
-      <form class="newCertForm">
-        <!-- aki data -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Authority Key Identifier</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-
-        <!-- Key Usage -->
-        <div class="newCertField" appearance="standard">
-          <label id="ki3label">Key usage</label>
-          <section aria-labelledby="ki3label" class="example-section">
-            <mat-checkbox class="margins">Digital Signature</mat-checkbox>
-            <mat-checkbox class="margins">Key Encipherment</mat-checkbox>
-          </section>
-        </div>
-
-        <!-- eku data -->
-        <div class="newCertField" appearance="standard">
-          <label id="eki2label">Extended Key usage</label>
-          <section aria-labelledby="eki2label" class="example-section">
-            <mat-checkbox class="margins">TLS Web Server Authentication</mat-checkbox>
-          </section>
-        </div>
-
-        <!-- san -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Subject Alternative Name</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-
-        <!-- ski -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Subject Key Identifier</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-      </form>
-    </mat-tab>
-    <mat-tab label="Code Signing" class="centeringContainer">
-      <form class="newCertForm">
-        <!-- aki data -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Authority Key Identifier</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-
-        <!-- Key Usage -->
-        <div class="newCertField" appearance="standard">
-          <label id="ki4label">Key usage</label>
-          <section aria-labelledby="ki4label" class="example-section">
-            <mat-checkbox class="margins">Digital Signature</mat-checkbox>
-          </section>
-        </div>
-
-        <!-- eku data -->
-        <div class="newCertField" appearance="standard">
-          <label id="eki3label">Extended Key usage</label>
-          <section aria-labelledby="eki3label" class="example-section">
-            <mat-checkbox class="margins">Code Signing</mat-checkbox>
-          </section>
-        </div>
-
-        <!-- ski -->
-        <mat-form-field class="newCertField" appearance="standard">
-          <mat-label>Subject Key Identifier</mat-label>
-          <input matInput class="newCertInput" />
-          <mat-hint>Identifier</mat-hint>
-        </mat-form-field>
-      </form>
+  <mat-tab-group
+    (selectedTabChange)="changeTemplate($event)"
+    class="tabNav"
+    mat-align-tabs="center"
+  >
+    <mat-tab
+      *ngFor="let template of extensionTemplates"
+      [label]="template"
+      class="centeringContainer"
+    >
     </mat-tab>
   </mat-tab-group>
-  <button (click)="signCsr()" id="sendBtn" mat-stroked-button color="primary">Send</button>
+
+  <form class="newCertForm">
+    <!-- aki data -->
+    <div class="akiskiDiv">
+      <mat-form-field class="akiskiField" appearance="standard">
+        <mat-label>Authority Key Identifier</mat-label>
+        <input matInput class="newCertInput" />
+        <mat-hint>Identifier</mat-hint>
+      </mat-form-field>
+      <button class="generateBtn" mat-button>Generate</button>
+    </div>
+
+    <!-- Basic Constraints -->
+    <div *ngIf="showbc" class="newCertField" appearance="standard">
+      <label id="kilabel">Basic Constraints</label>
+      <section aria-labelledby="kilabel">
+        <mat-checkbox
+          class="margins"
+          [checked]="newCert.extensions.basicConstraints.subjectIsCa"
+          (change)="newCert.extensions.basicConstraints.subjectIsCa = $event.checked"
+          > Subject Is CA
+        </mat-checkbox>
+      </section>
+    </div>
+
+    <!-- Key Usage -->
+    <div class="newCertField" appearance="standard">
+      <label id="kilabel">Key usage</label>
+      <section aria-labelledby="kilabel">
+        <mat-checkbox
+          class="margins"
+          *ngFor="let usage of keyUsages"
+          [checked]="newCert.extensions.keyUsage.keyUsages.includes(usage)"
+          (change)="updateCheckedKeyUsages(usage, $event)"
+          >{{ usage }}
+        </mat-checkbox>
+      </section>
+    </div>
+
+    <!-- eku data -->
+    <div *ngIf="showeku" class="newCertField" appearance="standard">
+      <label id="ekilabel">Extended Key usage</label>
+      <section aria-labelledby="ekilabel">
+        <mat-checkbox
+          class="margins"
+          *ngFor="let usage of extendedKeyUsages"
+          [checked]="newCert.extensions.extendedKeyUsage.keyUsages.includes(usage)"
+          (change)="updateCheckedExtendedKeyUsages(usage, $event)"
+          >{{ usage }}
+        </mat-checkbox>
+      </section>
+    </div>
+
+    <!-- ski -->
+    <div class="akiskiDiv">
+      <mat-form-field class="akiskiField" appearance="standard">
+        <mat-label>Subject Key Identifier</mat-label>
+        <input matInput class="newCertInput" />
+        <mat-hint>Identifier</mat-hint>
+      </mat-form-field>
+      <button class="generateBtn" mat-button>Generate</button>
+    </div>
+
+    <!-- san -->
+    <mat-form-field *ngIf="showsan" class="newCertField" appearance="standard">
+      <mat-label>Subject Alternative Name</mat-label>
+      <input matInput class="newCertInput" />
+      <mat-hint>Identifier</mat-hint>
+    </mat-form-field>
+  </form>
+  <button (click)="signCsr()" id="sendBtn" mat-stroked-button color="primary">
+    Sign
+  </button>
 </div>

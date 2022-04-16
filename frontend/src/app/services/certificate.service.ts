@@ -6,7 +6,7 @@ import Csr from '../model/certificates/Csr';
 import ReadCertificateResponse from '../model/certificates/ReadCertificateResponse';
 import CheckValidityResponse from '../model/certificates/CheckValidityResponse';
 import CertificatePurpose from '../model/certificates/enum/CerificatePurpose';
-import CertificateData from '../model/certificates/CertificateData';
+import CsrSignData from '../model/certificates/CsrSignData';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class CertificateService {
     return this.http.post(`http://localhost:8082/api/certificates/${id}/invalidate`, {});
   }
 
-  signCsr(csr: Csr, newCert: CertificateData) {
+  signCsr(csr: Csr, newCert: CsrSignData) {
     throw new Error('Method not implemented.');
   }
 

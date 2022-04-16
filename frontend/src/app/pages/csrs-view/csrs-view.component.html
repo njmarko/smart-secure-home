@@ -11,7 +11,7 @@
     <ng-container matColumnDef="OrganizationalUnit">
       <th mat-header-cell *matHeaderCellDef>Organizational Unit</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.x500Name.organizationalUnit }}
+        {{ element.x500Name.organizationUnit }}
       </td>
     </ng-container>
 
@@ -24,7 +24,7 @@
     <!-- Locality Column -->
     <ng-container matColumnDef="Locality">
       <th mat-header-cell *matHeaderCellDef>Locality</th>
-      <td mat-cell *matCellDef="let element">{{ element.x500Name.locality }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.x500Name.locale }}</td>
     </ng-container>
 
     <!-- State Column -->

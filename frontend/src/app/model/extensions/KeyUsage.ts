@@ -1,4 +1,4 @@
-import KeyUsageEnum from "./enums/KeyUsageEnum";
+import KeyUsageEnum from "./enum/KeyUsageEnum";
 import Extension from "./Extension";
 
 export interface KeyUsage extends Extension {

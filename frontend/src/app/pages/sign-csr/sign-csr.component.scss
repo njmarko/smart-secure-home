@@ -1,4 +1,4 @@
-.centeringContainer{
+.centeringContainer {
   display: grid;
   place-items: center;
 }
@@ -7,7 +7,7 @@
   margin: 16px;
 }
 
-.margins{
+.margins {
   margin-top: 16px;
   margin-right: 16px;
 }
@@ -19,17 +19,41 @@
   place-items: center;
 }
 
-.newCertField{
-  width: 300px;
+::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
+  min-width: 120px!important;
+  padding: 3px!important;
+  margin: 3px!important;
+ }
+
+.newCertField {
+  width: 480px;
   margin-top: 16px;
 }
 
-#subjectNameField{
+.akiskiDiv{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  place-items: center;
+  width: 480px;
+  margin-top: 16px;
+}
+
+.generateBtn {
+  float: right;
+  margin-left: 10px;
+  width: 24%;
+}
+
+.akiskiField {
   width: 100%;
-  width: 500px;
+}
+
+#subjectNameField {
+  width: 100%;
   margin-top: 16px;
 }
 
-#sendBtn{
+#sendBtn {
   margin-top: 16px;
 }

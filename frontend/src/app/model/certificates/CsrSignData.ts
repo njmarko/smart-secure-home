@@ -1,12 +1,10 @@
 import Extension from "../extensions/Extension";
 import Extensions from "../extensions/Extensions";
+import Csr from "./Csr";
 import SignatureAlg from "./enum/SignatureAlg";
-import X500PrincipalData from "./X500PrincipalData";
 
-export default interface CertificateData {
-  subjectName: X500PrincipalData,
-  issuerName: X500PrincipalData | null,
-  serialNumber: BigInteger | null,
+export default interface CsrSignData {
+  csr: Csr,
   validityStart: Date,
   validityEnd: Date,
   signatureAlg: SignatureAlg,
