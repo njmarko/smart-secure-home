@@ -69,7 +69,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 
     @Override
     public Page<CSR> readCsrData(Pageable pageable) {
-        return csrRepository.findAll(pageable);
+        return csrRepository.findAllByIsActiveTrue(pageable);
     }
 
     @Override
@@ -273,6 +273,18 @@ public class CertificatesServiceImpl implements CertificatesService {
         } catch (Exception ex) {
             return new UnknownStatus();
         }
+    }
+
+    @Transactional
+    public CSR readForUpdate(Integer id) {
+        return this.csrRepository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new RuntimeException("CSR with id: " + id + " not found"));
+    }
+
+    @Override
+    @Transactional
+    public void deleteCsr(Integer id) {
+        var csr = readForUpdate(id);
+        csr.setIsActive(Boolean.FALSE);
     }
 
 }

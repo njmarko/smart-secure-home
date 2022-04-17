@@ -36,6 +36,14 @@ import { CertInvalidationDialogComponent } from './components/cert-invalidation-
 import { SuchEmptyComponent } from './shared/such-empty/such-empty.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { CommonModule } from '@angular/common';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +57,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     SignCsrComponent,
     CertInvalidationDialogComponent,
     SuchEmptyComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +71,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     LayoutModule,
 
     // material imports
-    MatTabsModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -83,6 +91,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    CommonModule,
+    ReactiveFormsModule,
+    MatExpansionModule,
+    MatCardModule,
+    MatMenuModule,
+    MatDividerModule,
+    MatNativeDateModule,
+    MatTabsModule,
+    MatChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Getter
 @Setter
@@ -25,5 +26,8 @@ public class CSR extends BaseEntity {
     private CSRPurpose purpose;
     @Column(length = 20000)
     private String pemCSR;
+
+    @Version
+    private Integer version;
 
 }
