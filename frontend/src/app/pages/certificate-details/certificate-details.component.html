@@ -1,0 +1,45 @@
+<app-toolbar></app-toolbar>
+<div *ngIf="loaded">
+    <p>Issuer: {{certificate.issuer.x500}}</p>
+    <p>Subject: {{certificate.subject.x500}}</p>
+    <p>Serial number: {{certificate.serialNumber}}</p>
+
+    <p>Extensions</p>
+
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.isCA">Subject is CA</mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.certificateSigning">Certificate signing
+        </mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.crlSigning">CRL signing</mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.digitalSignature">Digital signature
+        </mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.keyEnchiperment">Key encipherment
+        </mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.serverAuth">TLS Web server authentication
+        </mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.clientAuth">TLS Web client authentication
+        </mat-checkbox>
+    </div>
+    <div>
+        <mat-checkbox disabled="true" [(ngModel)]="certificate.extensions.codeSigning">Code signing
+        </mat-checkbox>
+    </div>
+
+    <p>Raw output</p>
+    <mat-form-field class="pemField" appearance="outline">
+        <textarea readonly="true" matInput class="pemInput" [(ngModel)]="certificate.output" name=" csrPem"></textarea>
+        <mat-hint>Certificate output</mat-hint>
+    </mat-form-field>
+</div>

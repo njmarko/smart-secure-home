@@ -27,6 +27,7 @@ public class X509CertificateToReadCertificateResponse extends BaseConverter<X509
                 .issuer(toData.convert(source.getIssuerX500Principal()))
                 .subject(toData.convert(source.getSubjectX500Principal()))
                 .extensions(toExtensions.convert(source))
+                .output(source.toString())
                 .build();
     }
 }

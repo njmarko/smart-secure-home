@@ -29,7 +29,7 @@ export class CertificateService {
     this._csrsSource.next(csrs);
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getCertificates(): Observable<ReadCertificateResponse[]> {
     // TODO: Ko ima volje nek podesi onaj proxy i/ili putanju u env xD
@@ -80,6 +80,10 @@ export class CertificateService {
         },
       }
     );
+  }
+
+  readOne(id: number): Observable<ReadCertificateResponse> {
+    return this.http.get<ReadCertificateResponse>(`${environment.adminAppUrl}certificates/${id}`);
   }
 
   readCsr(id: number): Observable<Csr> {
@@ -137,7 +141,7 @@ export class CertificateService {
 
   generateCSR(csr: Csr | null) {
     if (csr) {
-      csr = {... csr};
+      csr = { ...csr };
       csr!.purpose = Object.values(CertificatePurpose).indexOf(csr!.purpose as CertificatePurpose);
       return this.http
         .post(environment.adminAppUrl + 'certificates/generateCSR', csr, {

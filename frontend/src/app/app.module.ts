@@ -44,6 +44,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { CertificateDetailsComponent } from './pages/certificate-details/certificate-details.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
     CertInvalidationDialogComponent,
     SuchEmptyComponent,
     ConfirmationDialogComponent,
+    CertificateDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,4 +106,4 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

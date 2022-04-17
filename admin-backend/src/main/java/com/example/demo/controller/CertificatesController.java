@@ -53,6 +53,12 @@ public class CertificatesController {
         certificatesService.create(csrSignDataDTO);
     }
 
+    @GetMapping(value = "/{serialNumber}")
+    public ReadCertificateResponse read(@PathVariable Integer serialNumber) {
+        var certificate = certificatesService.read(serialNumber);
+        return toReadResponse.convert(certificate);
+    }
+
     @GetMapping(value = "/{serialNumber}/validity")
     public CheckValidityResponse validity(@PathVariable Integer serialNumber) {
         // TODO: Maybe here we want to keep some mapping between alias and certificate's serial number

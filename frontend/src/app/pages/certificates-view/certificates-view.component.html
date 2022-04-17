@@ -41,7 +41,7 @@
             <td mat-cell *matCellDef="let cert">
                 <mat-grid-list cols="3">
                     <mat-grid-tile>
-                        <button mat-mini-fab color="primary" matTooltip="View certificate details">
+                        <button mat-mini-fab color="primary" matTooltip="View certificate details" (click)="onDetailsClick(cert)">
                             <mat-icon>more</mat-icon>
                         </button>
                     </mat-grid-tile>

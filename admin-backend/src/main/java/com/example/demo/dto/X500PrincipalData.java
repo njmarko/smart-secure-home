@@ -15,4 +15,5 @@ public class X500PrincipalData {
     private String organization;
     private String organizationUnit;
     private String locale;
+    private String x500;
 }

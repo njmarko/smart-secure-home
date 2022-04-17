@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { CertInvalidationDialogComponent } from 'src/app/components/cert-invalidation-dialog/cert-invalidation-dialog.component';
 import InvalidateCertificateRequest from 'src/app/model/certificates/InvalidateCertificateRequest';
 import ReadCertificateResponse from 'src/app/model/certificates/ReadCertificateResponse';
@@ -27,7 +28,8 @@ export class CertificatesViewComponent implements OnInit {
   constructor(
     private certificateService: CertificateService,
     private snackbar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +40,10 @@ export class CertificatesViewComponent implements OnInit {
     this.certificateService.getCertificates().subscribe(response => {
       this.dataSource.data = response;
     });
+  }
+
+  onDetailsClick(cert: ReadCertificateResponse): void {
+    this.router.navigate(['certificates/details', cert.serialNumber]);
   }
 
   onCheckValidity(cert: ReadCertificateResponse): void {

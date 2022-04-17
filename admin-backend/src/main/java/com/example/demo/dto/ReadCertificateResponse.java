@@ -9,4 +9,5 @@ public class ReadCertificateResponse {
     private X500PrincipalData issuer;
     private X500PrincipalData subject;
     private CertificateExtensions extensions;
+    private String output;
 }
