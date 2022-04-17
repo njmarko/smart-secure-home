@@ -16,9 +16,9 @@ public interface CertificateDataRepository extends JpaRepository<CertificateData
     @Query("select c from CertificateData c where c.serialNumber = :serialNumber")
     Optional<CertificateData> readBySerialNumber(@Param(value = "serialNumber")BigInteger serialNumber);
 
-    @Query("select c from CertificateData c where c.serialNumber = :serialNumber and c.isCancelled = false")
+    @Query("select c from CertificateData c where c.serialNumber = :serialNumber and c.revocation.id is null")
     Optional<CertificateData> readBySerialNumberNonCancelled(@Param(value = "serialNumber") BigInteger serialNumber);
 
-    @Query("select c from CertificateData c where c.isCancelled = false")
+    @Query("select c from CertificateData c where c.revocation.id is null")
     List<CertificateData> readNonInvalidated();
 }

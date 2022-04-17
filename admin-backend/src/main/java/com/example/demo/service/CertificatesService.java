@@ -13,7 +13,7 @@ public interface CertificatesService {
 
     X509Certificate read(BigInteger serialNumber);
 
-    void invalidate(BigInteger serialNumber);
+    void invalidate(BigInteger serialNumber, String reason);
 
     // TODO: Obrisati ovo kad se sredi kod
     void showKeyStoreContent();

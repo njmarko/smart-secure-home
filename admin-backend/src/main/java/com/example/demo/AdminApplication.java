@@ -62,9 +62,9 @@ public class AdminApplication {
 	}
 
 	public void prepareTestMapping() {
-		var e1 = new CertificateData("pera", BigInteger.valueOf(1), false);
-		var e2 = new CertificateData("marko", BigInteger.valueOf(2), false);
-		var e3 = new CertificateData("steva", BigInteger.valueOf(3), false);
+		var e1 = new CertificateData("pera", BigInteger.valueOf(1));
+		var e2 = new CertificateData("marko", BigInteger.valueOf(2));
+		var e3 = new CertificateData("steva", BigInteger.valueOf(3));
 		certificateDataRepository.saveAllAndFlush(List.of(e1, e2, e3));
 	}
 }

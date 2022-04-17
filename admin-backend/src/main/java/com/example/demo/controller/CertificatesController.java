@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CheckValidityResponse;
 import com.example.demo.dto.CsrDTO;
+import com.example.demo.dto.InvalidateCertificateRequest;
 import com.example.demo.dto.ReadCertificateResponse;
 import com.example.demo.model.CSR;
 import com.example.demo.service.CertificatesService;
@@ -50,8 +51,8 @@ public class CertificatesController {
 
     @PostMapping(value = "/{serialNumber}/invalidate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void invalidate(@PathVariable BigInteger serialNumber) {
-        certificatesService.invalidate(serialNumber);
+    public void invalidate(@PathVariable BigInteger serialNumber, @RequestBody InvalidateCertificateRequest request) {
+        certificatesService.invalidate(serialNumber, request.getReason());
     }
 
     @PostMapping(value = "/generateCSR")

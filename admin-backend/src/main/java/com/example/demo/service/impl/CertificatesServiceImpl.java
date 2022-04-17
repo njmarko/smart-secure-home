@@ -65,7 +65,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 
 	@Override
 	public X509Certificate read(BigInteger serialNumber) {
-		var data = certificateDataService.readNonCancelled(serialNumber);
+		var data = certificateDataService.readNonInvalidated(serialNumber);
 		var alias = data.getAlias();
 		return keystoreService.readOne(alias).orElseThrow(
 				() -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
@@ -73,8 +73,8 @@ public class CertificatesServiceImpl implements CertificatesService {
 	}
 
 	@Override
-	public void invalidate(BigInteger serialNumber) {
-		certificateDataService.invalidate(serialNumber);
+	public void invalidate(BigInteger serialNumber, String reason) {
+		certificateDataService.invalidate(serialNumber, reason);
 	}
 
 	public void showKeyStoreContent() {
