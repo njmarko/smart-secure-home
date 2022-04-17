@@ -10,6 +10,9 @@ import com.example.demo.service.CertificatesService;
 import com.example.demo.support.EntityConverter;
 import org.bouncycastle.cert.ocsp.CertificateStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,16 +27,20 @@ public class CertificatesController {
     private final EntityConverter<X509Certificate, ReadCertificateResponse> toReadResponse;
     private final EntityConverter<X509Certificate, CheckValidityResponse> toCheckValidityResponse;
     private final EntityConverter<CsrDTO, CSR> csrDTOCSREntityConverter;
+    private final EntityConverter<CSR, CsrDTO> csrCsrDTOEntityConverter;
+
 
     @Autowired
     public CertificatesController(CertificatesService certificatesService,
                                   EntityConverter<X509Certificate, ReadCertificateResponse> toReadResponse,
                                   EntityConverter<X509Certificate, CheckValidityResponse> toCheckValidityResponse,
-                                  EntityConverter<CsrDTO, CSR> csrDTOCSREntityConverter) {
+                                  EntityConverter<CsrDTO, CSR> csrDTOCSREntityConverter,
+                                  EntityConverter<CSR, CsrDTO> csrCsrDTOEntityConverter) {
         this.certificatesService = certificatesService;
         this.toReadResponse = toReadResponse;
         this.toCheckValidityResponse = toCheckValidityResponse;
         this.csrDTOCSREntityConverter = csrDTOCSREntityConverter;
+        this.csrCsrDTOEntityConverter = csrCsrDTOEntityConverter;
     }
 
     @GetMapping
@@ -70,6 +77,12 @@ public class CertificatesController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addCSR(@RequestBody String pemCSR) {
         this.certificatesService.createCSR(pemCSR);
+    }
+
+    @GetMapping(value = "/csr")
+    public Page<CsrDTO> getCertificateStatus(@PageableDefault Pageable pageable) {
+        var page = certificatesService.readCsrData(pageable);
+        return page.map(csrCsrDTOEntityConverter::convert);
     }
 
 }

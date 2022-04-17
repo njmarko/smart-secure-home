@@ -1,9 +1,11 @@
 package com.example.demo.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class X500PrincipalData {
     private String country;

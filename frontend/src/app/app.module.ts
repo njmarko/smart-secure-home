@@ -19,7 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatGridListModule } from "@angular/material/grid-list";
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTableModule } from '@angular/material/table';
@@ -33,7 +33,9 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CertInvalidationDialogComponent } from './components/cert-invalidation-dialog/cert-invalidation-dialog.component';
-
+import { SuchEmptyComponent } from './shared/such-empty/such-empty.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { CertInvalidationDialogComponent } from './components/cert-invalidation-
     CertificatesViewComponent,
     SignCsrComponent,
     CertInvalidationDialogComponent,
+    SuchEmptyComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,9 +80,11 @@ import { CertInvalidationDialogComponent } from './components/cert-invalidation-
     MatMomentDateModule,
     MatDatepickerModule,
     MatCheckboxModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
