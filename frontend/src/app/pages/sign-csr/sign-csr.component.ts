@@ -47,7 +47,7 @@ export class SignCsrComponent implements OnInit {
   signCsr() {
     this.newCert.validityStart = new Date(this.range.value.start);
     this.newCert.validityEnd = new Date(this.range.value.end);
-    this._certificateService.signCsr(this.csr, this.newCert);
+    this._certificateService.signCsr(this.newCert);
   }
 
   changeTemplate(event: MatTabChangeEvent) {

@@ -9,6 +9,9 @@ import CertificatePurpose from '../model/certificates/enum/CerificatePurpose';
 import CsrSignData from '../model/certificates/CsrSignData';
 import InvalidateCertificateRequest from '../model/certificates/InvalidateCertificateRequest';
 import { PaginatedResponse } from '../shared/types/PaginatedResponse';
+import SignatureAlg from '../model/certificates/enum/SignatureAlg';
+import KeyUsageEnum from '../model/extensions/enum/KeyUsageEnum';
+import ExtendedKeyUsageEnum from '../model/extensions/enum/ExtendedKeyUsageEnum';
 
 @Injectable({
   providedIn: 'root',
@@ -48,8 +51,14 @@ export class CertificateService {
     );
   }
 
-  signCsr(csr: Csr, newCert: CsrSignData) {
-    throw new Error('Method not implemented.');
+  signCsr(newCert: CsrSignData) {
+    newCert = JSON.parse(JSON.stringify(newCert));
+    newCert.signatureAlg = Object.values(SignatureAlg).indexOf(newCert!.signatureAlg as SignatureAlg);
+    newCert.extensions.keyUsage.keyUsages = newCert.extensions.keyUsage.keyUsages.map(elem => Object.values(KeyUsageEnum).indexOf(elem as KeyUsageEnum));
+    newCert.extensions.extendedKeyUsage.keyUsages = newCert.extensions.extendedKeyUsage.keyUsages.map(elem => Object.values(ExtendedKeyUsageEnum).indexOf(elem as ExtendedKeyUsageEnum));
+    return this.http.post(
+      `http://localhost:8082/api/certificates`, newCert
+    ).subscribe();
   }
 
   read(page: number, size: number) {
@@ -67,11 +76,11 @@ export class CertificateService {
 
   loadAllCsrs() {
     // TO:DO
-    this.http
-      .get(environment.adminAppUrl + 'certificates/all')
-      .subscribe((data: any) => {
-        this._setCsrs(data);
-      });
+    // this.http
+    //   .get(environment.adminAppUrl + 'certificates/all')
+    //   .subscribe((data: any) => {
+    //     this._setCsrs(data);
+    //   });
 
     //dummy
     this._setCsrs([
@@ -116,6 +125,8 @@ export class CertificateService {
 
   async generateCSR(csr: Csr | null, alertCallback: CallableFunction) {
     if (csr) {
+      csr = {... csr};
+      csr!.purpose = Object.values(CertificatePurpose).indexOf(csr!.purpose as CertificatePurpose);
       const httpResponse = await this.http
         .post(environment.adminAppUrl + 'certificates/generateCSR', csr, {
           responseType: 'json',
@@ -147,4 +158,6 @@ export class CertificateService {
         });
     }
   }
+
+
 }

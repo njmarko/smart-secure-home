@@ -7,6 +7,6 @@ export default interface CsrSignData {
   csr: Csr,
   validityStart: Date,
   validityEnd: Date,
-  signatureAlg: SignatureAlg,
+  signatureAlg: SignatureAlg | number,
   extensions: Extensions,
 }

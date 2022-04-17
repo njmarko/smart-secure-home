@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.CheckValidityResponse;
-import com.example.demo.dto.CsrDTO;
-import com.example.demo.dto.InvalidateCertificateRequest;
-import com.example.demo.dto.ReadCertificateResponse;
+import com.example.demo.dto.*;
 import com.example.demo.model.CSR;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.support.EntityConverter;
@@ -47,6 +44,12 @@ public class CertificatesController {
     public List<ReadCertificateResponse> read() {
         var certificates = certificatesService.read();
         return toReadResponse.convert(certificates);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveCertificate(@RequestBody CsrSignDataDTO csrSignDataDTO){
+        //TODO pravljenje sertifikata
     }
 
     @GetMapping(value = "/{serialNumber}/validity")

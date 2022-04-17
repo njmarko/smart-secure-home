@@ -54,6 +54,9 @@ export class CsrFormComponent implements OnInit {
     this.csr.x500Name.commonName = this.csr.x500Name.commonName
       ? this.csr.x500Name.commonName
       : 'Dusan Hajduk';
+    this.csr.x500Name.email = this.csr.x500Name.email
+      ? this.csr.x500Name.email
+      : 'hajduk.dusan@yahoo.com';
 
     this._certificateService.generateCSR(this.csr, this.alertResponse);
 
