@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
+import javax.transaction.TransactionScoped;
 import java.util.List;
 
 @Service
@@ -25,17 +25,23 @@ public class CertificateDataServiceImpl implements CertificateDataService {
     }
 
     @Override
-    public CertificateData read(BigInteger serialNumber) {
+    public CertificateData read(Integer serialNumber) {
         return certificateDataRepository.readBySerialNumber(serialNumber).orElseThrow(
                 () -> new RuntimeException(String.format("Cannot find certificate with serial number: %s", serialNumber))
         );
     }
 
     @Override
-    public CertificateData readNonInvalidated(BigInteger serialNumber) {
+    public CertificateData readNonInvalidated(Integer serialNumber) {
         return certificateDataRepository.readBySerialNumberNonCancelled(serialNumber).orElseThrow(
                 () -> new RuntimeException(String.format("Cannot find certificate with serial number: %s", serialNumber))
         );
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public CertificateData save(CertificateData certificateData) {
+        return certificateDataRepository.save(certificateData);
     }
 
     @Override
@@ -45,7 +51,7 @@ public class CertificateDataServiceImpl implements CertificateDataService {
 
     @Override
     @Transactional(readOnly = false)
-    public void invalidate(BigInteger serialNumber, String reason) {
+    public void invalidate(Integer serialNumber, String reason) {
         var data = read(serialNumber);
         var revocation = new Revocation(data, reason);
         data.setRevocation(revocation);

@@ -20,7 +20,7 @@ public class X509CertificateToReadCertificateResponse extends BaseConverter<X509
     @Override
     public ReadCertificateResponse convert(X509Certificate source) {
         return ReadCertificateResponse.builder()
-                .serialNumber(source.getSerialNumber())
+                .serialNumber(source.getSerialNumber().intValue())
                 .issuer(toData.convert(source.getIssuerX500Principal()))
                 .subject(toData.convert(source.getSubjectX500Principal()))
                 .build();

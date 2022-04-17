@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class CertificatesController {
     }
 
     @GetMapping(value = "/{serialNumber}/validity")
-    public CheckValidityResponse validity(@PathVariable BigInteger serialNumber) {
+    public CheckValidityResponse validity(@PathVariable Integer serialNumber) {
         // TODO: Maybe here we want to keep some mapping between alias and certificate's serial number
         var certificate = certificatesService.read(serialNumber);
         return toCheckValidityResponse.convert(certificate);
@@ -51,7 +50,7 @@ public class CertificatesController {
 
     @PostMapping(value = "/{serialNumber}/invalidate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void invalidate(@PathVariable BigInteger serialNumber, @RequestBody InvalidateCertificateRequest request) {
+    public void invalidate(@PathVariable Integer serialNumber, @RequestBody InvalidateCertificateRequest request) {
         certificatesService.invalidate(serialNumber, request.getReason());
     }
 

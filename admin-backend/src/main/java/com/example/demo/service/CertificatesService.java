@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.model.CSR;
 
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
@@ -11,9 +10,9 @@ public interface CertificatesService {
 
     List<X509Certificate> read();
 
-    X509Certificate read(BigInteger serialNumber);
+    X509Certificate read(Integer serialNumber);
 
-    void invalidate(BigInteger serialNumber, String reason);
+    void invalidate(Integer serialNumber, String reason);
 
     // TODO: Obrisati ovo kad se sredi kod
     void showKeyStoreContent();

@@ -8,10 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -62,9 +59,9 @@ public class AdminApplication {
 	}
 
 	public void prepareTestMapping() {
-		var e1 = new CertificateData("pera", BigInteger.valueOf(1));
-		var e2 = new CertificateData("marko", BigInteger.valueOf(2));
-		var e3 = new CertificateData("steva", BigInteger.valueOf(3));
+		var e1 = new CertificateData("pera");
+		var e2 = new CertificateData("marko");
+		var e3 = new CertificateData("steva");
 		certificateDataRepository.saveAllAndFlush(List.of(e1, e2, e3));
 	}
 }
