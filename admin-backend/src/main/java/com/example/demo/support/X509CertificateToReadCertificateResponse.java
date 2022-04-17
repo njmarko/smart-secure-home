@@ -1,5 +1,6 @@
 package com.example.demo.support;
 
+import com.example.demo.dto.CertificateExtensions;
 import com.example.demo.dto.ReadCertificateResponse;
 import com.example.demo.dto.X500PrincipalData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,12 @@ import java.security.cert.X509Certificate;
 @Component
 public class X509CertificateToReadCertificateResponse extends BaseConverter<X509Certificate, ReadCertificateResponse> {
     private final EntityConverter<X500Principal, X500PrincipalData> toData;
+    private final EntityConverter<X509Certificate, CertificateExtensions> toExtensions;
 
     @Autowired
-    public X509CertificateToReadCertificateResponse(EntityConverter<X500Principal, X500PrincipalData> toData) {
+    public X509CertificateToReadCertificateResponse(EntityConverter<X500Principal, X500PrincipalData> toData, EntityConverter<X509Certificate, CertificateExtensions> toExtensions) {
         this.toData = toData;
+        this.toExtensions = toExtensions;
     }
 
     @Override
@@ -23,6 +26,7 @@ public class X509CertificateToReadCertificateResponse extends BaseConverter<X509
                 .serialNumber(source.getSerialNumber().intValue())
                 .issuer(toData.convert(source.getIssuerX500Principal()))
                 .subject(toData.convert(source.getSubjectX500Principal()))
+                .extensions(toExtensions.convert(source))
                 .build();
     }
 }

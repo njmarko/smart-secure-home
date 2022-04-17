@@ -8,4 +8,5 @@ public class ReadCertificateResponse {
     private Integer serialNumber;
     private X500PrincipalData issuer;
     private X500PrincipalData subject;
+    private CertificateExtensions extensions;
 }
