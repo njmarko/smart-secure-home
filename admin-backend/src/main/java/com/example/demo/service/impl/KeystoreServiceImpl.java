@@ -5,8 +5,10 @@ import com.example.demo.service.KeystoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,10 +27,17 @@ import java.util.Optional;
 public class KeystoreServiceImpl implements KeystoreService {
     private KeyStore keyStore;
 
-    public KeystoreServiceImpl() {
+    @Value("${keystore.name}")
+    private String keystoreName;
+
+    @Value("${keystore.password}")
+    private String keystorePassword;
+
+    @PostConstruct
+    public void init() {
         try {
             keyStore = KeyStore.getInstance("JKS", "SUN");
-            loadKeystore("src/main/resources/static/proba", "proba".toCharArray());
+            loadKeystore("src/main/resources/static/" + keystoreName, keystorePassword.toCharArray());
         } catch (KeyStoreException | NoSuchProviderException e) {
             e.printStackTrace();
         }
@@ -180,6 +189,15 @@ public class KeystoreServiceImpl implements KeystoreService {
     public void writeCertificate(String alias, Certificate certificate) {
         try {
             keyStore.setCertificateEntry(alias, certificate);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeChain(String alias, PrivateKey privateKey, char[] password, Certificate[] certificate) {
+        try {
+            keyStore.setKeyEntry(alias, privateKey, password, certificate);
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }

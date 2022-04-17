@@ -1,17 +1,19 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.CsrSignDataDTO;
+import com.example.demo.dto.SignatureAlgEnumDTO;
 import com.example.demo.model.CSR;
 import com.example.demo.model.CertificateData;
-import com.example.demo.model.IssuerData;
 import com.example.demo.model.RevocationReason;
 import com.example.demo.repository.CSRRepository;
 import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.service.KeystoreService;
 import com.example.demo.service.X500DetailsService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.Certificate;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -21,31 +23,50 @@ import org.bouncycastle.cert.ocsp.RevokedStatus;
 import org.bouncycastle.cert.ocsp.UnknownStatus;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
+import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.math.BigInteger;
-import java.security.*;
-import java.security.cert.CertificateException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
+import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CertificatesServiceImpl implements CertificatesService {
     private final KeystoreService keystoreService;
     private final CertificateDataService certificateDataService;
     private final X500DetailsService x500DetailsService;
     private final CSRRepository csrRepository;
+
+    @Value("${keystore.name}")
+    private String keystoreFile;
+
+    @Value("${keystore.password}")
+    private String keystorePassword;
+
+    @Value("${keystore.superAdmin.alias}")
+    private String superAdminAlias;
+
+    @Value("${keystore.superAdmin.password}")
+    private String superAdminPassword;
 
     @Autowired
     public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService,
@@ -54,6 +75,11 @@ public class CertificatesServiceImpl implements CertificatesService {
         this.certificateDataService = certificateDataService;
         this.x500DetailsService = x500DetailsService;
         this.csrRepository = csrRepository;
+    }
+
+    @PostConstruct
+    public void init() {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
     @Override
@@ -86,151 +112,7 @@ public class CertificatesServiceImpl implements CertificatesService {
         certificateDataService.invalidate(serialNumber, reason);
     }
 
-    public void showKeyStoreContent() {
-        Scanner keyboard = new Scanner(System.in);
-        String keystoreName = "";
-        String keystorePassword = "";
-        System.out.println("===== Unesite ime za keystore =====");
-        keystoreName = keyboard.nextLine();
-        System.out.println("===== Unesite password za keystore =====");
-        keystorePassword = keyboard.nextLine();
-
-        keystoreService.listContent("src/main/resources/static/" + keystoreName, keystorePassword.toCharArray());
-        System.out.println("Kraj");
-    }
-
-    public String readCertificateSigningRequest(InputStream csrStream) {
-        Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
-
-        PKCS10CertificationRequest csr = convertPemToPKCS10CertificationRequest(csrStream);
-        String compname = null;
-
-        if (csr == null) {
-            LOG.warning("FAIL! conversion of Pem To PKCS10 Certification Request");
-        } else {
-            X500Name x500Name = csr.getSubject();
-
-            System.out.println("x500Name is: " + x500Name + "\n");
-
-            RDN cn = x500Name.getRDNs(BCStyle.EmailAddress)[0];
-            System.out.println(cn.getFirst().getValue().toString());
-            System.out.println(x500Name.getRDNs(BCStyle.EmailAddress)[0]);
-            System.out.println("COUNTRY: " + x500DetailsService.getCountry(x500Name));
-            System.out.println("STATE: " + x500DetailsService.getState(x500Name));
-            System.out.println("LOCALE: " + x500DetailsService.getLocale(x500Name));
-            System.out.println("ORGANIZATION: " + x500DetailsService.getOrganization(x500Name));
-            System.out.println("ORGANIZATION_UNIT: " + x500DetailsService.getOrganizationUnit(x500Name));
-            System.out.println("COMMON_NAME: " + x500DetailsService.getCommonName(x500Name));
-            System.out.println("EMAIL: " + x500DetailsService.getEmail(x500Name));
-
-            String keystoreName = "proba";
-            String keystorePassword = "proba";
-            String alias = "self";
-            String privateKeyPass = "self";
-
-            IssuerData issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreName, alias, keystorePassword.toCharArray(), privateKeyPass.toCharArray());
-            PrivateKey privateKey = issuerData.getPrivateKey();
-
-            X509Certificate newCert = null;
-
-            try {
-                newCert = sign(csr, issuerData);
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (NoSuchProviderException e) {
-                e.printStackTrace();
-            } catch (SignatureException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (OperatorCreationException e) {
-                e.printStackTrace();
-            } catch (CertificateException e) {
-                e.printStackTrace();
-            }
-
-            keystoreService.loadKeystore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
-            keystoreService.writeCertificate("codal", newCert);
-            keystoreService.saveKeyStore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
-
-        }
-        return compname;
-    }
-
-
-    private PKCS10CertificationRequest convertPemToPKCS10CertificationRequest(InputStream pem) {
-        Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
-
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        PKCS10CertificationRequest csr = null;
-        ByteArrayInputStream pemStream = null;
-
-        pemStream = (ByteArrayInputStream) pem;
-
-        Reader pemReader = new BufferedReader(new InputStreamReader(pemStream));
-        PEMParser pemParser = null;
-        try {
-            pemParser = new PEMParser(pemReader);
-            Object parsedObj = pemParser.readObject();
-            System.out.println("PemParser returned: " + parsedObj);
-            if (parsedObj instanceof PKCS10CertificationRequest) {
-                csr = (PKCS10CertificationRequest) parsedObj;
-            }
-        } catch (IOException ex) {
-            LOG.severe("IOException, convertPemToPublicKey");
-        } finally {
-            if (pemParser != null) {
-                IOUtils.closeQuietly(pemParser);
-            }
-        }
-        return csr;
-    }
-
-    private X509Certificate sign(PKCS10CertificationRequest inputCSR, IssuerData issuerData)
-            throws InvalidKeyException, NoSuchAlgorithmException,
-            NoSuchProviderException, SignatureException, IOException,
-            OperatorCreationException, CertificateException {
-
-        // TODO: nakon ovoga certificateData ima polje id koje treba koristiti kao serialNumber
-        // TODO: u sustini za alias moze bilo sta da se korsiti bilo sta, ovo je verovatno najlaksa opcija
-        var alias = UUID.randomUUID().toString();
-        var certificateData = certificateDataService.save(new CertificateData(alias));
-
-        // Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
-        // Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
-        // Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
-        JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
-
-        // Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
-        builder = builder.setProvider("BC");
-
-        // Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
-        ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
-
-        X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
-                issuerData.getX500name(), new BigInteger("1"), new Date(
-                System.currentTimeMillis()), new Date(
-                System.currentTimeMillis() + 30L * 365 * 24 * 60 * 60
-                        * 1000), inputCSR.getSubject(), inputCSR.getSubjectPublicKeyInfo());
-        X509CertificateHolder holder = certificateBuilder.build(contentSigner);
-
-        Certificate eeX509CertificateStructure = holder.toASN1Structure();
-
-        CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
-
-        // Read Certificate
-        InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
-        X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1);
-        is1.close();
-        return theCert;
-        //return null;
-
-        // TODO: Ovde treba poslati privatni kljuc?
-    }
-
-
+    @Override
     public void saveCSR(CSR csr) {
         csrRepository.save(csr);
     }
@@ -285,6 +167,113 @@ public class CertificatesServiceImpl implements CertificatesService {
     public void deleteCsr(Integer id) {
         var csr = readForUpdate(id);
         csr.setIsActive(Boolean.FALSE);
+    }
+
+    @Override
+    @Transactional
+    public void create(CsrSignDataDTO request) throws Exception {
+        var csr = readForUpdate(request.getCsr().getId());
+        var keyPair = generateKeyPair();
+        PKCS10CertificationRequest pkcs;
+        if (Objects.isNull(csr.getPemCSR())) {
+            pkcs = fromDto(csr, keyPair, request.getSignatureAlg());
+        } else {
+            pkcs = convertPemToPKCS10CertificationRequest(new ByteArrayInputStream(csr.getPemCSR().getBytes()));
+        }
+        signCertificate(keyPair, pkcs, request, request.getSignatureAlg());
+        // add extensions to certificate
+        csr.setIsActive(Boolean.FALSE);
+    }
+
+    private void signCertificate(KeyPair keyPair, PKCS10CertificationRequest request, CsrSignDataDTO dto, SignatureAlgEnumDTO algo) throws Exception {
+        var alias = UUID.randomUUID().toString();
+        var certificateData = certificateDataService.save(new CertificateData(alias));
+        JcaContentSignerBuilder builder = new JcaContentSignerBuilder(signAlgoFromEnum(algo) + "Encryption");
+        builder = builder.setProvider("BC");
+
+        var issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/"+keystoreFile, superAdminAlias, keystorePassword.toCharArray(), superAdminPassword.toCharArray());
+
+        ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
+        X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
+                issuerData.getX500name(), BigInteger.valueOf(certificateData.getId()), dto.getValidityStart(),
+                dto.getValidityEnd(), request.getSubject(), request.getSubjectPublicKeyInfo());
+        X509CertificateHolder holder = certificateBuilder.build(contentSigner);
+        Certificate eeX509CertificateStructure = holder.toASN1Structure();
+        CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
+        // Read Certificate
+        InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
+        X509Certificate cert = (X509Certificate) cf.generateCertificate(is1);
+        is1.close();
+
+        java.security.cert.Certificate[] iusserCertificates = keystoreService.readCertificateChain("src/main/resources/static/"+keystoreFile, keystorePassword, superAdminAlias);
+        List<java.security.cert.Certificate> issuerCertChain = Arrays.stream(iusserCertificates).collect(Collectors.toList());
+        issuerCertChain.add(0, cert);
+        java.security.cert.Certificate[] chain = issuerCertChain.toArray(new java.security.cert.Certificate[0]);
+
+        keystoreService.writeChain(alias, keyPair.getPrivate(), superAdminPassword.toCharArray(), chain);
+        keystoreService.saveKeyStore("src/main/resources/static/"+keystoreFile, keystorePassword.toCharArray());
+    }
+
+    private PKCS10CertificationRequest fromDto(CSR csr, KeyPair keyPair, SignatureAlgEnumDTO algo) throws Exception {
+        var builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, csr.getCommonName());
+        builder.addRDN(BCStyle.O, csr.getOrganization());
+        builder.addRDN(BCStyle.OU, csr.getOrganizationUnit());
+        builder.addRDN(BCStyle.C, csr.getCountry());
+        builder.addRDN(BCStyle.EmailAddress, csr.getEmail());
+        builder.addRDN(BCStyle.L, csr.getLocale());
+        builder.addRDN(BCStyle.ST, csr.getState());
+        var name = builder.build();
+        PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(name, keyPair.getPublic());
+        JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder(signAlgoFromEnum(algo));
+        ContentSigner signer = csBuilder.build(keyPair.getPrivate());
+        return p10Builder.build(signer);
+    }
+
+    private String signAlgoFromEnum(SignatureAlgEnumDTO algo) {
+        switch (algo) {
+            case SHA_1_WITH_RSA:
+                return "SHA1withRSA";
+            case SHA_256_WITH_RSA:
+                return "SHA256withRSA";
+            default:
+                return null;
+        }
+    }
+
+    private KeyPair generateKeyPair() throws Exception {
+        var keyGen = KeyPairGenerator.getInstance("RSA");
+        var random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        keyGen.initialize(2048, random);
+        return keyGen.generateKeyPair();
+    }
+
+    private PKCS10CertificationRequest convertPemToPKCS10CertificationRequest(InputStream pem) {
+        Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
+
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        PKCS10CertificationRequest csr = null;
+        ByteArrayInputStream pemStream = null;
+
+        pemStream = (ByteArrayInputStream) pem;
+
+        Reader pemReader = new BufferedReader(new InputStreamReader(pemStream));
+        PEMParser pemParser = null;
+        try {
+            pemParser = new PEMParser(pemReader);
+            Object parsedObj = pemParser.readObject();
+            System.out.println("PemParser returned: " + parsedObj);
+            if (parsedObj instanceof PKCS10CertificationRequest) {
+                csr = (PKCS10CertificationRequest) parsedObj;
+            }
+        } catch (IOException ex) {
+            LOG.severe("IOException, convertPemToPublicKey");
+        } finally {
+            if (pemParser != null) {
+                IOUtils.closeQuietly(pemParser);
+            }
+        }
+        return csr;
     }
 
 }

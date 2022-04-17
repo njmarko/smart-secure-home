@@ -36,7 +36,6 @@ export class CertificatesViewComponent implements OnInit {
 
   fetchData(): void {
     this.certificateService.getCertificates().subscribe(response => {
-      console.log(response);
       this.dataSource.data = response;
     });
   }

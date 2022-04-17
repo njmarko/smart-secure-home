@@ -48,8 +48,9 @@ public class CertificatesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveCertificate(@RequestBody CsrSignDataDTO csrSignDataDTO){
+    public void saveCertificate(@RequestBody CsrSignDataDTO csrSignDataDTO) throws Exception {
         //TODO pravljenje sertifikata
+        certificatesService.create(csrSignDataDTO);
     }
 
     @GetMapping(value = "/{serialNumber}/validity")

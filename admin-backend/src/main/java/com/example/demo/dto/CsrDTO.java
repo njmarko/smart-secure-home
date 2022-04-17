@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CsrDTO {
-	private Long id;
+	private Integer id;
 	private X500PrincipalData x500Name;
 	private CSRPurpose purpose;
 }

@@ -30,4 +30,6 @@ public interface KeystoreService {
     void writeCertificate(String alias, Certificate certificate);
 
     void saveKeyStore(String fileName, char[] password);
+
+    void writeChain(String alias, PrivateKey privateKey, char[] password, Certificate[] certificate);
 }

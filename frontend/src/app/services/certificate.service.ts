@@ -53,6 +53,7 @@ export class CertificateService {
 
   signCsr(newCert: CsrSignData) {
     newCert = JSON.parse(JSON.stringify(newCert));
+    newCert.csr.purpose = Object.values(CertificatePurpose).indexOf(newCert.csr.purpose as CertificatePurpose);
     newCert.signatureAlg = Object.values(SignatureAlg).indexOf(newCert!.signatureAlg as SignatureAlg);
     newCert.extensions.keyUsage.keyUsages = newCert.extensions.keyUsage.keyUsages.map(elem => Object.values(KeyUsageEnum).indexOf(elem as KeyUsageEnum));
     newCert.extensions.extendedKeyUsage.keyUsages = newCert.extensions.extendedKeyUsage.keyUsages.map(elem => Object.values(ExtendedKeyUsageEnum).indexOf(elem as ExtendedKeyUsageEnum));

@@ -9,7 +9,7 @@ public interface X500DetailsService {
     String ORGANIZATION = "2.5.4.10";
     String ORGANIZATION_UNIT = "2.5.4.11";
     String COMMON_NAME = "2.5.4.3";
-    String EMAIL = "2.5.4.9";
+    String EMAIL = "1.2.840.113549.1.9.1";
 
     String getX500Field(String asn1ObjectIdentifier, X500Name x500Name);
 

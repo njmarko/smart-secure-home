@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CsrSignDataDTO {
-	private CsrDTO csrDTO;
+	private CsrDTO csr;
 	private Date validityStart;
 	private Date validityEnd;
 	private SignatureAlgEnumDTO signatureAlg;

@@ -3,8 +3,6 @@ package com.example.demo.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigInteger;
-
 @Data @Builder
 public class ReadCertificateResponse {
     private Integer serialNumber;

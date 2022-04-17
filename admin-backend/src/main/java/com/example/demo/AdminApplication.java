@@ -59,9 +59,8 @@ public class AdminApplication {
 	}
 
 	public void prepareTestMapping() {
-		var e1 = new CertificateData("pera");
-		var e2 = new CertificateData("marko");
-		var e3 = new CertificateData("steva");
-		certificateDataRepository.saveAllAndFlush(List.of(e1, e2, e3));
+		var e1 = new CertificateData("root");
+		var e2 = new CertificateData("superAdmin");
+		certificateDataRepository.saveAllAndFlush(List.of(e1, e2));
 	}
 }

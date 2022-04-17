@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Csr from 'src/app/model/certificates/Csr';
 import CsrSignData from 'src/app/model/certificates/CsrSignData';
 import SignatureAlg from 'src/app/model/certificates/enum/SignatureAlg';
@@ -42,12 +42,13 @@ export class SignCsrComponent implements OnInit {
     end: new FormControl(),
   });
 
-  constructor(private _route: ActivatedRoute, private _certificateService: CertificateService) { }
+  constructor(private _route: ActivatedRoute, private _certificateService: CertificateService, private router: Router) { }
 
   signCsr() {
     this.newCert.validityStart = new Date(this.range.value.start);
     this.newCert.validityEnd = new Date(this.range.value.end);
     this._certificateService.signCsr(this.newCert);
+    this.router.navigate(['/certificates'])
   }
 
   changeTemplate(event: MatTabChangeEvent) {
