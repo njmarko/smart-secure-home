@@ -89,6 +89,11 @@ public class CertificatesController {
         return page.map(csrCsrDTOEntityConverter::convert);
     }
 
+    @GetMapping(value = "/csr/{id}")
+    public CsrDTO getCsr(@PathVariable(name="id") Integer id){
+        return csrCsrDTOEntityConverter.convert(this.certificatesService.readCsr(id));
+    }
+
     @DeleteMapping(value = "/csr/{id}")
     public void deleteCSR(@PathVariable(name="id") Integer id){
         this.certificatesService.deleteCsr(id);

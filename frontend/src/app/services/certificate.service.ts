@@ -82,6 +82,10 @@ export class CertificateService {
     );
   }
 
+  readCsr(id: number): Observable<Csr> {
+    return this.http.get<Csr>(`${environment.adminAppUrl}certificates/csr/${id}`);
+  }
+
   loadAllCsrs() {
     // TO:DO
     // this.http

@@ -47,8 +47,49 @@ export class SignCsrComponent implements OnInit {
   signCsr() {
     this.newCert.validityStart = new Date(this.range.value.start);
     this.newCert.validityEnd = new Date(this.range.value.end);
+    this.checkExtensionsUsed()
     this._certificateService.signCsr(this.newCert);
     this.router.navigate(['/certificates'])
+  }
+
+  checkExtensionsUsed() {
+    //aki
+    if (this.newCert.extensions.authorityKeyIdentifier.keyIdentifier) {
+      this.newCert.extensions.authorityKeyIdentifier.isUsed = true;
+    } else {
+      this.newCert.extensions.authorityKeyIdentifier.isUsed = false;
+    }
+    //bc
+    if (this.newCert.extensions.basicConstraints.subjectIsCa) {
+      this.newCert.extensions.basicConstraints.isUsed = true
+    } else {
+      this.newCert.extensions.basicConstraints.isUsed = false;
+    }
+    //eku
+    if (this.newCert.extensions.extendedKeyUsage.keyUsages) {
+      this.newCert.extensions.extendedKeyUsage.isUsed = true
+    } else {
+      this.newCert.extensions.extendedKeyUsage.isUsed = false;
+    }
+    //ku
+    if (this.newCert.extensions.keyUsage.keyUsages) {
+      this.newCert.extensions.keyUsage.isUsed = true
+    } else {
+      this.newCert.extensions.keyUsage.isUsed = false;
+    }
+    //san
+    if (this.newCert.extensions.subjectAlternativeName.name) {
+      this.newCert.extensions.subjectAlternativeName.isUsed = true
+    } else {
+      this.newCert.extensions.subjectAlternativeName.isUsed = false;
+    }
+    //ski
+    if (this.newCert.extensions.subjectKeyIdentifier.keyIdentifier) {
+      this.newCert.extensions.subjectKeyIdentifier.isUsed = true
+    } else {
+      this.newCert.extensions.subjectKeyIdentifier.isUsed = false;
+    }
+
   }
 
   changeTemplate(event: MatTabChangeEvent) {
@@ -155,9 +196,6 @@ export class SignCsrComponent implements OnInit {
       this.csr.x500Name.organization,
       this.csr.x500Name.organizationUnit,
     ].join(", ")
-
-
-
   }
 
 }

@@ -31,4 +31,6 @@ public interface CertificatesService {
     void deleteCsr(Integer id);
 
     void create(CsrSignDataDTO request) throws Exception;
+
+    CSR readCsr(Integer id);
 }
