@@ -275,12 +275,14 @@ public class CertificatesServiceImpl implements CertificatesService {
         }
     }
 
-    public CSR readForUpdate(Long id){
+    @Transactional
+    public CSR readForUpdate(Integer id) {
         return this.csrRepository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new RuntimeException("CSR with id: " + id + " not found"));
     }
 
     @Override
-    public void deleteCsr(Long id) {
+    @Transactional
+    public void deleteCsr(Integer id) {
         var csr = readForUpdate(id);
         csr.setIsActive(Boolean.FALSE);
     }

@@ -86,7 +86,7 @@ public class CertificatesController {
     }
 
     @DeleteMapping(value = "/csr/{id}")
-    public void deleteCSR(@PathVariable(name="id") Long id){
+    public void deleteCSR(@PathVariable(name="id") Integer id){
         this.certificatesService.deleteCsr(id);
     }
 

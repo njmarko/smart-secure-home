@@ -52,6 +52,13 @@ export class CertificateService {
     throw new Error('Method not implemented.');
   }
 
+  delete(id: number): Observable<void> {
+    console.log(id);
+    return this.http.delete<void>(
+      `${environment.adminAppUrl}certificates/csr/${id}`
+    );
+  }
+
   read(page: number, size: number) {
     return this.http.get<PaginatedResponse<Csr>>(
       `${environment.adminAppUrl}certificates/csr`,

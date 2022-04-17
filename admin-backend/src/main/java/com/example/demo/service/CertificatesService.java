@@ -31,6 +31,7 @@ public interface CertificatesService {
 
     CertificateStatus readCertificateStatus(Integer serialNumber);
 
-    CSR readForUpdate(Long id);
-    void deleteCsr(Long id);
+    CSR readForUpdate(Integer id);
+
+    void deleteCsr(Integer id);
 }

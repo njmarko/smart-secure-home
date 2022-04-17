@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.CSR;
-import org.hibernate.annotations.OptimisticLock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +17,5 @@ public interface CSRRepository extends JpaRepository<CSR, Integer> {
     Page<CSR> findAllByIsActiveTrue(Pageable pageable);
 
     @Lock(LockModeType.OPTIMISTIC)
-    Optional<CSR> findByIdAndIsActiveTrue(Long id);
+    Optional<CSR> findByIdAndIsActiveTrue(Integer id);
 }

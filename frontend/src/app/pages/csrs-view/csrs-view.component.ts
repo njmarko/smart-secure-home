@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import Csr from 'src/app/model/certificates/Csr';
+import { Observer } from 'rxjs';
 import { CertificateService } from 'src/app/services/certificate.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmationService } from 'src/app/shared/confirmation-service/confirmation.service';
+import { ErrorService } from 'src/app/shared/error-service/error.service';
 
 @Component({
   selector: 'app-csrs-view',
@@ -30,7 +33,11 @@ export class CsrsViewComponent implements OnInit {
   totalElements: number = 0;
   waitingResults: boolean = true;
 
-  constructor(private certificateService: CertificateService) {}
+  constructor(
+    private certificateService: CertificateService,
+    private confirmationService: ConfirmationService,
+    private errorService: ErrorService
+  ) {}
 
   ngOnInit(): void {
     this.fetchData(0, this.defaultPageSize);
@@ -51,5 +58,43 @@ export class CsrsViewComponent implements OnInit {
 
   onSelectPage(event: any): void {
     this.fetchData(event.pageIndex, event.pageSize);
+  }
+
+  getDefaultEntityServiceHandler<TResponse = void>(
+    page?: number
+  ): Partial<Observer<TResponse>> {
+    return {
+      next: (_) => {
+        this.fetchData(page ?? this.pageNum, this.pageSize);
+      },
+      error: (err) => {
+        this.errorService.handle(err);
+        this.waitingResults = false;
+      },
+    };
+  }
+
+  onDeleteCSR(csr: Csr): void {
+    this.waitingResults = true;
+    this.confirmationService
+      .confirm({
+        title: `CSR deletion`,
+        message: `Are you sure you want to delete CSR ${csr.id}?`,
+        yes: 'Yes',
+        no: 'No',
+      })
+      .subscribe((confirmation) => {
+        if (confirmation) {
+          const nextPage =
+            this.pageSize == 1 && this.pageNum > 0
+              ? this.pageNum - 1
+              : this.pageNum;
+          this.certificateService
+            .delete(csr.id)
+            .subscribe(this.getDefaultEntityServiceHandler(nextPage));
+        } else {
+          this.waitingResults = false;
+        }
+      });
   }
 }
