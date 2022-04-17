@@ -69,7 +69,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 
     @Override
     public Page<CSR> readCsrData(Pageable pageable) {
-        return csrRepository.findAll(pageable);
+        return csrRepository.findAllByIsActive(pageable);
     }
 
     @Override
