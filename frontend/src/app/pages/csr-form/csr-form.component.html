@@ -6,7 +6,12 @@
         <form class="csrForm">
           <mat-form-field class="pemField" appearance="outline">
             <mat-label>CSR in PEM format</mat-label>
-            <textarea matInput class="pemInput"></textarea>
+            <textarea
+              matInput
+              class="pemInput"
+              [(ngModel)]="csrPem"
+              name="csrPem"
+            ></textarea>
             <mat-hint>Input your CSR</mat-hint>
           </mat-form-field>
           <button
@@ -89,8 +94,16 @@
         </mat-form-field>
         <mat-form-field class="x500Field" appearance="standard">
           <mat-label>Certificate Purpose</mat-label>
-          <mat-select class="x500Input" [(ngModel)]="csr.purpose" name="purpose">
-            <mat-option *ngFor="let purpose of certificatePurposes; let i = index" [value]="i">{{purpose}}</mat-option>
+          <mat-select
+            class="x500Input"
+            [(ngModel)]="csr.purpose"
+            name="purpose"
+          >
+            <mat-option
+              *ngFor="let purpose of certificatePurposes; let i = index"
+              [value]="i"
+              >{{ purpose }}</mat-option
+            >
           </mat-select>
         </mat-form-field>
         <mat-form-field class="x500Field" appearance="standard">

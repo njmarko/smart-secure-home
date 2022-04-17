@@ -60,4 +60,10 @@ public class CertificatesController {
         this.certificatesService.saveCSR(csrDTOCSREntityConverter.convert(csrDTO));
     }
 
+    @PostMapping(value = "/addCSR")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addCSR(@RequestBody String pemCSR) {
+        this.certificatesService.createCSR(pemCSR);
+    }
+
 }

@@ -38,187 +38,210 @@ import java.util.stream.Collectors;
 
 @Service
 public class CertificatesServiceImpl implements CertificatesService {
-	private final KeystoreService keystoreService;
-	private final CertificateDataService certificateDataService;
-	private final X500DetailsService x500DetailsService;
-	private final CSRRepository csrRepository;
+    private final KeystoreService keystoreService;
+    private final CertificateDataService certificateDataService;
+    private final X500DetailsService x500DetailsService;
+    private final CSRRepository csrRepository;
 
-	@Autowired
-	public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService,
-								   X500DetailsService x500DetailsService, CSRRepository csrRepository) {
-		this.keystoreService = keystoreService;
-		this.certificateDataService = certificateDataService;
-		this.x500DetailsService = x500DetailsService;
-		this.csrRepository = csrRepository;
-	}
+    @Autowired
+    public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService,
+                                   X500DetailsService x500DetailsService, CSRRepository csrRepository) {
+        this.keystoreService = keystoreService;
+        this.certificateDataService = certificateDataService;
+        this.x500DetailsService = x500DetailsService;
+        this.csrRepository = csrRepository;
+    }
 
-	@Override
-	public List<X509Certificate> read() {
-		return certificateDataService.readNonInvalidated()
-				.stream()
-				.map(CertificateData::getAlias)
-				.map(keystoreService::readOne)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.collect(Collectors.toList());
-	}
+    @Override
+    public List<X509Certificate> read() {
+        return certificateDataService.readNonInvalidated()
+                .stream()
+                .map(CertificateData::getAlias)
+                .map(keystoreService::readOne)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public X509Certificate read(BigInteger serialNumber) {
-		var data = certificateDataService.readNonCancelled(serialNumber);
-		var alias = data.getAlias();
-		return keystoreService.readOne(alias).orElseThrow(
-				() -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
-		);
-	}
+    @Override
+    public X509Certificate read(BigInteger serialNumber) {
+        var data = certificateDataService.readNonCancelled(serialNumber);
+        var alias = data.getAlias();
+        return keystoreService.readOne(alias).orElseThrow(
+                () -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
+        );
+    }
 
-	@Override
-	public void invalidate(BigInteger serialNumber) {
-		certificateDataService.invalidate(serialNumber);
-	}
+    @Override
+    public void invalidate(BigInteger serialNumber) {
+        certificateDataService.invalidate(serialNumber);
+    }
 
-	public void showKeyStoreContent() {
-		Scanner keyboard = new Scanner(System.in);
-		String keystoreName = "";
-		String keystorePassword = "";
-		System.out.println("===== Unesite ime za keystore =====");
-		keystoreName = keyboard.nextLine();
-		System.out.println("===== Unesite password za keystore =====");
-		keystorePassword = keyboard.nextLine();
+    public void showKeyStoreContent() {
+        Scanner keyboard = new Scanner(System.in);
+        String keystoreName = "";
+        String keystorePassword = "";
+        System.out.println("===== Unesite ime za keystore =====");
+        keystoreName = keyboard.nextLine();
+        System.out.println("===== Unesite password za keystore =====");
+        keystorePassword = keyboard.nextLine();
 
-		keystoreService.listContent("src/main/resources/static/" + keystoreName, keystorePassword.toCharArray());
-		System.out.println("Kraj");
-	}
+        keystoreService.listContent("src/main/resources/static/" + keystoreName, keystorePassword.toCharArray());
+        System.out.println("Kraj");
+    }
 
-	public String readCertificateSigningRequest(InputStream csrStream) {
-		Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
+    public String readCertificateSigningRequest(InputStream csrStream) {
+        Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
 
-		PKCS10CertificationRequest csr = convertPemToPKCS10CertificationRequest(csrStream);
-		String compname = null;
+        PKCS10CertificationRequest csr = convertPemToPKCS10CertificationRequest(csrStream);
+        String compname = null;
 
-		if (csr == null) {
-			LOG.warning("FAIL! conversion of Pem To PKCS10 Certification Request");
-		} else {
-			X500Name x500Name = csr.getSubject();
+        if (csr == null) {
+            LOG.warning("FAIL! conversion of Pem To PKCS10 Certification Request");
+        } else {
+            X500Name x500Name = csr.getSubject();
 
-			System.out.println("x500Name is: " + x500Name + "\n");
+            System.out.println("x500Name is: " + x500Name + "\n");
 
-			RDN cn = x500Name.getRDNs(BCStyle.EmailAddress)[0];
-			System.out.println(cn.getFirst().getValue().toString());
-			System.out.println(x500Name.getRDNs(BCStyle.EmailAddress)[0]);
-			System.out.println("COUNTRY: " + x500DetailsService.getCountry(x500Name));
-			System.out.println("STATE: " + x500DetailsService.getState(x500Name));
-			System.out.println("LOCALE: " + x500DetailsService.getLocale(x500Name));
-			System.out.println("ORGANIZATION: " + x500DetailsService.getOrganization(x500Name));
-			System.out.println("ORGANIZATION_UNIT: " + x500DetailsService.getOrganizationUnit(x500Name));
-			System.out.println("COMMON_NAME: " + x500DetailsService.getCommonName(x500Name));
-			System.out.println("EMAIL: " + x500DetailsService.getEmail(x500Name));
+            RDN cn = x500Name.getRDNs(BCStyle.EmailAddress)[0];
+            System.out.println(cn.getFirst().getValue().toString());
+            System.out.println(x500Name.getRDNs(BCStyle.EmailAddress)[0]);
+            System.out.println("COUNTRY: " + x500DetailsService.getCountry(x500Name));
+            System.out.println("STATE: " + x500DetailsService.getState(x500Name));
+            System.out.println("LOCALE: " + x500DetailsService.getLocale(x500Name));
+            System.out.println("ORGANIZATION: " + x500DetailsService.getOrganization(x500Name));
+            System.out.println("ORGANIZATION_UNIT: " + x500DetailsService.getOrganizationUnit(x500Name));
+            System.out.println("COMMON_NAME: " + x500DetailsService.getCommonName(x500Name));
+            System.out.println("EMAIL: " + x500DetailsService.getEmail(x500Name));
 
-			String keystoreName = "proba";
-			String keystorePassword = "proba";
-			String alias = "self";
-			String privateKeyPass = "self";
+            String keystoreName = "proba";
+            String keystorePassword = "proba";
+            String alias = "self";
+            String privateKeyPass = "self";
 
-			IssuerData issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreName, alias, keystorePassword.toCharArray(), privateKeyPass.toCharArray());
-			PrivateKey privateKey = issuerData.getPrivateKey();
+            IssuerData issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreName, alias, keystorePassword.toCharArray(), privateKeyPass.toCharArray());
+            PrivateKey privateKey = issuerData.getPrivateKey();
 
-			X509Certificate newCert = null;
+            X509Certificate newCert = null;
 
-			try {
-				newCert = sign(csr, issuerData);
-			} catch (InvalidKeyException e) {
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} catch (NoSuchProviderException e) {
-				e.printStackTrace();
-			} catch (SignatureException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (OperatorCreationException e) {
-				e.printStackTrace();
-			} catch (CertificateException e) {
-				e.printStackTrace();
-			}
+            try {
+                newCert = sign(csr, issuerData);
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchProviderException e) {
+                e.printStackTrace();
+            } catch (SignatureException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (OperatorCreationException e) {
+                e.printStackTrace();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            }
 
-			keystoreService.loadKeystore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
-			keystoreService.writeCertificate("codal", newCert);
-			keystoreService.saveKeyStore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
+            keystoreService.loadKeystore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
+            keystoreService.writeCertificate("codal", newCert);
+            keystoreService.saveKeyStore("src/main/resources/static/" + keystoreName, "proba".toCharArray());
 
-		}
-		return compname;
-	}
-
-
+        }
+        return compname;
+    }
 
 
-	private PKCS10CertificationRequest convertPemToPKCS10CertificationRequest(InputStream pem) {
-		Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
+    private PKCS10CertificationRequest convertPemToPKCS10CertificationRequest(InputStream pem) {
+        Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
 
-		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-		PKCS10CertificationRequest csr = null;
-		ByteArrayInputStream pemStream = null;
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        PKCS10CertificationRequest csr = null;
+        ByteArrayInputStream pemStream = null;
 
-		pemStream = (ByteArrayInputStream) pem;
+        pemStream = (ByteArrayInputStream) pem;
 
-		Reader pemReader = new BufferedReader(new InputStreamReader(pemStream));
-		PEMParser pemParser = null;
-		try {
-			pemParser = new PEMParser(pemReader);
-			Object parsedObj = pemParser.readObject();
-			System.out.println("PemParser returned: " + parsedObj);
-			if (parsedObj instanceof PKCS10CertificationRequest) {
-				csr = (PKCS10CertificationRequest) parsedObj;
-			}
-		} catch (IOException ex) {
-			LOG.severe("IOException, convertPemToPublicKey");
-		} finally {
-			if (pemParser != null) {
-				IOUtils.closeQuietly(pemParser);
-			}
-		}
-		return csr;
-	}
+        Reader pemReader = new BufferedReader(new InputStreamReader(pemStream));
+        PEMParser pemParser = null;
+        try {
+            pemParser = new PEMParser(pemReader);
+            Object parsedObj = pemParser.readObject();
+            System.out.println("PemParser returned: " + parsedObj);
+            if (parsedObj instanceof PKCS10CertificationRequest) {
+                csr = (PKCS10CertificationRequest) parsedObj;
+            }
+        } catch (IOException ex) {
+            LOG.severe("IOException, convertPemToPublicKey");
+        } finally {
+            if (pemParser != null) {
+                IOUtils.closeQuietly(pemParser);
+            }
+        }
+        return csr;
+    }
 
-	private X509Certificate sign(PKCS10CertificationRequest inputCSR, IssuerData issuerData)
-			throws InvalidKeyException, NoSuchAlgorithmException,
-			NoSuchProviderException, SignatureException, IOException,
-			OperatorCreationException, CertificateException {
+    private X509Certificate sign(PKCS10CertificationRequest inputCSR, IssuerData issuerData)
+            throws InvalidKeyException, NoSuchAlgorithmException,
+            NoSuchProviderException, SignatureException, IOException,
+            OperatorCreationException, CertificateException {
 
-		// Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
-		// Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
-		// Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
-		JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
+        // Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
+        // Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
+        // Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
+        JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
-		// Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
-		builder = builder.setProvider("BC");
+        // Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
+        builder = builder.setProvider("BC");
 
-		// Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
-		ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
+        // Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
+        ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
 
-		X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
-				issuerData.getX500name(), new BigInteger("1"), new Date(
-				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis() + 30L * 365 * 24 * 60 * 60
-						* 1000), inputCSR.getSubject(), inputCSR.getSubjectPublicKeyInfo());
-		X509CertificateHolder holder = certificateBuilder.build(contentSigner);
+        X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
+                issuerData.getX500name(), new BigInteger("1"), new Date(
+                System.currentTimeMillis()), new Date(
+                System.currentTimeMillis() + 30L * 365 * 24 * 60 * 60
+                        * 1000), inputCSR.getSubject(), inputCSR.getSubjectPublicKeyInfo());
+        X509CertificateHolder holder = certificateBuilder.build(contentSigner);
 
-		Certificate eeX509CertificateStructure = holder.toASN1Structure();
+        Certificate eeX509CertificateStructure = holder.toASN1Structure();
 
-		CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
+        CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
 
-		// Read Certificate
-		InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
-		X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1);
-		is1.close();
-		return theCert;
-		//return null;
-	}
+        // Read Certificate
+        InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
+        X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1);
+        is1.close();
+        return theCert;
+        //return null;
+    }
 
 
-	public void saveCSR(CSR csr){
-		csrRepository.save(csr);
-	}
+    public void saveCSR(CSR csr) {
+        csrRepository.save(csr);
+    }
+
+    @Override
+    public void createCSR(String pemCSR) {
+        Logger LOG = Logger.getLogger(CertificatesServiceImpl.class.getName());
+
+        PKCS10CertificationRequest csr = convertPemToPKCS10CertificationRequest(new ByteArrayInputStream(pemCSR.getBytes()));
+
+        if (csr == null) {
+            LOG.warning("FAIL! conversion of Pem To PKCS10 Certification Request");
+        } else {
+            CSR createdCSR = new CSR();
+            X500Name x500Name = csr.getSubject();
+
+            createdCSR.setPemCSR(pemCSR);
+            createdCSR.setCountry(x500DetailsService.getCountry(x500Name));
+            createdCSR.setState(x500DetailsService.getState(x500Name));
+            createdCSR.setLocale(x500DetailsService.getLocale(x500Name));
+            createdCSR.setOrganization(x500DetailsService.getOrganization(x500Name));
+            createdCSR.setOrganizationUnit(x500DetailsService.getOrganizationUnit(x500Name));
+            createdCSR.setCommonName(x500DetailsService.getCommonName(x500Name));
+            createdCSR.setEmail(x500DetailsService.getEmail(x500Name));
+
+            this.saveCSR(createdCSR);
+        }
+    }
 
 }

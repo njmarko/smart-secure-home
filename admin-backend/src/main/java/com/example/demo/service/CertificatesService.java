@@ -21,4 +21,6 @@ public interface CertificatesService {
     String readCertificateSigningRequest(InputStream stream);
 
     void saveCSR(CSR csr);
+
+    void createCSR(String pemCSR);
 }
