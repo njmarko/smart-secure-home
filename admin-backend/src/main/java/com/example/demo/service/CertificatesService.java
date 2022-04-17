@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.model.CSR;
+
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
@@ -17,4 +19,6 @@ public interface CertificatesService {
     void showKeyStoreContent();
 
     String readCertificateSigningRequest(InputStream stream);
+
+    void saveCSR(CSR csr);
 }

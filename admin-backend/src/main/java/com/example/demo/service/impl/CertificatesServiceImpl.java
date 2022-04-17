@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.model.CSR;
 import com.example.demo.model.CertificateData;
 import com.example.demo.model.IssuerData;
+import com.example.demo.repository.CSRRepository;
 import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.service.KeystoreService;
@@ -39,12 +41,15 @@ public class CertificatesServiceImpl implements CertificatesService {
 	private final KeystoreService keystoreService;
 	private final CertificateDataService certificateDataService;
 	private final X500DetailsService x500DetailsService;
+	private final CSRRepository csrRepository;
 
 	@Autowired
-	public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService, X500DetailsService x500DetailsService) {
+	public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService,
+								   X500DetailsService x500DetailsService, CSRRepository csrRepository) {
 		this.keystoreService = keystoreService;
 		this.certificateDataService = certificateDataService;
 		this.x500DetailsService = x500DetailsService;
+		this.csrRepository = csrRepository;
 	}
 
 	@Override
@@ -209,6 +214,11 @@ public class CertificatesServiceImpl implements CertificatesService {
 		is1.close();
 		return theCert;
 		//return null;
+	}
+
+
+	public void saveCSR(CSR csr){
+		csrRepository.save(csr);
 	}
 
 }

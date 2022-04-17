@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.CheckValidityResponse;
 import com.example.demo.dto.CsrDTO;
 import com.example.demo.dto.ReadCertificateResponse;
+import com.example.demo.model.CSR;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.support.EntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,17 @@ public class CertificatesController {
 
     private final EntityConverter<X509Certificate, ReadCertificateResponse> toReadResponse;
     private final EntityConverter<X509Certificate, CheckValidityResponse> toCheckValidityResponse;
+    private final EntityConverter<CsrDTO, CSR> csrDTOCSREntityConverter;
 
     @Autowired
     public CertificatesController(CertificatesService certificatesService,
                                   EntityConverter<X509Certificate, ReadCertificateResponse> toReadResponse,
-                                  EntityConverter<X509Certificate, CheckValidityResponse> toCheckValidityResponse) {
+                                  EntityConverter<X509Certificate, CheckValidityResponse> toCheckValidityResponse,
+                                  EntityConverter<CsrDTO, CSR> csrDTOCSREntityConverter) {
         this.certificatesService = certificatesService;
         this.toReadResponse = toReadResponse;
         this.toCheckValidityResponse = toCheckValidityResponse;
+        this.csrDTOCSREntityConverter = csrDTOCSREntityConverter;
     }
 
     @GetMapping
@@ -52,9 +56,8 @@ public class CertificatesController {
 
     @PostMapping(value = "/generateCSR")
     @ResponseStatus(HttpStatus.CREATED)
-    public void generateCSR(@RequestBody CsrDTO csrDTO){
-        System.out.println(csrDTO.getX500Name());
-        System.out.println(csrDTO.getPurpose());
+    public void generateCSR(@RequestBody CsrDTO csrDTO) {
+        this.certificatesService.saveCSR(csrDTOCSREntityConverter.convert(csrDTO));
     }
 
 }
