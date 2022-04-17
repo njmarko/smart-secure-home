@@ -3,18 +3,23 @@ package com.example.demo.service.impl;
 import com.example.demo.model.CSR;
 import com.example.demo.model.CertificateData;
 import com.example.demo.model.IssuerData;
+import com.example.demo.model.RevocationReason;
 import com.example.demo.repository.CSRRepository;
 import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.service.KeystoreService;
 import com.example.demo.service.X500DetailsService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.bouncycastle.asn1.ocsp.RevokedInfo;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.Certificate;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.ocsp.CertificateStatus;
+import org.bouncycastle.cert.ocsp.RevokedStatus;
+import org.bouncycastle.cert.ocsp.UnknownStatus;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -22,6 +27,7 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -70,7 +76,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 	}
 
 	@Override
-	public void invalidate(Integer serialNumber, String reason) {
+	public void invalidate(Integer serialNumber, RevocationReason reason) {
 		certificateDataService.invalidate(serialNumber, reason);
 	}
 
@@ -247,5 +253,20 @@ public class CertificatesServiceImpl implements CertificatesService {
             this.saveCSR(createdCSR);
         }
     }
+
+	@Override
+	@Transactional
+	public CertificateStatus readCertificateStatus(Integer serialNumber) {
+		try {
+			var certificate = certificateDataService.read(serialNumber);
+			var revocation = certificate.getRevocation();
+			if (Objects.isNull(revocation)) {
+				return CertificateStatus.GOOD;
+			}
+			return new RevokedStatus(revocation.getRevocationTime(), revocation.getReason().getValue());
+		} catch (Exception ex) {
+			return new UnknownStatus();
+		}
+	}
 
 }

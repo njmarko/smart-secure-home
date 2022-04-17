@@ -56,7 +56,7 @@ export class CertificatesViewComponent implements OnInit {
 
   onInvalidate(cert: ReadCertificateResponse): void {
     const request: InvalidateCertificateRequest = {
-      reason: "No longer in use."
+      reason: "UNSPECIFIED"
     }
     const dialogRef = this.dialog.open(CertInvalidationDialogComponent, {
       width: '250px',

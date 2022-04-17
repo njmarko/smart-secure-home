@@ -2,14 +2,15 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.CertificateData;
 import com.example.demo.model.Revocation;
+import com.example.demo.model.RevocationReason;
 import com.example.demo.repository.CertificateDataRepository;
 import com.example.demo.repository.RevocationRepository;
 import com.example.demo.service.CertificateDataService;
+import com.example.demo.service.DateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.TransactionScoped;
 import java.util.List;
 
 @Service
@@ -17,11 +18,15 @@ import java.util.List;
 public class CertificateDataServiceImpl implements CertificateDataService {
     private final CertificateDataRepository certificateDataRepository;
     private final RevocationRepository revocationRepository;
+    private final DateTimeService dateTimeService;
 
     @Autowired
-    public CertificateDataServiceImpl(CertificateDataRepository certificateDataRepository, RevocationRepository revocationRepository) {
+    public CertificateDataServiceImpl(CertificateDataRepository certificateDataRepository,
+                                      RevocationRepository revocationRepository,
+                                      DateTimeService dateTimeService) {
         this.certificateDataRepository = certificateDataRepository;
         this.revocationRepository = revocationRepository;
+        this.dateTimeService = dateTimeService;
     }
 
     @Override
@@ -51,9 +56,9 @@ public class CertificateDataServiceImpl implements CertificateDataService {
 
     @Override
     @Transactional(readOnly = false)
-    public void invalidate(Integer serialNumber, String reason) {
+    public void invalidate(Integer serialNumber, RevocationReason reason) {
         var data = read(serialNumber);
-        var revocation = new Revocation(data, reason);
+        var revocation = new Revocation(data, dateTimeService.now(), reason);
         data.setRevocation(revocation);
         revocationRepository.save(revocation);
     }

@@ -3,7 +3,18 @@
     <p>Enter invalidation reason</p>
     <mat-form-field appearance="fill">
         <mat-label>Reason</mat-label>
-        <input matInput [(ngModel)]="request.reason">
+        <mat-select [(ngModel)]="request.reason">
+            <mat-option value="UNSPECIFIED">Unspecified</mat-option>
+            <mat-option value="KEY_COMPROMISE">Key compromise</mat-option>
+            <mat-option value="CA_COMPROMISE">CA compromise</mat-option>
+            <mat-option value="AFFILIATION_CHANGED">Affiliation changed</mat-option>
+            <mat-option value="SUPERSEDED">Superseded</mat-option>
+            <mat-option value="CESSATION_OF_OPERATION">Cessation of operation</mat-option>
+            <mat-option value="CERTIFICATE_HOLD">Certificate hold</mat-option>
+            <mat-option value="REMOVE_FROM_CRL">Remove from CRL</mat-option>
+            <mat-option value="PRIVILEGE_WITHDRAWN">Priviledge withdrawn</mat-option>
+            <mat-option value="AA_COMPROMISE">AA compromise</mat-option>
+        </mat-select>
     </mat-form-field>
 </div>
 <div mat-dialog-actions>

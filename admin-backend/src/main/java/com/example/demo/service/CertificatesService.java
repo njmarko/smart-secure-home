@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.model.CSR;
+import com.example.demo.model.RevocationReason;
+import org.bouncycastle.cert.ocsp.CertificateStatus;
 
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
@@ -12,7 +14,7 @@ public interface CertificatesService {
 
     X509Certificate read(Integer serialNumber);
 
-    void invalidate(Integer serialNumber, String reason);
+    void invalidate(Integer serialNumber, RevocationReason reason);
 
     // TODO: Obrisati ovo kad se sredi kod
     void showKeyStoreContent();
@@ -22,4 +24,6 @@ public interface CertificatesService {
     void saveCSR(CSR csr);
 
     void createCSR(String pemCSR);
+
+    CertificateStatus readCertificateStatus(Integer serialNumber);
 }

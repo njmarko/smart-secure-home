@@ -8,6 +8,7 @@ import com.example.demo.dto.ReadCertificateResponse;
 import com.example.demo.model.CSR;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.support.EntityConverter;
+import org.bouncycastle.cert.ocsp.CertificateStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,11 @@ public class CertificatesController {
         // TODO: Maybe here we want to keep some mapping between alias and certificate's serial number
         var certificate = certificatesService.read(serialNumber);
         return toCheckValidityResponse.convert(certificate);
+    }
+
+    @GetMapping(value = "/{serialNumber}/status")
+    public CertificateStatus getCertificateStatus(@PathVariable Integer serialNumber) {
+        return certificatesService.readCertificateStatus(serialNumber);
     }
 
     @PostMapping(value = "/{serialNumber}/invalidate")
