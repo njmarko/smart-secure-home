@@ -15,7 +15,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.asn1.x509.Certificate;
+import org.bouncycastle.asn1.x509.*;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.ocsp.CertificateStatus;
@@ -181,8 +181,12 @@ public class CertificatesServiceImpl implements CertificatesService {
             pkcs = convertPemToPKCS10CertificationRequest(new ByteArrayInputStream(csr.getPemCSR().getBytes()));
         }
         signCertificate(keyPair, pkcs, request, request.getSignatureAlg());
-        // add extensions to certificate
         csr.setIsActive(Boolean.FALSE);
+    }
+
+    @Override
+    public CSR readCsr(Integer id) {
+        return readForUpdate(id);
     }
 
     private void signCertificate(KeyPair keyPair, PKCS10CertificationRequest request, CsrSignDataDTO dto, SignatureAlgEnumDTO algo) throws Exception {
@@ -197,6 +201,26 @@ public class CertificatesServiceImpl implements CertificatesService {
         X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
                 issuerData.getX500name(), BigInteger.valueOf(certificateData.getId()), dto.getValidityStart(),
                 dto.getValidityEnd(), request.getSubject(), request.getSubjectPublicKeyInfo());
+
+        // Add extensions
+        // TODO: Drugi parametera je isCritial vrednost
+        var extensions = dto.getExtensions();
+        // Basic constraints
+        var basicConstraints = extensions.getBasicConstraints();
+        if (basicConstraints.getIsUsed()) {
+            certificateBuilder.addExtension(Extension.basicConstraints, false, new BasicConstraints(basicConstraints.getSubjectIsCa()));
+        }
+        // Key usage
+        var keyUsage = extensions.getKeyUsage();
+        if (keyUsage.getIsUsed()) {
+            certificateBuilder.addExtension(Extension.keyUsage, false, new KeyUsage(keyUsage.toBitMask()));
+        }
+        // Extended key usage
+        var extendedKeyUsage = extensions.getExtendedKeyUsage();
+        if (extendedKeyUsage.getIsUsed()) {
+            certificateBuilder.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsage.toKeyPurposeIds()));
+        }
+
         X509CertificateHolder holder = certificateBuilder.build(contentSigner);
         Certificate eeX509CertificateStructure = holder.toASN1Structure();
         CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
