@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Confirm certificate invalidation</h1>
+<div mat-dialog-content>
+    <p>Enter invalidation reason</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Reason</mat-label>
+        <input matInput [(ngModel)]="request.reason">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()" cdkFocusInitial>Cancel</button>
+    <button mat-button [mat-dialog-close]="request">Invalidate</button>
+</div>

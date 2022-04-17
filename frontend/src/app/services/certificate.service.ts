@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import Csr from '../model/certificates/Csr';
 import ReadCertificateResponse from '../model/certificates/ReadCertificateResponse';
 import CheckValidityResponse from '../model/certificates/CheckValidityResponse';
 import CertificatePurpose from '../model/certificates/enum/CerificatePurpose';
 import CsrSignData from '../model/certificates/CsrSignData';
+import InvalidateCertificateRequest from '../model/certificates/InvalidateCertificateRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -26,17 +27,17 @@ export class CertificateService {
 
   constructor(private http: HttpClient) { }
 
-  getCertificates() {
+  getCertificates(): Observable<ReadCertificateResponse[]> {
     // TODO: Ko ima volje nek podesi onaj proxy i/ili putanju u env xD
     return this.http.get<ReadCertificateResponse[]>('http://localhost:8082/api/certificates');
   }
 
-  checkValidity(id: number) {
+  checkValidity(id: number): Observable<CheckValidityResponse> {
     return this.http.get<CheckValidityResponse>(`http://localhost:8082/api/certificates/${id}/validity`);
   }
 
-  invalidate(id: number) {
-    return this.http.post(`http://localhost:8082/api/certificates/${id}/invalidate`, {});
+  invalidate(id: number, request: InvalidateCertificateRequest) {
+    return this.http.post(`http://localhost:8082/api/certificates/${id}/invalidate`, request);
   }
 
   signCsr(csr: Csr, newCert: CsrSignData) {

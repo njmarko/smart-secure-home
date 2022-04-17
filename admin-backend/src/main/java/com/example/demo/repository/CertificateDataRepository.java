@@ -6,19 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CertificateDataRepository extends JpaRepository<CertificateData, Integer> {
 
-    @Query("select c from CertificateData c where c.serialNumber = :serialNumber")
-    Optional<CertificateData> readBySerialNumber(@Param(value = "serialNumber")BigInteger serialNumber);
+    @Query("select c from CertificateData c where c.id = :serialNumber")
+    Optional<CertificateData> readBySerialNumber(@Param(value = "serialNumber") Integer serialNumber);
 
-    @Query("select c from CertificateData c where c.serialNumber = :serialNumber and c.isCancelled = false")
-    Optional<CertificateData> readBySerialNumberNonCancelled(@Param(value = "serialNumber") BigInteger serialNumber);
+    @Query("select c from CertificateData c where c.id = :serialNumber and c.revocation.id is null")
+    Optional<CertificateData> readBySerialNumberNonCancelled(@Param(value = "serialNumber") Integer serialNumber);
 
-    @Query("select c from CertificateData c where c.isCancelled = false")
+    @Query("select c from CertificateData c where c.revocation.id is null")
     List<CertificateData> readNonInvalidated();
 }

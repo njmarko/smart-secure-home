@@ -29,10 +29,7 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -63,19 +60,19 @@ public class CertificatesServiceImpl implements CertificatesService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public X509Certificate read(BigInteger serialNumber) {
-        var data = certificateDataService.readNonCancelled(serialNumber);
-        var alias = data.getAlias();
-        return keystoreService.readOne(alias).orElseThrow(
-                () -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
-        );
-    }
+	@Override
+	public X509Certificate read(Integer serialNumber) {
+		var data = certificateDataService.readNonInvalidated(serialNumber);
+		var alias = data.getAlias();
+		return keystoreService.readOne(alias).orElseThrow(
+				() -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
+		);
+	}
 
-    @Override
-    public void invalidate(BigInteger serialNumber) {
-        certificateDataService.invalidate(serialNumber);
-    }
+	@Override
+	public void invalidate(Integer serialNumber, String reason) {
+		certificateDataService.invalidate(serialNumber, reason);
+	}
 
     public void showKeyStoreContent() {
         Scanner keyboard = new Scanner(System.in);
@@ -184,10 +181,15 @@ public class CertificatesServiceImpl implements CertificatesService {
             NoSuchProviderException, SignatureException, IOException,
             OperatorCreationException, CertificateException {
 
-        // Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
-        // Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
-        // Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
-        JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
+		// TODO: nakon ovoga certificateData ima polje id koje treba koristiti kao serialNumber
+		// TODO: u sustini za alias moze bilo sta da se korsiti bilo sta, ovo je verovatno najlaksa opcija
+		var alias = UUID.randomUUID().toString();
+		var certificateData = certificateDataService.save(new CertificateData(alias));
+
+		// Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
+		// Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
+		// Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
+		JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
         // Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
         builder = builder.setProvider("BC");
@@ -206,13 +208,15 @@ public class CertificatesServiceImpl implements CertificatesService {
 
         CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
 
-        // Read Certificate
-        InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
-        X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1);
-        is1.close();
-        return theCert;
-        //return null;
-    }
+		// Read Certificate
+		InputStream is1 = new ByteArrayInputStream(eeX509CertificateStructure.getEncoded());
+		X509Certificate theCert = (X509Certificate) cf.generateCertificate(is1);
+		is1.close();
+		return theCert;
+		//return null;
+
+		// TODO: Ovde treba poslati privatni kljuc?
+	}
 
 
     public void saveCSR(CSR csr) {

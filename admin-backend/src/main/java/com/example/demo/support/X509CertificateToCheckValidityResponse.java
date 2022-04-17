@@ -12,7 +12,7 @@ public class X509CertificateToCheckValidityResponse extends BaseConverter<X509Ce
     @Override
     public CheckValidityResponse convert(X509Certificate source) {
         var builder = CheckValidityResponse.builder()
-                .serialNumber(source.getSerialNumber())
+                .serialNumber(source.getSerialNumber().intValue())
                 .expired(false)
                 .started(true);
         try {

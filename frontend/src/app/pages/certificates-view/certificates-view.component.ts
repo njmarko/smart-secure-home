@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { CertInvalidationDialogComponent } from 'src/app/components/cert-invalidation-dialog/cert-invalidation-dialog.component';
+import InvalidateCertificateRequest from 'src/app/model/certificates/InvalidateCertificateRequest';
 import ReadCertificateResponse from 'src/app/model/certificates/ReadCertificateResponse';
 import { CertificateService } from 'src/app/services/certificate.service';
 
@@ -21,7 +24,11 @@ export class CertificatesViewComponent implements OnInit {
 
   dataSource: MatTableDataSource<ReadCertificateResponse> = new MatTableDataSource<ReadCertificateResponse>();
 
-  constructor(private certificateService: CertificateService, private snackbar: MatSnackBar) { }
+  constructor(
+    private certificateService: CertificateService,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.fetchData();
@@ -48,10 +55,20 @@ export class CertificatesViewComponent implements OnInit {
   }
 
   onInvalidate(cert: ReadCertificateResponse): void {
-    // TODO: Kasnije ubaciti neki dijalog za potvrdu ili tako nesto
-    this.certificateService.invalidate(cert.serialNumber).subscribe(_ => {
-      this.fetchData();
-      this.snackbar.open("Certificate has been invalidated.", "Confirm");
+    const request: InvalidateCertificateRequest = {
+      reason: "No longer in use."
+    }
+    const dialogRef = this.dialog.open(CertInvalidationDialogComponent, {
+      width: '250px',
+      data: request,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.certificateService.invalidate(cert.serialNumber, request).subscribe(_ => {
+          this.fetchData();
+          this.snackbar.open("Certificate has been invalidated.", "Confirm");
+        })
+      }
     })
   }
 
