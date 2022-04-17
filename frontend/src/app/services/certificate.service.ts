@@ -142,10 +142,10 @@ export class CertificateService {
         })
         .toPromise()
         .then((response: any) => {
-          alertCallback(response);
+          alertCallback("CSR uspesno sacuvan!");
         })
         .catch((response: any) => {
-          alertCallback(response);
+          alertCallback("Greska u koracima!");
         });
     }
   }
@@ -159,10 +159,10 @@ export class CertificateService {
         })
         .toPromise()
         .then((response: any) => {
-          alertCallback(response);
+          alertCallback("CSR uspesno sacuvan!");
         })
         .catch((response: any) => {
-          alertCallback(response);
+          alertCallback("Greska u koracima!");
         });
     }
   }
