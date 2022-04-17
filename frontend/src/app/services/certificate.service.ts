@@ -90,55 +90,6 @@ export class CertificateService {
     return this.http.get<Csr>(`${environment.adminAppUrl}certificates/csr/${id}`);
   }
 
-  loadAllCsrs() {
-    // TO:DO
-    // this.http
-    //   .get(environment.adminAppUrl + 'certificates/all')
-    //   .subscribe((data: any) => {
-    //     this._setCsrs(data);
-    //   });
-
-    //dummy
-    this._setCsrs([
-      {
-        id: 0,
-        x500Name: {
-          commonName: 'Dusan Hajduk',
-          country: 'RS',
-          locale: 'Sid',
-          state: 'Sremski okrug',
-          organization: 'FTN',
-          organizationUnit: 'SW',
-        },
-        purpose: CertificatePurpose.STANDARD_USER,
-      },
-      {
-        id: 1,
-        x500Name: {
-          commonName: 'Filip Zivanac',
-          country: 'RS',
-          locale: 'Titel',
-          state: 'Juznobacki okrug',
-          organization: 'FTN',
-          organizationUnit: 'SW',
-        },
-        purpose: CertificatePurpose.STANDARD_USER,
-      },
-      {
-        id: 2,
-        x500Name: {
-          commonName: 'Matija Pojatar',
-          country: 'RS',
-          locale: 'Kikinda',
-          state: 'Severnobanatski okrug',
-          organization: 'FTN',
-          organizationUnit: 'SW',
-        },
-        purpose: CertificatePurpose.ADVANCED_USER,
-      },
-    ]);
-  }
-
   generateCSR(csr: Csr | null) {
     if (csr) {
       csr = { ...csr };

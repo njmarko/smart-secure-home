@@ -185,6 +185,7 @@ public class CertificatesServiceImpl implements CertificatesService {
     }
 
     @Override
+    @Transactional
     public CSR readCsr(Integer id) {
         return readForUpdate(id);
     }

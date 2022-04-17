@@ -171,31 +171,32 @@ export class SignCsrComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._certificateService.loadAllCsrs();
-    this.csr = this._certificateService.getCsrs().find(el => el.id == this._route.snapshot.params['id'])!;
-    this.newCert = {
-      extensions: {
-        keyUsage: { keyUsages: [KeyUsageEnum.CERTIFICATE_SIGNING, KeyUsageEnum.CRL_SIGN], isUsed: true },
-        authorityKeyIdentifier: { keyIdentifier: "", isUsed: false },
-        basicConstraints: { subjectIsCa: true, isUsed: true },
-        subjectKeyIdentifier: { keyIdentifier: "", isUsed: false },
-        extendedKeyUsage: { keyUsages: [], isUsed: false },
-        subjectAlternativeName: { name: "", isUsed: false },
-      },
-      signatureAlg: SignatureAlg.SHA_256_WITH_RSA,
-      csr: this.csr,
-      validityStart: new Date(),
-      validityEnd: (() => { let d = new Date(); d.setFullYear(d.getFullYear() + 1); return d; })(),
-    }
-    this.subjectName = [
-      this.csr.x500Name.commonName,
-      this.csr.x500Name.locale,
-      this.csr.x500Name.state,
-      this.csr.x500Name.country,
-      this.csr.x500Name.email,
-      this.csr.x500Name.organization,
-      this.csr.x500Name.organizationUnit,
-    ].join(", ")
+    this._certificateService.readCsr(this._route.snapshot.params['id']).subscribe((response) => {
+      this.csr = response
+      this.newCert = {
+        extensions: {
+          keyUsage: { keyUsages: [KeyUsageEnum.CERTIFICATE_SIGNING, KeyUsageEnum.CRL_SIGN], isUsed: true },
+          authorityKeyIdentifier: { keyIdentifier: "", isUsed: false },
+          basicConstraints: { subjectIsCa: true, isUsed: true },
+          subjectKeyIdentifier: { keyIdentifier: "", isUsed: false },
+          extendedKeyUsage: { keyUsages: [], isUsed: false },
+          subjectAlternativeName: { name: "", isUsed: false },
+        },
+        signatureAlg: SignatureAlg.SHA_256_WITH_RSA,
+        csr: this.csr,
+        validityStart: new Date(),
+        validityEnd: (() => { let d = new Date(); d.setFullYear(d.getFullYear() + 1); return d; })(),
+      }
+      this.subjectName = [
+        this.csr.x500Name.commonName,
+        this.csr.x500Name.locale,
+        this.csr.x500Name.state,
+        this.csr.x500Name.country,
+        this.csr.x500Name.email,
+        this.csr.x500Name.organization,
+        this.csr.x500Name.organizationUnit,
+      ].join(", ")
+    });
   }
 
 }
