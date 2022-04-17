@@ -59,8 +59,6 @@ export class CsrFormComponent implements OnInit {
       : 'hajduk.dusan@yahoo.com';
 
     this._certificateService.generateCSR(this.csr, this.alertResponse);
-
-    this._snackBar.open('random message', 'Dismiss');
   }
 
   sendGeneratedCSR(): void {
@@ -88,7 +86,7 @@ export class CsrFormComponent implements OnInit {
     this._snackBar.open('random message', 'Dismiss');
   }
 
-  alertResponse(response: any) {
-    if (response.data) this._snackBar.open(response.data, 'Dismiss');
+  alertResponse(response: any, message : string) {
+    if (response.data) this._snackBar.open(message, 'Dismiss');
   }
 }
