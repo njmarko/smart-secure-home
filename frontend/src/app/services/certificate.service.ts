@@ -135,40 +135,26 @@ export class CertificateService {
     ]);
   }
 
-  async generateCSR(csr: Csr | null, alertCallback: CallableFunction) {
+  generateCSR(csr: Csr | null) {
     if (csr) {
       csr = {... csr};
       csr!.purpose = Object.values(CertificatePurpose).indexOf(csr!.purpose as CertificatePurpose);
-      const httpResponse = await this.http
+      return this.http
         .post(environment.adminAppUrl + 'certificates/generateCSR', csr, {
           responseType: 'json',
           observe: 'response',
         })
-        .toPromise()
-        .then((response: any) => {
-          alertCallback("CSR uspesno sacuvan!");
-        })
-        .catch((response: any) => {
-          alertCallback("Greska u koracima!");
-        });
-    }
+    } else return null
   }
 
-  async sendCSR(csrPem: string | null, alertCallback: CallableFunction) {
+  sendCSR(csrPem: string | null) {
     if (csrPem) {
-      const httpResponse = await this.http
+      return this.http
         .post(environment.adminAppUrl + 'certificates/addCSR', csrPem, {
           responseType: 'json',
           observe: 'response',
         })
-        .toPromise()
-        .then((response: any) => {
-          alertCallback("CSR uspesno sacuvan!");
-        })
-        .catch((response: any) => {
-          alertCallback("Greska u koracima!");
-        });
-    }
+    } else return null
   }
 
 
