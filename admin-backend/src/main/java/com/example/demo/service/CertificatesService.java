@@ -30,4 +30,7 @@ public interface CertificatesService {
     void createCSR(String pemCSR);
 
     CertificateStatus readCertificateStatus(Integer serialNumber);
+
+    CSR readForUpdate(Long id);
+    void deleteCsr(Long id);
 }
