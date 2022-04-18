@@ -15,6 +15,7 @@ import CertificatePurpose from 'src/app/model/certificates/enum/CerificatePurpos
 export class CsrsViewComponent implements OnInit {
   csrs!: Csr[];
   displayedColumns: string[] = [
+    'Id',
     'CommonName',
     'OrganizationalUnit',
     'Organization',

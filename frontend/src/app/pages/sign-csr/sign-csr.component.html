@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<div class="centeringContainer">
+<div *ngIf="newCert" class="centeringContainer">
   <form class="newCertForm">
     <!-- subject data -->
     <mat-form-field id="subjectNameField" appearance="standard">
