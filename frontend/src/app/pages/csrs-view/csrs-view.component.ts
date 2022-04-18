@@ -48,7 +48,7 @@ export class CsrsViewComponent implements OnInit {
   fetchData(pageIdx: number, pageSize: number): void {
     this.waitingResults = true;
     this.certificateService.read(pageIdx, pageSize).subscribe((page) => {
-      this.csrs = page.content.map(element => {element.purpose = (CertificatePurpose as any)[element.purpose as string]; return element;})
+      // this.csrs = page.content.map(element => {element.purpose = (CertificatePurpose as any)[element.purpose as string]; return element;})
       this.pageNum = page.pageable.pageNumber;
       this.pageSize = page.pageable.pageSize;
       this.totalPages = page.totalPages;
