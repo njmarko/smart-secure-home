@@ -29,12 +29,18 @@ export class CertificateService {
     this._csrsSource.next(csrs);
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getCertificates(): Observable<ReadCertificateResponse[]> {
-    // TODO: Ko ima volje nek podesi onaj proxy i/ili putanju u env xD
-    return this.http.get<ReadCertificateResponse[]>(
-      'http://localhost:8082/api/certificates'
+  getCertificates(page: number, size: number) {
+    return this.http.get<PaginatedResponse<ReadCertificateResponse>>(
+      `${environment.adminAppUrl}certificates`,
+      {
+        params: {
+          page: page,
+          size: size,
+          sort: 'id,asc',
+        },
+      }
     );
   }
 
@@ -54,12 +60,22 @@ export class CertificateService {
   signCsr(newCert: CsrSignData) {
     newCert = JSON.parse(JSON.stringify(newCert));
     // newCert.csr.purpose = Object.keys(CertificatePurpose).indexOf(newCert.csr.purpose as CertificatePurpose);
-    newCert.signatureAlg = Object.values(SignatureAlg).indexOf(newCert!.signatureAlg as SignatureAlg);
-    newCert.extensions.keyUsage.keyUsages = newCert.extensions.keyUsage.keyUsages.map(elem => Object.values(KeyUsageEnum).indexOf(elem as KeyUsageEnum));
-    newCert.extensions.extendedKeyUsage.keyUsages = newCert.extensions.extendedKeyUsage.keyUsages.map(elem => Object.values(ExtendedKeyUsageEnum).indexOf(elem as ExtendedKeyUsageEnum));
-    return this.http.post(
-      `http://localhost:8082/api/certificates`, newCert
-    ).subscribe();
+    newCert.signatureAlg = Object.values(SignatureAlg).indexOf(
+      newCert!.signatureAlg as SignatureAlg
+    );
+    newCert.extensions.keyUsage.keyUsages =
+      newCert.extensions.keyUsage.keyUsages.map((elem) =>
+        Object.values(KeyUsageEnum).indexOf(elem as KeyUsageEnum)
+      );
+    newCert.extensions.extendedKeyUsage.keyUsages =
+      newCert.extensions.extendedKeyUsage.keyUsages.map((elem) =>
+        Object.values(ExtendedKeyUsageEnum).indexOf(
+          elem as ExtendedKeyUsageEnum
+        )
+      );
+    return this.http
+      .post(`http://localhost:8082/api/certificates`, newCert)
+      .subscribe();
   }
 
   delete(id: number): Observable<void> {
@@ -83,34 +99,44 @@ export class CertificateService {
   }
 
   readOne(id: number): Observable<ReadCertificateResponse> {
-    return this.http.get<ReadCertificateResponse>(`${environment.adminAppUrl}certificates/${id}`);
+    return this.http.get<ReadCertificateResponse>(
+      `${environment.adminAppUrl}certificates/${id}`
+    );
   }
 
   readCsr(id: number): Observable<Csr> {
-    return this.http.get<Csr>(`${environment.adminAppUrl}certificates/csr/${id}`);
+    return this.http.get<Csr>(
+      `${environment.adminAppUrl}certificates/csr/${id}`
+    );
   }
 
   generateCSR(csr: Csr | null) {
     if (csr) {
       csr = { ...csr };
-      csr!.purpose = Object.values(CertificatePurpose).indexOf(csr!.purpose as CertificatePurpose);
-      return this.http
-        .post(environment.adminAppUrl + 'certificates/generateCSR', csr, {
+      csr!.purpose = Object.values(CertificatePurpose).indexOf(
+        csr!.purpose as CertificatePurpose
+      );
+      return this.http.post(
+        environment.adminAppUrl + 'certificates/generateCSR',
+        csr,
+        {
           responseType: 'json',
           observe: 'response',
-        })
-    } else return null
+        }
+      );
+    } else return null;
   }
 
   sendCSR(csrPem: string | null) {
     if (csrPem) {
-      return this.http
-        .post(environment.adminAppUrl + 'certificates/addCSR', csrPem, {
+      return this.http.post(
+        environment.adminAppUrl + 'certificates/addCSR',
+        csrPem,
+        {
           responseType: 'json',
           observe: 'response',
-        })
-    } else return null
+        }
+      );
+    } else return null;
   }
-
-
 }

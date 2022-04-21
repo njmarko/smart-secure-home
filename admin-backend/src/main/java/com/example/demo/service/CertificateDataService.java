@@ -2,8 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.model.CertificateData;
 import com.example.demo.model.RevocationReason;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CertificateDataService {
     CertificateData save(CertificateData certificateData);
@@ -14,5 +14,5 @@ public interface CertificateDataService {
 
     void invalidate(Integer serialNumber, RevocationReason reason);
 
-    List<CertificateData> readNonInvalidated();
+    Page<CertificateData> readNonInvalidated(Pageable pageable);
 }

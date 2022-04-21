@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.cert.X509Certificate;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/certificates")
@@ -41,9 +40,9 @@ public class CertificatesController {
     }
 
     @GetMapping
-    public List<ReadCertificateResponse> read() {
-        var certificates = certificatesService.read();
-        return toReadResponse.convert(certificates);
+    public Page<ReadCertificateResponse> read(@PageableDefault Pageable pageable) {
+        var certificates = certificatesService.read(pageable);
+        return certificates.map(toReadResponse::convert);
     }
 
     @PostMapping
@@ -96,12 +95,12 @@ public class CertificatesController {
     }
 
     @GetMapping(value = "/csr/{id}")
-    public CsrDTO getCsr(@PathVariable(name="id") Integer id){
+    public CsrDTO getCsr(@PathVariable(name = "id") Integer id) {
         return csrCsrDTOEntityConverter.convert(this.certificatesService.readCsr(id));
     }
 
     @DeleteMapping(value = "/csr/{id}")
-    public void deleteCSR(@PathVariable(name="id") Integer id){
+    public void deleteCSR(@PathVariable(name = "id") Integer id) {
         this.certificatesService.deleteCsr(id);
     }
 

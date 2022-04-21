@@ -8,10 +8,10 @@ import com.example.demo.repository.RevocationRepository;
 import com.example.demo.service.CertificateDataService;
 import com.example.demo.service.DateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -50,8 +50,8 @@ public class CertificateDataServiceImpl implements CertificateDataService {
     }
 
     @Override
-    public List<CertificateData> readNonInvalidated() {
-        return certificateDataRepository.readNonInvalidated();
+    public Page<CertificateData> readNonInvalidated(Pageable pageable) {
+        return certificateDataRepository.readNonInvalidated(pageable);
     }
 
     @Override
