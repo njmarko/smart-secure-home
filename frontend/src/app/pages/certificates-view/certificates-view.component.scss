@@ -1,9 +1,14 @@
+.tableWrapper {
+  width: 100%;
+  max-width: 1600px;
+}
+
+.centeringDiv{
+  display: grid;
+  place-items: center;
+  margin-top: 24px;
+}
+
 table {
-    width: 100%;
-  }
-  
-  .table-container {
-    margin: 15px;
-    padding: 10px;
-  }
-  
+  width: 100%;
+}

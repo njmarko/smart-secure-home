@@ -5,13 +5,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import Csr from '../model/certificates/Csr';
 import ReadCertificateResponse from '../model/certificates/ReadCertificateResponse';
 import CheckValidityResponse from '../model/certificates/CheckValidityResponse';
-import CertificatePurpose from '../model/certificates/enum/CerificatePurpose';
+import {CertificatePurpose} from '../model/certificates/enum/CerificatePurpose';
 import CsrSignData from '../model/certificates/CsrSignData';
 import InvalidateCertificateRequest from '../model/certificates/InvalidateCertificateRequest';
 import { PaginatedResponse } from '../shared/types/PaginatedResponse';
-import SignatureAlg from '../model/certificates/enum/SignatureAlg';
-import KeyUsageEnum from '../model/extensions/enum/KeyUsageEnum';
-import ExtendedKeyUsageEnum from '../model/extensions/enum/ExtendedKeyUsageEnum';
 
 @Injectable({
   providedIn: 'root',
@@ -52,14 +49,9 @@ export class CertificateService {
   }
 
   signCsr(newCert: CsrSignData) {
-    newCert = JSON.parse(JSON.stringify(newCert));
-    // newCert.csr.purpose = Object.keys(CertificatePurpose).indexOf(newCert.csr.purpose as CertificatePurpose);
-    newCert.signatureAlg = Object.values(SignatureAlg).indexOf(newCert!.signatureAlg as SignatureAlg);
-    newCert.extensions.keyUsage.keyUsages = newCert.extensions.keyUsage.keyUsages.map(elem => Object.values(KeyUsageEnum).indexOf(elem as KeyUsageEnum));
-    newCert.extensions.extendedKeyUsage.keyUsages = newCert.extensions.extendedKeyUsage.keyUsages.map(elem => Object.values(ExtendedKeyUsageEnum).indexOf(elem as ExtendedKeyUsageEnum));
     return this.http.post(
       `http://localhost:8082/api/certificates`, newCert
-    ).subscribe();
+    );
   }
 
   delete(id: number): Observable<void> {
@@ -92,8 +84,6 @@ export class CertificateService {
 
   generateCSR(csr: Csr | null) {
     if (csr) {
-      csr = { ...csr };
-      csr!.purpose = Object.values(CertificatePurpose).indexOf(csr!.purpose as CertificatePurpose);
       return this.http
         .post(environment.adminAppUrl + 'certificates/generateCSR', csr, {
           responseType: 'json',

@@ -1,6 +1,9 @@
 enum SignatureAlg {
-  SHA_256_WITH_RSA = "SHA 256 With RSA",
-  SHA_1_WITH_RSA = "SHA 1 With RSA",
+  SHA_256_WITH_RSA,
+  SHA_1_WITH_RSA,
 }
 
-export default SignatureAlg
+const signatureAlgLabels=["SHA 256 With RSA", "SHA 1 With RSA",]
+
+export {SignatureAlg};
+export {signatureAlgLabels}

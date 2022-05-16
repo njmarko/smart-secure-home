@@ -1,12 +1,14 @@
-.mat-table {
-  width: 1600px;
+.tableWrapper {
+  width: 100%;
+  max-width: 1600px;
 }
 
-.tableWrapper {
+.centeringDiv{
   display: grid;
   place-items: center;
   margin-top: 24px;
 }
+
 table {
   width: 100%;
 }

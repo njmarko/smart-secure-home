@@ -1,7 +1,14 @@
 enum CertificatePurpose {
-  ADVANCED_USER = "Advanced User",
-  STANDARD_USER = "Standard User",
-  DEVICE = "Device",
+  ADVANCED_USER,
+  STANDARD_USER,
+  DEVICE,
 }
 
-export default CertificatePurpose;
+const certificatePurposeLabels = [
+  "Advanced User",
+  "Standard User",
+  "Device",
+]
+
+export {CertificatePurpose};
+export {certificatePurposeLabels};

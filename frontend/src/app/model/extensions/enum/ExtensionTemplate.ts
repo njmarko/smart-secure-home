@@ -1,8 +1,11 @@
 enum ExtensionTemplate {
-  CA = "Certificate Authority",
-  SSL_SERVER = "SSL Server",
-  SSL_CLIENT = "SSL Client",
-  CODE_SIGNING = "Code Signing"
+  CA,
+  SSL_SERVER,
+  SSL_CLIENT,
+  CODE_SIGNING
 }
 
-export default ExtensionTemplate
+const extensionTemplateLabels=["Certificate Authority", "SSL Server", "SSL Client", "Code Signing"]
+
+export {ExtensionTemplate}
+export {extensionTemplateLabels}

@@ -1,7 +1,10 @@
 enum ExtendedKeyUsageEnum {
-  TLS_WEB_SERVER_AUTHENTICATION = "TLS Web Server Authentication",
-  TLS_WEB_CLIENT_AUTHENTICATION = "TLS Web Client Authentication",
-  CODE_SIGNING = "Code Signing"
+  TLS_WEB_SERVER_AUTHENTICATION,
+  TLS_WEB_CLIENT_AUTHENTICATION,
+  CODE_SIGNING
 }
 
-export default ExtendedKeyUsageEnum;
+const ekuLabels = ["TLS Web Server Authentication", "TLS Web Client Authentication", "Code Signing"]
+
+export {ExtendedKeyUsageEnum};
+export {ekuLabels};

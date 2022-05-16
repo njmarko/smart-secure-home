@@ -1,8 +1,11 @@
 enum KeyUsageEnum {
-  CERTIFICATE_SIGNING = "Certificate Signing",
-  CRL_SIGN = "CRL Signing",
-  DIGITAL_SIGNATURE = "Digital Signature",
-  KEY_ENCIPHERMENT = "Key Encipherment",
+  CERTIFICATE_SIGNING,
+  CRL_SIGN,
+  DIGITAL_SIGNATURE,
+  KEY_ENCIPHERMENT,
 }
 
-export default KeyUsageEnum;
+const kuLabels=["Certificate Signing", "CRL Signing", "Digital Signature", "Key Encipherment",]
+
+export {KeyUsageEnum};
+export {kuLabels};

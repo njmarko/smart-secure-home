@@ -5,7 +5,7 @@ import { CertificateService } from 'src/app/services/certificate.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationService } from 'src/app/shared/confirmation-service/confirmation.service';
 import { ErrorService } from 'src/app/shared/error-service/error.service';
-import CertificatePurpose from 'src/app/model/certificates/enum/CerificatePurpose';
+import { CertificatePurpose, certificatePurposeLabels } from 'src/app/model/certificates/enum/CerificatePurpose';
 
 @Component({
   selector: 'app-csrs-view',
@@ -26,6 +26,9 @@ export class CsrsViewComponent implements OnInit {
     'Sign',
     'Delete',
   ];
+
+  certificatePurposesLabelsRef = certificatePurposeLabels;
+  CertificatePurposesRef = CertificatePurpose;
 
   dataSource: MatTableDataSource<Csr> = new MatTableDataSource<Csr>();
   pageNum: number = 0;
@@ -49,7 +52,6 @@ export class CsrsViewComponent implements OnInit {
   fetchData(pageIdx: number, pageSize: number): void {
     this.waitingResults = true;
     this.certificateService.read(pageIdx, pageSize).subscribe((page) => {
-      // this.csrs = page.content.map(element => {element.purpose = (CertificatePurpose as any)[element.purpose as string]; return element;})
       this.pageNum = page.pageable.pageNumber;
       this.pageSize = page.pageable.pageSize;
       this.totalPages = page.totalPages;

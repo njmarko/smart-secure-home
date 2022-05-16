@@ -22,8 +22,8 @@
         name="signatureAlg"
       >
         <mat-option
-          *ngFor="let signatureAlg of signatureAlgs"
-          [value]="signatureAlg"
+          *ngFor="let signatureAlg of signatureAlgLabelsRef; let i = index"
+          [value]="i"
           >{{ signatureAlg }}</mat-option
         >
       </mat-select>
@@ -54,7 +54,7 @@
     mat-align-tabs="center"
   >
     <mat-tab
-      *ngFor="let template of extensionTemplates"
+      *ngFor="let template of extensionTemplateLabelsRef"
       [label]="template"
       class="centeringContainer"
     >
@@ -91,9 +91,9 @@
       <section aria-labelledby="kilabel">
         <mat-checkbox
           class="margins"
-          *ngFor="let usage of keyUsages"
-          [checked]="newCert.extensions.keyUsage.keyUsages.includes(usage)"
-          (change)="updateCheckedKeyUsages(usage, $event)"
+          *ngFor="let usage of kuLabelsRef; let i=index"
+          [checked]="newCert.extensions.keyUsage.keyUsages.includes(i)"
+          (change)="updateCheckedKeyUsages(i, $event)"
           >{{ usage }}
         </mat-checkbox>
       </section>
@@ -105,9 +105,9 @@
       <section aria-labelledby="ekilabel">
         <mat-checkbox
           class="margins"
-          *ngFor="let usage of extendedKeyUsages"
-          [checked]="newCert.extensions.extendedKeyUsage.keyUsages.includes(usage)"
-          (change)="updateCheckedExtendedKeyUsages(usage, $event)"
+          *ngFor="let usage of ekuLabelsRef; let i=index"
+          [checked]="newCert.extensions.extendedKeyUsage.keyUsages.includes(i)"
+          (change)="updateCheckedExtendedKeyUsages(i, $event)"
           >{{ usage }}
         </mat-checkbox>
       </section>

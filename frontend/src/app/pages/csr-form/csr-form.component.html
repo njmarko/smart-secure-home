@@ -111,8 +111,8 @@
             name="purpose"
           >
             <mat-option
-              *ngFor="let purpose of certificatePurposes"
-              [value]="purpose"
+              *ngFor="let purpose of certificatePurposeLabels; let i=index"
+              [value]="i"
               >{{ purpose }}</mat-option
             >
           </mat-select>

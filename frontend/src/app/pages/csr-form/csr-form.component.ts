@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import Csr from 'src/app/model/certificates/Csr';
 import { CertificateService } from 'src/app/services/certificate.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import CertificatePurpose from 'src/app/model/certificates/enum/CerificatePurpose';
+import {CertificatePurpose, certificatePurposeLabels} from 'src/app/model/certificates/enum/CerificatePurpose';
 
 @Component({
   selector: 'app-csr-form',
@@ -12,7 +12,8 @@ import CertificatePurpose from 'src/app/model/certificates/enum/CerificatePurpos
 export class CsrFormComponent implements OnInit {
   csr!: Csr;
   csrPem: string = '';
-  certificatePurposes = Object.values(CertificatePurpose);
+  certificatePurposeRef = CertificatePurpose;
+  certificatePurposeLabels = certificatePurposeLabels;
 
   constructor(
     private _certificateService: CertificateService,

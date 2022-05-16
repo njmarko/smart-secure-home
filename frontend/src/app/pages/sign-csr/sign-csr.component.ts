@@ -5,12 +5,13 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import Csr from 'src/app/model/certificates/Csr';
 import CsrSignData from 'src/app/model/certificates/CsrSignData';
-import SignatureAlg from 'src/app/model/certificates/enum/SignatureAlg';
+import { certificatePurposeLabels } from 'src/app/model/certificates/enum/CerificatePurpose';
+import {SignatureAlg, signatureAlgLabels} from 'src/app/model/certificates/enum/SignatureAlg';
 import AuthorityKeyIdentifier from 'src/app/model/extensions/AuthorityKeyIdentifier';
 import BasicConstraints from 'src/app/model/extensions/BasicConstraints';
-import ExtendedKeyUsageEnum from 'src/app/model/extensions/enum/ExtendedKeyUsageEnum';
-import ExtensionTemplate from 'src/app/model/extensions/enum/ExtensionTemplate';
-import KeyUsageEnum from 'src/app/model/extensions/enum/KeyUsageEnum';
+import {ExtendedKeyUsageEnum, ekuLabels} from 'src/app/model/extensions/enum/ExtendedKeyUsageEnum';
+import {ExtensionTemplate, extensionTemplateLabels} from 'src/app/model/extensions/enum/ExtensionTemplate';
+import {KeyUsageEnum, kuLabels} from 'src/app/model/extensions/enum/KeyUsageEnum';
 import Extensions from 'src/app/model/extensions/Extensions';
 import { SubjectKeyIdentifier } from 'src/app/model/extensions/SubjectKeyIdentifier';
 import { CertificateService } from 'src/app/services/certificate.service';
@@ -24,18 +25,18 @@ export class SignCsrComponent implements OnInit {
 
   csr!: Csr;
   newCert!: CsrSignData;
-  signatureAlgs = Object.values(SignatureAlg);
+  SignatureAlgRef = SignatureAlg;
+  signatureAlgLabelsRef = signatureAlgLabels;
+  certificatePurposeLabelsRef = certificatePurposeLabels;
   subjectName!: string;
 
   //extensions
-  extensionTemplates = Object.values(ExtensionTemplate);
-  keyUsages = Object.values(KeyUsageEnum);
-  extendedKeyUsages = Object.values(ExtendedKeyUsageEnum);
-  keyUsageEnumRef = KeyUsageEnum;
-  ExtendedKeyUsageEnumRef = ExtendedKeyUsageEnum;
-  showsan: boolean = false;
-  showbc: boolean = true;
-  showeku: boolean = false;
+  ExtensionTemplateRef = ExtensionTemplate;
+  extensionTemplateLabelsRef = extensionTemplateLabels;
+  ExtendedKeyUsageRef = ExtendedKeyUsageEnum;
+  ekuLabelsRef = ekuLabels;
+  KeyUsageRef = KeyUsageEnum;
+  kuLabelsRef = kuLabels;
 
   range = new FormGroup({
     start: new FormControl(),
@@ -48,8 +49,9 @@ export class SignCsrComponent implements OnInit {
     this.newCert.validityStart = new Date(this.range.value.start);
     this.newCert.validityEnd = new Date(this.range.value.end);
     this.checkExtensionsUsed()
-    this._certificateService.signCsr(this.newCert);
-    this.router.navigate(['/certificates'])
+    this._certificateService.signCsr(this.newCert).subscribe(()=>{
+      this.router.navigate(['/certificates'])
+    });
   }
 
   checkExtensionsUsed() {
@@ -93,7 +95,7 @@ export class SignCsrComponent implements OnInit {
   }
 
   changeTemplate(event: MatTabChangeEvent) {
-    switch (event.tab.textLabel) {
+    switch (event.tab.position) {
       case ExtensionTemplate.CA: {
         this.newCert.extensions = {
           keyUsage: { keyUsages: [KeyUsageEnum.CERTIFICATE_SIGNING, KeyUsageEnum.CRL_SIGN], isUsed: true },
@@ -103,9 +105,6 @@ export class SignCsrComponent implements OnInit {
           extendedKeyUsage: { keyUsages: [], isUsed: false },
           subjectAlternativeName: { name: "", isUsed: false },
         };
-        this.showsan = false;
-        this.showbc = true;
-        this.showeku = false;
         break;
       }
       case ExtensionTemplate.SSL_SERVER: {
@@ -117,9 +116,6 @@ export class SignCsrComponent implements OnInit {
           extendedKeyUsage: { keyUsages: [ExtendedKeyUsageEnum.TLS_WEB_SERVER_AUTHENTICATION], isUsed: true },
           subjectAlternativeName: { name: "", isUsed: false },
         }
-        this.showsan = true;
-        this.showbc = false;
-        this.showeku = true;
         break;
       }
       case ExtensionTemplate.SSL_CLIENT: {
@@ -131,9 +127,6 @@ export class SignCsrComponent implements OnInit {
           extendedKeyUsage: { keyUsages: [ExtendedKeyUsageEnum.TLS_WEB_CLIENT_AUTHENTICATION], isUsed: true },
           subjectAlternativeName: { name: "", isUsed: false },
         }
-        this.showsan = false;
-        this.showbc = false;
-        this.showeku = true;
         break;
       }
       case ExtensionTemplate.CODE_SIGNING: {
@@ -145,28 +138,25 @@ export class SignCsrComponent implements OnInit {
           extendedKeyUsage: { keyUsages: [ExtendedKeyUsageEnum.CODE_SIGNING], isUsed: true },
           subjectAlternativeName: { name: "", isUsed: false },
         }
-        this.showsan = false;
-        this.showbc = false;
-        this.showeku = true;
         break;
       }
     }
 
   }
 
-  updateCheckedKeyUsages(usage: string, event: MatCheckboxChange) {
+  updateCheckedKeyUsages(i: number, event: MatCheckboxChange) {
     if (event.checked) {
-      this.newCert.extensions.keyUsage.keyUsages.push(usage as KeyUsageEnum)
+      this.newCert.extensions.keyUsage.keyUsages.push(i)
     } else {
-      this.newCert.extensions.keyUsage.keyUsages = this.newCert.extensions.keyUsage.keyUsages.filter(elem => elem != usage)
+      this.newCert.extensions.keyUsage.keyUsages = this.newCert.extensions.keyUsage.keyUsages.filter(elem => elem != i)
     }
   }
 
-  updateCheckedExtendedKeyUsages(usage: string, event: MatCheckboxChange) {
+  updateCheckedExtendedKeyUsages(i: number, event: MatCheckboxChange) {
     if (event.checked) {
-      this.newCert.extensions.extendedKeyUsage.keyUsages.push(usage as ExtendedKeyUsageEnum)
+      this.newCert.extensions.extendedKeyUsage.keyUsages.push(i)
     } else {
-      this.newCert.extensions.extendedKeyUsage.keyUsages = this.newCert.extensions.extendedKeyUsage.keyUsages.filter(elem => elem != usage)
+      this.newCert.extensions.extendedKeyUsage.keyUsages = this.newCert.extensions.extendedKeyUsage.keyUsages.filter(elem => elem != i)
     }
   }
 
