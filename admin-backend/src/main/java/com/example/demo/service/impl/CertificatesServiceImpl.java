@@ -30,6 +30,7 @@ import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
@@ -83,14 +83,16 @@ public class CertificatesServiceImpl implements CertificatesService {
     }
 
     @Override
-    public List<X509Certificate> read() {
-        return certificateDataService.readNonInvalidated()
+    public Page<X509Certificate> read(Pageable pageable) {
+        var results = certificateDataService.readNonInvalidated(pageable);
+        return new PageImpl<>(results.getContent()
                 .stream()
                 .map(CertificateData::getAlias)
                 .map(keystoreService::readOne)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()),
+                results.getPageable(), results.getTotalElements());
     }
 
     @Override
@@ -196,7 +198,7 @@ public class CertificatesServiceImpl implements CertificatesService {
         JcaContentSignerBuilder builder = new JcaContentSignerBuilder(signAlgoFromEnum(algo) + "Encryption");
         builder = builder.setProvider("BC");
 
-        var issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/"+keystoreFile, superAdminAlias, keystorePassword.toCharArray(), superAdminPassword.toCharArray());
+        var issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreFile, superAdminAlias, keystorePassword.toCharArray(), superAdminPassword.toCharArray());
 
         ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
         X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
@@ -230,13 +232,13 @@ public class CertificatesServiceImpl implements CertificatesService {
         X509Certificate cert = (X509Certificate) cf.generateCertificate(is1);
         is1.close();
 
-        java.security.cert.Certificate[] iusserCertificates = keystoreService.readCertificateChain("src/main/resources/static/"+keystoreFile, keystorePassword, superAdminAlias);
+        java.security.cert.Certificate[] iusserCertificates = keystoreService.readCertificateChain("src/main/resources/static/" + keystoreFile, keystorePassword, superAdminAlias);
         List<java.security.cert.Certificate> issuerCertChain = Arrays.stream(iusserCertificates).collect(Collectors.toList());
         issuerCertChain.add(0, cert);
         java.security.cert.Certificate[] chain = issuerCertChain.toArray(new java.security.cert.Certificate[0]);
 
         keystoreService.writeChain(alias, keyPair.getPrivate(), superAdminPassword.toCharArray(), chain);
-        keystoreService.saveKeyStore("src/main/resources/static/"+keystoreFile, keystorePassword.toCharArray());
+        keystoreService.saveKeyStore("src/main/resources/static/" + keystoreFile, keystorePassword.toCharArray());
     }
 
     private PKCS10CertificationRequest fromDto(CSR csr, KeyPair keyPair, SignatureAlgEnumDTO algo) throws Exception {

@@ -8,11 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.security.cert.X509Certificate;
-import java.util.List;
 
 public interface CertificatesService {
 
-    List<X509Certificate> read();
+    Page<X509Certificate> read(Pageable pageable);
 
     Page<CSR> readCsrData(Pageable pageable);
 

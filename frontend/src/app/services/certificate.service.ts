@@ -26,12 +26,18 @@ export class CertificateService {
     this._csrsSource.next(csrs);
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getCertificates(): Observable<ReadCertificateResponse[]> {
-    // TODO: Ko ima volje nek podesi onaj proxy i/ili putanju u env xD
-    return this.http.get<ReadCertificateResponse[]>(
-      'http://localhost:8082/api/certificates'
+  getCertificates(page: number, size: number) {
+    return this.http.get<PaginatedResponse<ReadCertificateResponse>>(
+      `${environment.adminAppUrl}certificates`,
+      {
+        params: {
+          page: page,
+          size: size,
+          sort: 'id,asc',
+        },
+      }
     );
   }
 
@@ -75,11 +81,15 @@ export class CertificateService {
   }
 
   readOne(id: number): Observable<ReadCertificateResponse> {
-    return this.http.get<ReadCertificateResponse>(`${environment.adminAppUrl}certificates/${id}`);
+    return this.http.get<ReadCertificateResponse>(
+      `${environment.adminAppUrl}certificates/${id}`
+    );
   }
 
   readCsr(id: number): Observable<Csr> {
-    return this.http.get<Csr>(`${environment.adminAppUrl}certificates/csr/${id}`);
+    return this.http.get<Csr>(
+      `${environment.adminAppUrl}certificates/csr/${id}`
+    );
   }
 
   generateCSR(csr: Csr | null) {
@@ -88,19 +98,21 @@ export class CertificateService {
         .post(environment.adminAppUrl + 'certificates/generateCSR', csr, {
           responseType: 'json',
           observe: 'response',
-        })
-    } else return null
+        }
+      );
+    } else return null;
   }
 
   sendCSR(csrPem: string | null) {
     if (csrPem) {
-      return this.http
-        .post(environment.adminAppUrl + 'certificates/addCSR', csrPem, {
+      return this.http.post(
+        environment.adminAppUrl + 'certificates/addCSR',
+        csrPem,
+        {
           responseType: 'json',
           observe: 'response',
-        })
-    } else return null
+        }
+      );
+    } else return null;
   }
-
-
 }
