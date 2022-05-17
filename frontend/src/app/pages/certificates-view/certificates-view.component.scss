@@ -7,8 +7,19 @@
   display: grid;
   place-items: center;
   margin-top: 24px;
+  margin: 15px;
+  padding: 10px;
 }
 
 table {
   width: 100%;
+}
+
+#pagination-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+#spinner-box {
+  margin-top: auto;
 }
