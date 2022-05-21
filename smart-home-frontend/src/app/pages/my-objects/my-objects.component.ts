@@ -7,6 +7,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyObjectsComponent implements OnInit {
 
+  myObjects = [
+    {
+      name: "Kuca"
+    },
+    {
+      name: "Supa"
+    },
+    {
+      name: "Pusnica"
+    },
+    {
+      name: "Kuca za kera"
+    },
+    {
+      name: "Pomocni objekat"
+    }
+  ]
+
   constructor() { }
 
   ngOnInit(): void {

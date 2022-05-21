@@ -1,1 +1,14 @@
-<p>my-objects works!</p>
+<mat-card>
+    <mat-card-title>
+        My Objects
+    </mat-card-title>
+    <mat-card-content>
+        <mat-list>
+            <mat-list-item *ngFor="let obj of myObjects"> {{obj.name}} </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button color="primary">I don't do anything.</button>
+        <button mat-button color="primary">Me neither :(</button>
+    </mat-card-actions>
+</mat-card>
