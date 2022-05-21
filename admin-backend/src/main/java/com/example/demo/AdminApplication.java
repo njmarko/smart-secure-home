@@ -3,6 +3,8 @@ package com.example.demo;
 import com.example.demo.model.CertificateData;
 import com.example.demo.repository.CertificateDataRepository;
 import com.example.demo.service.CertificatesService;
+import com.example.demo.service.EmailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,16 +14,11 @@ import org.springframework.context.annotation.Bean;
 import java.util.List;
 
 @SpringBootApplication
+@RequiredArgsConstructor
 public class AdminApplication {
-
+	private final EmailService emailService;
 	private final CertificatesService certificatesService;
 	private final CertificateDataRepository certificateDataRepository;
-
-	@Autowired
-	public AdminApplication(CertificatesService certificatesService, CertificateDataRepository certificateDataRepository) {
-		this.certificatesService = certificatesService;
-		this.certificateDataRepository = certificateDataRepository;
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(AdminApplication.class, args);

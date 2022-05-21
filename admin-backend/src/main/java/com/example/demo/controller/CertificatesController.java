@@ -12,8 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/certificates")
@@ -48,7 +50,6 @@ public class CertificatesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void saveCertificate(@RequestBody CsrSignDataDTO csrSignDataDTO) throws Exception {
-        //TODO pravljenje sertifikata
         certificatesService.create(csrSignDataDTO);
     }
 
@@ -60,7 +61,6 @@ public class CertificatesController {
 
     @GetMapping(value = "/{serialNumber}/validity")
     public CheckValidityResponse validity(@PathVariable Integer serialNumber) {
-        // TODO: Maybe here we want to keep some mapping between alias and certificate's serial number
         var certificate = certificatesService.read(serialNumber);
         return toCheckValidityResponse.convert(certificate);
     }
@@ -74,6 +74,14 @@ public class CertificatesController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void invalidate(@PathVariable Integer serialNumber, @RequestBody InvalidateCertificateRequest request) {
         certificatesService.invalidate(serialNumber, request.getReason());
+    }
+
+    @GetMapping(value = "csr-verification")
+    public void verifyCSR(@RequestParam("token") String token) {
+        if (Objects.isNull(token)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        certificatesService.verifyCSR(token);
     }
 
     @PostMapping(value = "/generateCSR")

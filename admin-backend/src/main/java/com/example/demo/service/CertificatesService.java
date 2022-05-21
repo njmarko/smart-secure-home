@@ -32,4 +32,6 @@ public interface CertificatesService {
     void create(CsrSignDataDTO request) throws Exception;
 
     CSR readCsr(Integer id);
+
+    void verifyCSR(String token);
 }

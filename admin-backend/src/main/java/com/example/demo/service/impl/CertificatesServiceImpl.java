@@ -3,13 +3,13 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.CsrSignDataDTO;
 import com.example.demo.dto.SignatureAlgEnumDTO;
 import com.example.demo.model.CSR;
+import com.example.demo.model.CSRVerificationToken;
 import com.example.demo.model.CertificateData;
 import com.example.demo.model.RevocationReason;
 import com.example.demo.repository.CSRRepository;
-import com.example.demo.service.CertificateDataService;
-import com.example.demo.service.CertificatesService;
-import com.example.demo.service.KeystoreService;
-import com.example.demo.service.X500DetailsService;
+import com.example.demo.repository.CSRVerificationTokenRepository;
+import com.example.demo.service.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -50,10 +50,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CertificatesServiceImpl implements CertificatesService {
     private final KeystoreService keystoreService;
+    private final CSRVerificationTokenRepository verificationTokenRepository;
     private final CertificateDataService certificateDataService;
     private final X500DetailsService x500DetailsService;
+    private final EmailService emailService;
     private final CSRRepository csrRepository;
 
     @Value("${keystore.name}")
@@ -67,15 +70,6 @@ public class CertificatesServiceImpl implements CertificatesService {
 
     @Value("${keystore.superAdmin.password}")
     private String superAdminPassword;
-
-    @Autowired
-    public CertificatesServiceImpl(KeystoreService keystoreService, CertificateDataService certificateDataService,
-                                   X500DetailsService x500DetailsService, CSRRepository csrRepository) {
-        this.keystoreService = keystoreService;
-        this.certificateDataService = certificateDataService;
-        this.x500DetailsService = x500DetailsService;
-        this.csrRepository = csrRepository;
-    }
 
     @PostConstruct
     public void init() {
@@ -97,7 +91,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 
     @Override
     public Page<CSR> readCsrData(Pageable pageable) {
-        return csrRepository.findAllByIsActiveTrue(pageable);
+        return csrRepository.findByIsActiveTrueAndVerifiedTrue(pageable);
     }
 
     @Override
@@ -117,6 +111,7 @@ public class CertificatesServiceImpl implements CertificatesService {
     @Override
     public void saveCSR(CSR csr) {
         csrRepository.save(csr);
+        sendVerificationEmail(csr);
     }
 
     @Override
@@ -141,7 +136,17 @@ public class CertificatesServiceImpl implements CertificatesService {
             createdCSR.setEmail(x500DetailsService.getEmail(x500Name));
 
             this.saveCSR(createdCSR);
+            this.sendVerificationEmail(createdCSR);
         }
+    }
+
+    private void sendVerificationEmail(CSR csr) {
+        var token = new CSRVerificationToken(csr);
+        verificationTokenRepository.save(token);
+        // TODO: Update this :)
+        var tokenUrl = "http://localhost:8082/api/certificates/csr-verification?token=" + token;
+        String message = String.format("Click on this totally not suspicious link '%s' to verify CSR.", tokenUrl);
+        emailService.sendMessage(csr.getEmail(), "CSR verification token", tokenUrl);
     }
 
     @Override
@@ -192,6 +197,17 @@ public class CertificatesServiceImpl implements CertificatesService {
         return readForUpdate(id);
     }
 
+    @Override
+    @Transactional
+    public void verifyCSR(String token) {
+        var verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(IllegalArgumentException::new);
+        var csr = verificationToken.getCsr();
+        if (verificationToken.isExpired()) {
+            throw new RuntimeException("Token expired.");
+        }
+        csr.setVerified(true);
+    }
+
     private void signCertificate(KeyPair keyPair, PKCS10CertificationRequest request, CsrSignDataDTO dto, SignatureAlgEnumDTO algo) throws Exception {
         var alias = UUID.randomUUID().toString();
         var certificateData = certificateDataService.save(new CertificateData(alias));
@@ -206,7 +222,6 @@ public class CertificatesServiceImpl implements CertificatesService {
                 dto.getValidityEnd(), request.getSubject(), request.getSubjectPublicKeyInfo());
 
         // Add extensions
-        // TODO: Drugi parametera je isCritial vrednost
         var extensions = dto.getExtensions();
         // Basic constraints
         var basicConstraints = extensions.getBasicConstraints();
