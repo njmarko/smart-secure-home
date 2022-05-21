@@ -8,6 +8,7 @@ import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +26,14 @@ public class DataLoader implements ApplicationRunner {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
         User user1 = new User();
-        user1.setUsername("Pera");
-        user1.setPassword("Pera");
+        user1.setUsername("pera");
+        user1.setPassword(passwordEncoder.encode("Test$123"));
         user1.setFirstName("Pera");
         user1.setLastName("Peric");
         user1.setEmail("pera@yahoo.com");

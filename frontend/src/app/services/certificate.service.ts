@@ -37,7 +37,7 @@ export class CertificateService {
           size: size,
           sort: 'id,asc',
         },
-      }
+      },
     );
   }
 

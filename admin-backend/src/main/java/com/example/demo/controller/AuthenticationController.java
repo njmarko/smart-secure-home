@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
-
-
     @Autowired
     private TokenUtils tokenUtils;
 
@@ -61,7 +59,8 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
 
         // Kreiraj cookie
-        // String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
+//         String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
+//        String cookie = "Fingerprint" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
         String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
 
         HttpHeaders headers = new HttpHeaders();

@@ -45,7 +45,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { CertificateDetailsComponent } from './pages/certificate-details/certificate-details.component';
-
+import { LoginComponent } from './pages/login/login.component';
+import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 @NgModule({
   declarations: [
     // page components
@@ -60,6 +61,7 @@ import { CertificateDetailsComponent } from './pages/certificate-details/certifi
     SuchEmptyComponent,
     ConfirmationDialogComponent,
     CertificateDetailsComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -103,7 +105,9 @@ import { CertificateDetailsComponent } from './pages/certificate-details/certifi
     MatTabsModule,
     MatChipsModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
 })
-export class AppModule { }
+export class AppModule {}
