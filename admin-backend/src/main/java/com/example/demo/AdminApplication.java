@@ -5,7 +5,6 @@ import com.example.demo.repository.CertificateDataRepository;
 import com.example.demo.service.CertificatesService;
 import com.example.demo.service.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
