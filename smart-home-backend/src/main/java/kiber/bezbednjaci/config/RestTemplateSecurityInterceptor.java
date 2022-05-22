@@ -1,7 +1,6 @@
 package kiber.bezbednjaci.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -12,6 +11,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -32,6 +32,9 @@ public class RestTemplateSecurityInterceptor implements ClientHttpRequestInterce
     }
 
     private Optional<Cookie> getAuthCookie() {
+        if (Objects.isNull(httpServletRequest.getCookies())) {
+            return Optional.empty();
+        }
         return Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> cookie.getName().equals("Fingerprint")).findAny();
     }
 }

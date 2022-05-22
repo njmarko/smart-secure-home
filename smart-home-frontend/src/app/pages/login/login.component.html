@@ -3,15 +3,15 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <h2>Sign In</h2>
             <mat-form-field class="full-width-input">
-                <input matInput placeholder="Email" formControlName="email" required />
-                <mat-error> Please provide a valid email address. </mat-error>
+                <input matInput placeholder="Username" formControlName="username" required />
+                <mat-error> Please provide a valid username. </mat-error>
             </mat-form-field>
             <mat-form-field class="full-width-input">
                 <input matInput type="password" placeholder="Password" formControlName="password" required />
                 <mat-error> Please provide a valid password. </mat-error>
             </mat-form-field>
             <mat-error *ngIf="invalidUser">
-                Invalid email and/or password.
+                Invalid username and/or password.
             </mat-error>
             <button id="signIn" mat-raised-button [disabled]="!form.valid" color="primary">
                 Sign In
