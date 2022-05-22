@@ -1,8 +1,9 @@
 package com.example.demo;
 
-import com.example.demo.model.Privilege;
+import com.example.demo.model.RealEstate;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
+import com.example.demo.repository.RealEstateRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
-
     private final RoleRepository roleRepository;
-
     private final UserRepository userRepository;
-
+    private final RealEstateRepository realEstateRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -51,7 +48,16 @@ public class DataLoader implements ApplicationRunner {
 
         user1.setRoles(List.of(superAdmin));
 
+        var home = new RealEstate("Kuca").addStakeholder(user1);
+        var dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);
+        var helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
+
+        user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
+
         userRepository.save(user1);
+        realEstateRepository.save(home);
+        realEstateRepository.save(dogHouse);
+        realEstateRepository.save(helperObject);
 
     }
 }

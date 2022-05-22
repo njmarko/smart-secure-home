@@ -21,8 +21,7 @@ public class UserController {
     private final UserService userService;
     private final EntityConverter<RealEstate, ReadRealEstateResponse> toRealEstateResponse;
 
-    //TODO: PreAuthorizer
-    @GetMapping("my-objects")
+    @GetMapping("my-real-estates")
     public List<ReadRealEstateResponse> getMyRealEstates(Principal principal) {
         var realEstates = userService.getMyRealEstates(principal.getName());
         return toRealEstateResponse.convert(realEstates);

@@ -24,4 +24,14 @@ public class RealEstate extends BaseEntity {
     public RealEstate() {
         super();
     }
+
+    public RealEstate(String name) {
+        this();
+        this.name = name;
+    }
+
+    public RealEstate addStakeholder(User user) {
+        stakeholders.add(user);
+        return this;
+    }
 }

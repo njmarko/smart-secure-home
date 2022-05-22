@@ -60,6 +60,11 @@ public class User extends BaseEntity implements UserDetails {
         super();
     }
 
+    public User addRealEstate(RealEstate realEstate) {
+        realEstates.add(realEstate);
+        return this;
+    }
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
