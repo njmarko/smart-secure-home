@@ -7,6 +7,7 @@ import { CsrsViewComponent } from './pages/csrs-view/csrs-view.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SignCsrComponent } from './pages/sign-csr/sign-csr.component';
+import { UsersViewComponent } from './pages/users-view/users-view.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'certificates/details/:id', component: CertificateDetailsComponent },
   { path: 'csrs/sign-csr/:id', component: SignCsrComponent },
   { path: 'login', component:  LoginComponent},
+  { path: 'users', component:  UsersViewComponent},
 ];
 
 @NgModule({

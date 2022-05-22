@@ -47,6 +47,7 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { CertificateDetailsComponent } from './pages/certificate-details/certificate-details.component';
 import { LoginComponent } from './pages/login/login.component';
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
+import { UsersViewComponent } from './pages/users-view/users-view.component';
 @NgModule({
   declarations: [
     // page components
@@ -62,6 +63,7 @@ import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
     ConfirmationDialogComponent,
     CertificateDetailsComponent,
     LoginComponent,
+    UsersViewComponent,
   ],
   imports: [
     BrowserModule,
