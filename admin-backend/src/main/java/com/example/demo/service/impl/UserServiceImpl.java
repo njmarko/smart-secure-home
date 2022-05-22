@@ -40,6 +40,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
+	public List<RealEstate> getMyRealEstates(String username) {
+		var user = findByUsername(username);
+		return user.getRealEstates().stream().filter(BaseEntity::getIsActive).collect(Collectors.toList());
+	}
+
+	@Override
 	public User save(UserRequest userRequest) {
 		User u = new User();
 		u.setUsername(userRequest.getUsername());
@@ -58,13 +65,6 @@ public class UserServiceImpl implements UserService {
 		u.setRoles(roles);
 		
 		return this.userRepository.save(u);
-	}
-
-	@Override
-	@Transactional
-	public List<RealEstate> getMyRealEstates(String username) {
-		var user = findByUsername(username);
-		return user.getRealEstates().stream().filter(BaseEntity::getIsActive).collect(Collectors.toList());
 	}
 
 }
