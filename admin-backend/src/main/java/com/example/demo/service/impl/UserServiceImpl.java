@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public List<User> getUsersBellowMyRole(String username) {
 		var user = findByUsername(username);
 		var myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);

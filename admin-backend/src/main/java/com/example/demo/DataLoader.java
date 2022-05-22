@@ -34,15 +34,6 @@ public class DataLoader implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        User user1 = new User();
-        user1.setUsername("pera");
-        user1.setPassword(passwordEncoder.encode("Test$123"));
-        user1.setFirstName("Pera");
-        user1.setLastName("Peric");
-        user1.setEmail("pera@yahoo.com");
-        user1.setEnabled(true);
-        user1.setLastPasswordResetDate(Timestamp.valueOf(LocalDateTime.now()));
-
         // CREATE PRIVILEGES HERE...
         var createRealEstatePrivilege = createPrivilege("CREATE_REAL_ESTATE");
         var readMyRealEstatesPrivilege = createPrivilege("READ_MY_REAL_ESTATES");
@@ -54,21 +45,44 @@ public class DataLoader implements ApplicationRunner {
         // this is used when we look for possible user to assigned them to objects
         var adminRole = createRole("ROLE_ADMIN", 100, createRealEstatePrivilege, readMyRealEstatesPrivilege);
         var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000, createRealEstatePrivilege, readMyRealEstatesPrivilege);
-        roleRepository.save(adminRole);
-        roleRepository.save(superAdminRole);
+        var ownerRole = createRole("ROLE_OWNER", 99, createRealEstatePrivilege, readMyRealEstatesPrivilege);
+        var tenantRole = createRole("ROLE_TENANT", 98, readMyRealEstatesPrivilege);
+        roleRepository.saveAll(List.of(
+                superAdminRole, adminRole, ownerRole, tenantRole
+        ));
 
-        user1.setRoles(List.of(superAdminRole));
+        // CREATE USERS HERE...
+        var user1 = createUser("Pera", "Peric", "pera", "Test$123", superAdminRole);
+        var user2 = createUser("Pera", "Peric", "manji pera", "Test$123", adminRole);
+        var user3 = createUser("Pera", "Peric", "jos manji pera", "Test$123", ownerRole);
+        var user4 = createUser("Pera", "Peric", "najmanji pera", "Test$123", tenantRole);
 
+        // CREATE REAL ESTATES HERE...
         var home = new RealEstate("Kuca").addStakeholder(user1);
         var dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);
         var helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
 
         user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
 
-        userRepository.save(user1);
-        realEstateRepository.save(home);
-        realEstateRepository.save(dogHouse);
-        realEstateRepository.save(helperObject);
+        userRepository.saveAll(
+                List.of(user1, user2, user3, user4)
+        );
+        realEstateRepository.saveAll(
+                List.of(home, dogHouse, helperObject)
+        );
+    }
+
+    private User createUser(String firstName, String lastName, String username, String password, Role... roles) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(String.format("%s@gmail.com", username));
+        user.setEnabled(true);
+        user.setLastPasswordResetDate(Timestamp.valueOf(LocalDateTime.now()));
+        user.setRoles(List.of(roles));
+        return user;
     }
 
     private Privilege createPrivilege(String name) {
