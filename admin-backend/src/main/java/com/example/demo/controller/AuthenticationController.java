@@ -5,38 +5,34 @@ import com.example.demo.dto.UserRequest;
 import com.example.demo.dto.UserTokenState;
 import com.example.demo.exception.ResourceConflictException;
 import com.example.demo.model.User;
+import com.example.demo.service.BlacklistedTokenService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.TokenUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AuthenticationController {
-
-    @Autowired
-    private TokenUtils tokenUtils;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private UserService userService;
+    private final TokenUtils tokenUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final BlacklistedTokenService blacklistedTokenService;
 
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -89,5 +85,12 @@ public class AuthenticationController {
         User user = this.userService.save(userRequest);
 
         return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('BLACKLIST_JWT')")
+    @PutMapping("/blacklist/{token}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void blacklist(@PathVariable("token") String token) {
+        blacklistedTokenService.blacklist(token);
     }
 }

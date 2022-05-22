@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.auth.RestAuthenticationEntryPoint;
 import com.example.demo.auth.TokenAuthenticationFilter;
+import com.example.demo.service.BlacklistedTokenService;
 import com.example.demo.service.impl.CustomUserDetailsService;
 import com.example.demo.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final PasswordEncoder passwordEncoder;
+	private final BlacklistedTokenService blacklistedTokenService;
 
 	// Servis koji se koristi za citanje podataka o korisnicima aplikacije
 	private final CustomUserDetailsService customUserDetailsService;
@@ -88,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// za development svrhe ukljuci konfiguraciju za CORS iz WebConfig klase
 			.cors().and()
 			// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
-			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class);
+			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService, blacklistedTokenService), BasicAuthenticationFilter.class);
 		
 		// zbog jednostavnosti primera ne koristimo Anti-CSRF token (https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 		http.csrf().disable();

@@ -1,5 +1,6 @@
 package com.example.demo.auth;
 
+import com.example.demo.service.BlacklistedTokenService;
 import com.example.demo.util.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
@@ -14,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 // Filter koji ce presretati SVAKI zahtev klijenta ka serveru 
 // (sem nad putanjama navedenim u WebSecurityConfig.configure(WebSecurity web))
@@ -22,16 +22,16 @@ import java.util.Arrays;
 // Ukoliko token postoji, proverava se da li je validan. Ukoliko je sve u redu, postavlja se autentifikacija
 // u SecurityContext holder kako bi podaci o korisniku bili dostupni u ostalim delovima aplikacije gde su neophodni
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-
-	private TokenUtils tokenUtils;
-
-	private UserDetailsService userDetailsService;
+	private final TokenUtils tokenUtils;
+	private final UserDetailsService userDetailsService;
+	private final BlacklistedTokenService blacklistedTokenService;
 	
 	protected final Log LOGGER = LogFactory.getLog(getClass());
 
-	public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
+	public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService, BlacklistedTokenService blacklistedTokenService) {
 		this.tokenUtils = tokenHelper;
 		this.userDetailsService = userDetailsService;
+		this.blacklistedTokenService = blacklistedTokenService;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 		try {
 	
-			if (authToken != null) {
+			if (authToken != null && blacklistedTokenService.isAllowed(authToken)) {
 				
 				// 2. Citanje korisnickog imena iz tokena
 				username = tokenUtils.getUsernameFromToken(authToken);
