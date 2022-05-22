@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { RealEstate } from 'src/app/model/RealEstate';
+import { ErrorService } from 'src/app/services/error-service/error.service';
+import { UserService } from 'src/app/services/user-service/user.service';
 
 @Component({
   selector: 'app-my-objects',
@@ -7,27 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyObjectsComponent implements OnInit {
 
-  myObjects = [
-    {
-      name: "Kuca"
-    },
-    {
-      name: "Supa"
-    },
-    {
-      name: "Pusnica"
-    },
-    {
-      name: "Kuca za kera"
-    },
-    {
-      name: "Pomocni objekat"
-    }
-  ]
+  myObjects: RealEstate[] = [];
 
-  constructor() { }
+  constructor(private userService: UserService, private errorService: ErrorService) { }
 
   ngOnInit(): void {
+    this.userService.getMyRealEstates().subscribe({
+      next: response => this.myObjects = response,
+      error: err => this.errorService.handle(err)
+    });
   }
 
 }
