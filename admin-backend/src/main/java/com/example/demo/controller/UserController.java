@@ -5,9 +5,8 @@ import com.example.demo.model.RealEstate;
 import com.example.demo.service.UserService;
 import com.example.demo.support.EntityConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +20,7 @@ public class UserController {
     private final UserService userService;
     private final EntityConverter<RealEstate, ReadRealEstateResponse> toRealEstateResponse;
 
+    @PreAuthorize("hasAuthority('READ_MY_REAL_ESTATES')")
     @GetMapping("my-real-estates")
     public List<ReadRealEstateResponse> getMyRealEstates(Principal principal) {
         var realEstates = userService.getMyRealEstates(principal.getName());
