@@ -43,19 +43,33 @@ public class DataLoader implements ApplicationRunner {
         user1.setEnabled(true);
         user1.setLastPasswordResetDate(Timestamp.valueOf(LocalDateTime.now()));
 
+        User hajduk = new User();
+        hajduk.setUsername("hajduk");
+        hajduk.setPassword(passwordEncoder.encode("Hajduk1!"));
+        hajduk.setFirstName("Hajduk");
+        hajduk.setLastName("Dusan");
+        hajduk.setEmail("hajduk@goDaddy.com");
+        hajduk.setEnabled(true);
+        hajduk.setLastPasswordResetDate(Timestamp.valueOf(LocalDateTime.now()));
+
         // CREATE PRIVILEGES HERE...
         var createRealEstatePrivilege = createPrivilege("CREATE_REAL_ESTATE");
         var readMyRealEstatesPrivilege = createPrivilege("READ_MY_REAL_ESTATES");
+        var deleteUsersPrivilege = createPrivilege("DELETE_USERS");
+        var modifyRolePrivilege = createPrivilege("MODIFY_USER_ROLE");
         privilegeRepository.save(createRealEstatePrivilege);
         privilegeRepository.save(readMyRealEstatesPrivilege);
+        privilegeRepository.save(deleteUsersPrivilege);
+        privilegeRepository.save(modifyRolePrivilege);
 
         // CREATE ROLES HERE...
-        var adminRole = createRole("ROLE_ADMIN", createRealEstatePrivilege, readMyRealEstatesPrivilege);
-        var superAdminRole = createRole("ROLE_SUPER_ADMIN", createRealEstatePrivilege, readMyRealEstatesPrivilege);
+        var adminRole = createRole("ROLE_ADMIN", createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
+        var superAdminRole = createRole("ROLE_SUPER_ADMIN", createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
         roleRepository.save(adminRole);
         roleRepository.save(superAdminRole);
 
         user1.setRoles(List.of(superAdminRole));
+        hajduk.setRoles(List.of(adminRole));
 
         var home = new RealEstate("Kuca").addStakeholder(user1);
         var dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);

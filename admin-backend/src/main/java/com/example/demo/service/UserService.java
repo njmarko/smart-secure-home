@@ -12,4 +12,6 @@ public interface UserService {
     List<User> findAll ();
 	User save(UserRequest userRequest);
     List<RealEstate> getMyRealEstates(String username);
+    void deleteUser(String username);
+    void modifyRole(String username, String roleName);
 }

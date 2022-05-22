@@ -6,7 +6,11 @@ import com.example.demo.service.UserService;
 import com.example.demo.support.EntityConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +31,15 @@ public class UserController {
         return toRealEstateResponse.convert(realEstates);
     }
 
-    // @PostMapping("{userId}/modifyRole")
-    // public void modifyRole(@RequestBody RoleDTO roleDTO){
+    @PreAuthorize("hasAuthority('MODIFY_USER_ROLE')")
+    @PostMapping("{username}/modifyRole/{roleName}")
+    public void modifyRole(@PathVariable String roleName, @PathVariable String username){
+        userService.modifyRole(username, roleName);
+    }
 
-    // }
+    @PreAuthorize("hasAuthority('DELETE_USERS')")
+    @DeleteMapping("{username}")
+    public void deleteUser(@PathVariable String username ){
+        userService.deleteUser(username);
+    }
 }

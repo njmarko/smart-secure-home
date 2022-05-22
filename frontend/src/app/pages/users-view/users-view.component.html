@@ -76,14 +76,19 @@
 
         <!-- Actions Column -->
         <ng-container matColumnDef="Actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <a [routerLink]="'sign-csr/' + element.id" mat-stroked-button
-              >Modify Role</a
-            >
-            <a [routerLink]="'sign-csr/' + element.id" mat-stroked-button
-              >Delete</a
-            >
+            <div>
+              <a
+                style="margin-right: 7px"
+                onclick="modifyRole(element.username)"
+                mat-stroked-button
+                >Modify Role</a
+              >
+              <a onclick="deleteUser(element.username)" mat-stroked-button
+                >Delete</a
+              >
+            </div>
           </td>
         </ng-container>
 
@@ -114,5 +119,12 @@
       </mat-paginator>
     </div>
   </div>
-  <button style="margin-top: 25px;" [routerLink]="" mat-stroked-button color="primary"><mat-icon>person_add</mat-icon> Add New</button>
+  <a
+    style="margin-top: 25px"
+    [routerLink]=""
+    mat-stroked-button
+    color="primary"
+  >
+    <mat-icon>person_add</mat-icon> Add New
+  </a>
 </div>

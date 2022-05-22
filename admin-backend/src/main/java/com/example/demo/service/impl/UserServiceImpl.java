@@ -5,6 +5,7 @@ import com.example.demo.model.BaseEntity;
 import com.example.demo.model.RealEstate;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
@@ -65,6 +66,21 @@ public class UserServiceImpl implements UserService {
 		u.setRoles(roles);
 		
 		return this.userRepository.save(u);
+	}
+
+	@Override
+	public void deleteUser(String username){
+		userRepository.deleteOneByUsername(username);
+	}
+
+	@Override
+	public void modifyRole(String username, String roleName) {
+		var roles = roleService.findByName(roleName);
+		var user = userRepository.findByUsername(username);
+
+		user.setRoles(roles);
+		
+		userRepository.save(user);
 	}
 
 }
