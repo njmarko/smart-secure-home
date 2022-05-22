@@ -129,19 +129,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void modifyRole(String username, String roleName, String issuerName) {
-		var myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		var issuer = userRepository.findByUsernameAndIsActiveTrue(issuerName);
+		var myRoleLevel = issuer.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
 		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 
-		var roles = roleService.findByName(roleName);
+		// provera da li rola koja se dodeljuje nije iznad role korisnika koji je pokrenuo akciju
+		var role = roleService.findByNameAndPriorityLessThanEqual(roleName, myRoleLevel);
+		
+		// provera da li je korisnik kome se dodeljuje rola ispod korisnika koji je pokrenuo akciju
 		var user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
 
 		// not authorized
-		if (user == null){
+		if (user == null || role == null){
 			System.out.println("=========================================== NOT AUTH ==========================================");
 			return;
 		}
 
-		user.setRoles(roles);
+		user.setRoles(List.of(role));
 		
 		userRepository.save(user);
 	}

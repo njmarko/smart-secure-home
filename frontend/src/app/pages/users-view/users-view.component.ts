@@ -95,4 +95,12 @@ export class UsersViewComponent implements OnInit {
   //   };
   // }
 
+  modifyRole(username : string){
+
+  }
+
+  deleteUser(username : string){
+
+  }
+
 }

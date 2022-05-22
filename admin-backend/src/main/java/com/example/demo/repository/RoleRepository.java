@@ -11,4 +11,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
 	@Query("select r from Role r where r.priority < :priority")
 	List<Role> findBellowPriority(Integer priority);
+
+    Role findByNameAndPriorityLessThanEqual(String name, Integer priority);
 }

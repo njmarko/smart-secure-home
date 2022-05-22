@@ -51,7 +51,7 @@ public class DataLoader implements ApplicationRunner {
         // this is used when we look for possible user to assigned them to objects
         var adminRole = createRole("ROLE_ADMIN", 100, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
         var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege, blacklistJwt);
-        var ownerRole = createRole("ROLE_OWNER", 99, createRealEstatePrivilege, readMyRealEstatesPrivilege);
+        var ownerRole = createRole("ROLE_OWNER", 99, createRealEstatePrivilege, readMyRealEstatesPrivilege, modifyRolePrivilege);
         var tenantRole = createRole("ROLE_TENANT", 98, readMyRealEstatesPrivilege);
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole

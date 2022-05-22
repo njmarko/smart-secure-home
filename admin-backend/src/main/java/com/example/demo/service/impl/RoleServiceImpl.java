@@ -25,6 +25,11 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
+  public Role findByNameAndPriorityLessThanEqual(String name, Integer priority) {
+    return this.roleRepository.findByNameAndPriorityLessThanEqual(name, priority);
+  }
+
+  @Override
   public List<Role> getRolesBellowPriority(Integer myRoleLevel) {
     return roleRepository.findBellowPriority(myRoleLevel);
   }

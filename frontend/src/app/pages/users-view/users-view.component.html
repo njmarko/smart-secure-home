@@ -79,14 +79,14 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
             <div>
-              <a
+              <button
                 style="margin-right: 7px"
-                onclick="modifyRole(element.username)"
+                (click)="modifyRole(element.username)"
                 mat-stroked-button
-                >Modify Role</a
+                >Modify Role</button
               >
-              <a onclick="deleteUser(element.username)" mat-stroked-button
-                >Delete</a
+              <button (click)="deleteUser(element.username)" mat-stroked-button
+                >Delete</button
               >
             </div>
           </td>

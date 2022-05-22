@@ -9,4 +9,6 @@ public interface RoleService {
 	List<Role> findByName(String name);
 
     List<Role> getRolesBellowPriority(Integer myRoleLevel);
+
+    Role findByNameAndPriorityLessThanEqual(String roleName, Integer myRoleLevel);
 }
