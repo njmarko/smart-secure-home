@@ -15,4 +15,6 @@ public interface UserService {
     void deleteUser(String username, String issuerName);
     void modifyRole(String username, String roleName, String issuerName);
     List<User> getUsersBellowMyRole(String username);
+
+    void tryLockAccount(String username);
 }

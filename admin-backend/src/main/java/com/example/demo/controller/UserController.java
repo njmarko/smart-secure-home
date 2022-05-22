@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ReadRealEstateResponse;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.model.RealEstate;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -24,6 +25,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final EntityConverter<RealEstate, ReadRealEstateResponse> toRealEstateResponse;
+    private final EntityConverter<User, UserResponse> toUserResponse;
 
     @PreAuthorize("hasAuthority('READ_MY_REAL_ESTATES')")
     @GetMapping("my-real-estates")
@@ -34,8 +36,9 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('CREATE_REAL_ESTATE')")
     @GetMapping("bellow-my-role")
-    public List<User> getUsersBellowMyRole(Principal principal) {
-        return userService.getUsersBellowMyRole(principal.getName());
+    public List<UserResponse> getUsersBellowMyRole(Principal principal) {
+        var users = userService.getUsersBellowMyRole(principal.getName());
+        return toUserResponse.convert(users);
     }
 
     @PreAuthorize("hasAuthority('MODIFY_USER_ROLE')")

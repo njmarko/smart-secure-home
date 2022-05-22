@@ -48,6 +48,9 @@ import { CertificateDetailsComponent } from './pages/certificate-details/certifi
 import { LoginComponent } from './pages/login/login.component';
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { UsersViewComponent } from './pages/users-view/users-view.component';
+import { CreateRealEstateComponent } from './pages/create-real-estate/create-real-estate.component';
+
+
 @NgModule({
   declarations: [
     // page components
@@ -64,6 +67,7 @@ import { UsersViewComponent } from './pages/users-view/users-view.component';
     CertificateDetailsComponent,
     LoginComponent,
     UsersViewComponent,
+    CreateRealEstateComponent,
   ],
   imports: [
     BrowserModule,
@@ -112,4 +116,4 @@ import { UsersViewComponent } from './pages/users-view/users-view.component';
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
 })
-export class AppModule {}
+export class AppModule { }
