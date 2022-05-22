@@ -12,4 +12,5 @@ public interface UserService {
     List<User> findAll ();
 	User save(UserRequest userRequest);
     List<RealEstate> getMyRealEstates(String username);
+    List<User> getUsersBellowMyRole(String username);
 }

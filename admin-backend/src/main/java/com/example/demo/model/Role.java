@@ -38,6 +38,9 @@ public class Role implements GrantedAuthority {
     @ManyToMany(mappedBy = "roles" , fetch = FetchType.LAZY)
     private Set<User> users;
 
+    @Column(name = "priority")
+    private Integer priority;
+
     @JsonIgnore
     @Override
     public String getAuthority() {

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ReadRealEstateResponse;
 import com.example.demo.model.RealEstate;
+import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import com.example.demo.support.EntityConverter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class UserController {
     public List<ReadRealEstateResponse> getMyRealEstates(Principal principal) {
         var realEstates = userService.getMyRealEstates(principal.getName());
         return toRealEstateResponse.convert(realEstates);
+    }
+
+    @PreAuthorize("hasAuthority('CREATE_REAL_ESTATE')")
+    @GetMapping("bellow-my-role")
+    public List<User> getUsersBellowMyRole(Principal principal) {
+        return userService.getUsersBellowMyRole(principal.getName());
     }
 
     // @PostMapping("{userId}/modifyRole")
