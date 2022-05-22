@@ -13,4 +13,6 @@ public interface UserService {
 	User save(UserRequest userRequest);
     List<RealEstate> getMyRealEstates(String username);
     List<User> getUsersBellowMyRole(String username);
+
+    void tryLockAccount(String username);
 }

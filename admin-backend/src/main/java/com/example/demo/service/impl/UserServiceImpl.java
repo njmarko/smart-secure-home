@@ -10,20 +10,28 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
+	private static final Integer CONSECUTIVE_SIGN_IN_MISTAKES_LIMIT = 5;
+	// TODO: Change this to smaller number if we are required to demonstrate this feature
+	private static final long LOCK_DURATION_SECONDS = 15*60L;
 	private final UserRepository userRepository;
 	private final RealEstateRepository realEstateRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -59,6 +67,21 @@ public class UserServiceImpl implements UserService {
 		var myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
 		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 		return findWithRoles(new HashSet<>(rolesBellowMine));
+	}
+
+	@Override
+	@Transactional
+	public void tryLockAccount(String username) {
+		var user = userRepository.findByUsernameAndIsActiveTrue(username);
+		if (Objects.isNull(user)) {
+			return;
+		}
+		user.incorrectSignIn();
+		if (user.getConsecutiveSignInMistakes() >= CONSECUTIVE_SIGN_IN_MISTAKES_LIMIT) {
+			user.setConsecutiveSignInMistakes(0);
+			user.setLockedUntil(Timestamp.valueOf(LocalDateTime.now().plusSeconds(LOCK_DURATION_SECONDS)));
+			log.info(String.format("Banning user %s for %d seconds.", user, LOCK_DURATION_SECONDS));
+		}
 	}
 
 	private List<User> findWithRoles(Set<Role> rolesBellowMine) {

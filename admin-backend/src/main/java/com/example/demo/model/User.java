@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 // POJO koji implementira Spring Security UserDetails interfejs koji specificira
@@ -56,8 +57,16 @@ public class User extends BaseEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
+    @Column(name = "mistakes")
+    private Integer consecutiveSignInMistakes;
+
+    @Column(name = "locked_until")
+    private Timestamp lockedUntil;
+
     public User() {
         super();
+        this.consecutiveSignInMistakes = 0;
+        this.lockedUntil = null;
     }
 
     public User addRealEstate(RealEstate realEstate) {
@@ -89,7 +98,8 @@ public class User extends BaseEntity implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        var now = Timestamp.valueOf(LocalDateTime.now());
+        return Objects.isNull(lockedUntil) || now.after(lockedUntil);
     }
 
     @JsonIgnore
@@ -98,4 +108,7 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
+    public void incorrectSignIn() {
+        this.consecutiveSignInMistakes += 1;
+    }
 }
