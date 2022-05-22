@@ -14,4 +14,5 @@ public interface UserService {
     List<RealEstate> getMyRealEstates(String username);
     void deleteUser(String username);
     void modifyRole(String username, String roleName);
+    List<User> getUsersBellowMyRole(String username);
 }

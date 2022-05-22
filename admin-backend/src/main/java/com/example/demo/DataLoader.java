@@ -63,8 +63,10 @@ public class DataLoader implements ApplicationRunner {
         privilegeRepository.save(modifyRolePrivilege);
 
         // CREATE ROLES HERE...
-        var adminRole = createRole("ROLE_ADMIN", createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
-        var superAdminRole = createRole("ROLE_SUPER_ADMIN", createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
+        // Higher priority means that the role is more important
+        // this is used when we look for possible user to assigned them to objects
+        var adminRole = createRole("ROLE_ADMIN", 100, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
+        var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
         roleRepository.save(adminRole);
         roleRepository.save(superAdminRole);
 
@@ -89,9 +91,10 @@ public class DataLoader implements ApplicationRunner {
         return privilege;
     }
 
-    private Role createRole(String name, Privilege... privileges) {
+    private Role createRole(String name, Integer priority, Privilege... privileges) {
         var role = new Role();
         role.setName(name);
+        role.setPriority(priority);
         role.setPrivileges(Set.of(privileges));
         for (var p: privileges) {
             var roles = Objects.requireNonNullElse(p.getRoles(), new HashSet<Role>());
