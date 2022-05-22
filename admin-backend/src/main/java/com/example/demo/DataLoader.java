@@ -80,6 +80,7 @@ public class DataLoader implements ApplicationRunner {
         user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
 
         userRepository.save(user1);
+        userRepository.save(hajduk);
         realEstateRepository.save(home);
         realEstateRepository.save(dogHouse);
         realEstateRepository.save(helperObject);

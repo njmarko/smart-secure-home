@@ -86,14 +86,36 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(String username){
-		userRepository.deleteOneByUsername(username);
+	@Transactional
+	public void deleteUser(String username, String issuerName){
+		var myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+
+		var user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+
+		// not authorized
+		if (user == null){
+			System.out.println("=========================================== NOT AUTH ==========================================");
+			return;
+		}
+
+		user.setIsActive(false);
+		userRepository.save(user);
 	}
 
 	@Override
-	public void modifyRole(String username, String roleName) {
+	public void modifyRole(String username, String roleName, String issuerName) {
+		var myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+
 		var roles = roleService.findByName(roleName);
-		var user = userRepository.findByUsernameAndIsActiveTrue(username);
+		var user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+
+		// not authorized
+		if (user == null){
+			System.out.println("=========================================== NOT AUTH ==========================================");
+			return;
+		}
 
 		user.setRoles(roles);
 		

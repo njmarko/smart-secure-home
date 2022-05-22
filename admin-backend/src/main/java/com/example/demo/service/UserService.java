@@ -12,7 +12,7 @@ public interface UserService {
     List<User> findAll ();
 	User save(UserRequest userRequest);
     List<RealEstate> getMyRealEstates(String username);
-    void deleteUser(String username);
-    void modifyRole(String username, String roleName);
+    void deleteUser(String username, String issuerName);
+    void modifyRole(String username, String roleName, String issuerName);
     List<User> getUsersBellowMyRole(String username);
 }

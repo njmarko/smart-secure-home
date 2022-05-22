@@ -40,13 +40,13 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('MODIFY_USER_ROLE')")
     @PostMapping("{username}/modifyRole/{roleName}")
-    public void modifyRole(@PathVariable String roleName, @PathVariable String username){
-        userService.modifyRole(username, roleName);
+    public void modifyRole(@PathVariable String roleName, @PathVariable String username, Principal principal){
+        userService.modifyRole(username, roleName, principal.getName());
     }
 
     @PreAuthorize("hasAuthority('DELETE_USERS')")
     @DeleteMapping("{username}")
-    public void deleteUser(@PathVariable String username ){
-        userService.deleteUser(username);
+    public void deleteUser(@PathVariable String username, Principal principal){
+        userService.deleteUser(username, principal.getName());
     }
 }
