@@ -1,0 +1,16 @@
+<app-toolbar></app-toolbar>
+<mat-card>
+    <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <h2>Blacklist JWT</h2>
+            <mat-form-field class="full-width-input">
+                <textarea cdkAutosizeMinRows="10" cdkAutosizeMaxRows="20" matInput placeholder="JWT"
+                    formControlName="token" required></textarea>
+                <mat-error> Please provide a valid token. </mat-error>
+            </mat-form-field>
+            <button id="signIn" mat-raised-button [disabled]="!form.valid" color="primary">
+                Blacklist
+            </button>
+        </form>
+    </mat-card-content>
+</mat-card>

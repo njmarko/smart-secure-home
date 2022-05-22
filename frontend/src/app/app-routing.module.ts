@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BlacklistJwtComponent } from './pages/blacklist-jwt/blacklist-jwt.component';
 import { CertificateDetailsComponent } from './pages/certificate-details/certificate-details.component';
 import { CertificatesViewComponent } from './pages/certificates-view/certificates-view.component';
 import { CreateRealEstateComponent } from './pages/create-real-estate/create-real-estate.component';
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'users', component: UsersViewComponent },
   { path: 'create-real-estate', component: CreateRealEstateComponent },
+  { path: 'blacklist-jwt', component: BlacklistJwtComponent }
 ];
 
 @NgModule({

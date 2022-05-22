@@ -49,6 +49,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { UsersViewComponent } from './pages/users-view/users-view.component';
 import { CreateRealEstateComponent } from './pages/create-real-estate/create-real-estate.component';
+import { BlacklistJwtComponent } from './pages/blacklist-jwt/blacklist-jwt.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { CreateRealEstateComponent } from './pages/create-real-estate/create-rea
     LoginComponent,
     UsersViewComponent,
     CreateRealEstateComponent,
+    BlacklistJwtComponent,
   ],
   imports: [
     BrowserModule,
