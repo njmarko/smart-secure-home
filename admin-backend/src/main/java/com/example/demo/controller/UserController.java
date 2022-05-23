@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ReadCertificateResponse;
 import com.example.demo.dto.ReadRealEstateResponse;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.model.RealEstate;
@@ -7,6 +8,9 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import com.example.demo.support.EntityConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +43,13 @@ public class UserController {
     public List<UserResponse> getUsersBellowMyRole(Principal principal) {
         var users = userService.getUsersBellowMyRole(principal.getName());
         return toUserResponse.convert(users);
+    }
+
+    @PreAuthorize("hasAuthority('READ_USERS')")
+    @GetMapping("bellow-my-role-paginated")
+    public Page<UserResponse> getUsersBellowMyRolePaginated(Principal principal, @PageableDefault Pageable pageable) {
+        var users = userService.getUsersBellowMyRolePaginated(principal.getName(), pageable);
+        return users.map(toUserResponse::convert);
     }
 
     @PreAuthorize("hasAuthority('MODIFY_USER_ROLE')")

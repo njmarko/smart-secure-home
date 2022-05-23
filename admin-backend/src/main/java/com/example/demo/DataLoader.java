@@ -40,18 +40,20 @@ public class DataLoader implements ApplicationRunner {
         var deleteUsersPrivilege = createPrivilege("DELETE_USERS");
         var modifyRolePrivilege = createPrivilege("MODIFY_USER_ROLE");
         var blacklistJwt = createPrivilege("BLACKLIST_JWT");
+        var readUsersPaginated = createPrivilege("READ_USERS");
         privilegeRepository.save(createRealEstatePrivilege);
         privilegeRepository.save(readMyRealEstatesPrivilege);
         privilegeRepository.save(deleteUsersPrivilege);
         privilegeRepository.save(modifyRolePrivilege);
         privilegeRepository.save(blacklistJwt);
+        privilegeRepository.save(readUsersPaginated);
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
         // this is used when we look for possible user to assigned them to objects
-        var adminRole = createRole("ROLE_ADMIN", 100, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege);
-        var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege, blacklistJwt);
-        var ownerRole = createRole("ROLE_OWNER", 99, createRealEstatePrivilege, readMyRealEstatesPrivilege, modifyRolePrivilege);
+        var adminRole = createRole("ROLE_ADMIN", 100, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege,readUsersPaginated);
+        var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege, blacklistJwt,readUsersPaginated);
+        var ownerRole = createRole("ROLE_OWNER", 99, createRealEstatePrivilege, readMyRealEstatesPrivilege, modifyRolePrivilege, readUsersPaginated);
         var tenantRole = createRole("ROLE_TENANT", 98, readMyRealEstatesPrivilege);
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole

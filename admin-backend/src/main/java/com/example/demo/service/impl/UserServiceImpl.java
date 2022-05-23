@@ -11,6 +11,8 @@ import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -81,6 +83,14 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public Page<User> getUsersBellowMyRolePaginated(String name, Pageable pageable) {
+		var user = findByUsername(name);
+		var myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+		return userRepository.findByIsActiveTrueAndRolesIn(rolesBellowMine, pageable);
+	}
+
 	private List<User> findWithRoles(Set<Role> rolesBellowMine) {
 		return userRepository.read().stream().filter(u -> u.getRoles().stream().anyMatch(rolesBellowMine::contains)).collect(Collectors.toList());
 	}
@@ -138,7 +148,6 @@ public class UserServiceImpl implements UserService {
 
 		// not authorized
 		if (user == null || role == null){
-			System.out.println("=========================================== NOT AUTH ==========================================");
 			return;
 		}
 

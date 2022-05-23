@@ -42,7 +42,7 @@ public class CertificatesController {
     }
 
     @GetMapping
-    public Page<ReadCertificateResponse> read(@PageableDefault Pageable pageable) {
+        public Page<ReadCertificateResponse> read(@PageableDefault Pageable pageable) {
         var certificates = certificatesService.read(pageable);
         return certificates.map(toReadResponse::convert);
     }
