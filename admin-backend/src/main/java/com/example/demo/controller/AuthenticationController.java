@@ -88,6 +88,12 @@ public class AuthenticationController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @PutMapping("/logout")
+    public void logout(@RequestHeader("Authorization") String authorizationHeader) {
+        var bearerToken = authorizationHeader.replace("Bearer ", "");
+        blacklistedTokenService.blacklist(bearerToken);
+    }
+
     @PreAuthorize("hasAuthority('BLACKLIST_JWT')")
     @PutMapping("/blacklist/{token}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

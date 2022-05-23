@@ -20,4 +20,8 @@ export class AuthService {
   register(register: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${environment.adminAppUrl}auth/register`, register);
   }
+
+  logout(): Observable<void> {
+    return this.http.put<void>(`${environment.adminAppUrl}auth/logout`, {});
+  }
 }

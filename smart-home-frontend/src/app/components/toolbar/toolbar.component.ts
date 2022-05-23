@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { CurrentUserService } from 'src/app/services/currrent-user-service/current-user.service';
 
 @Component({
@@ -10,15 +11,17 @@ import { CurrentUserService } from 'src/app/services/currrent-user-service/curre
 export class ToolbarComponent implements OnInit {
   isLoggedIn: boolean = false;
 
-  constructor(private currentUserService: CurrentUserService, private router: Router) { }
+  constructor(private currentUserService: CurrentUserService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.isLoggedIn = this.currentUserService.getCurrentUser() != null;
   }
 
   logout(): void {
-    this.currentUserService.removeCurrentUser();
-    this.router.navigate(["/login"]);
+    this.authService.logout().subscribe(_ => {
+      this.currentUserService.removeCurrentUser();
+      this.router.navigate(["/login"]);
+    })
   }
 
 }

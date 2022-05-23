@@ -24,6 +24,11 @@ public class UserController {
         return restTemplate.postForEntity("http://localhost:8082/api/auth/login", authRequest, AuthResponse.class);
     }
 
+    @PutMapping("/logout")
+    public void logout() {
+        restTemplate.put("http://localhost:8082/api/auth/logout", Void.class);
+    }
+
     @GetMapping("/my-real-estates")
     public List<RealEstateResponse> myRealEstates() {
         var realEstates = restTemplate.getForObject("http://localhost:8082/api/users/my-real-estates", RealEstateResponse[].class);
