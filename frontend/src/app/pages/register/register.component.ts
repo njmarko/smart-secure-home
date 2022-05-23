@@ -21,8 +21,17 @@ export class RegisterComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.form = this.formBuilder.group({
-      username: ['', Validators.compose([Validators.required])],
-      //https://stackoverflow.com/a/21456918/13066849
+      // https://stackoverflow.com/a/12019115/13066849
+      username: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(
+            '^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'
+          ),
+        ]),
+      ],
+      // https://stackoverflow.com/a/21456918/13066849
       password: [
         '',
         Validators.compose([
@@ -40,8 +49,23 @@ export class RegisterComponent implements OnInit {
         '',
         Validators.compose([Validators.required, Validators.max(100)]),
       ],
-      email: ['', Validators.compose([Validators.required, Validators.email])],
-      role: ['ROLE_TENANT', Validators.required],
+      email: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.email,
+          ,
+          Validators.max(100),
+        ]),
+      ],
+      role: [
+        'ROLE_TENANT',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern('[a-zA-Z]+_[a-zA-Z]+'),
+          Validators.max(100),
+        ]),
+      ],
     });
   }
 
