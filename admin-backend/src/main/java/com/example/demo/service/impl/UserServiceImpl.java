@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,13 +94,13 @@ public class UserServiceImpl implements UserService {
 		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		
-		u.setFirstName(userRequest.getFirstname());
-		u.setLastName(userRequest.getLastname());
+		u.setFirstName(userRequest.getFirstName());
+		u.setLastName(userRequest.getLastName());
 		u.setEnabled(true);
 		u.setEmail(userRequest.getEmail());
 
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
-		List<Role> roles = roleService.findByName("ROLE_USER");
+		List<Role> roles = roleService.findByName(userRequest.getRole());
 		u.setRoles(roles);
 		
 		return this.userRepository.save(u);

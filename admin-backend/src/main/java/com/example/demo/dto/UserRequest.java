@@ -25,7 +25,7 @@ public class UserRequest {
 	
 	private String email;
 
-	private Role role;
+	private String role;
 
 
 }
