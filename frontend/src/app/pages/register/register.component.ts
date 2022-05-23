@@ -82,7 +82,7 @@ export class RegisterComponent implements OnInit {
         if (destination) {
           this.router.navigate([destination]);
         } else {
-          this.router.navigate(['/certificates']);
+          this.router.navigate(['/users']);
         }
       },
       error: (err) => {
