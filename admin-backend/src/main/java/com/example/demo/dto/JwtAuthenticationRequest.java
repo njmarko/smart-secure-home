@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 public class JwtAuthenticationRequest {
 
     @NotBlank(message = "Username is required.")
-    @Pattern(regexp = "^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")
+    @Pattern(regexp = "^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")
     private String username;
 
     @NotBlank(message = "Password is required.")
