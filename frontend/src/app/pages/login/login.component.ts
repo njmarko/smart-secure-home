@@ -45,7 +45,7 @@ export class LoginComponent {
         if (destination) {
           this.router.navigate([destination]);
         } else {
-          this.router.navigate(["/certificates"]);
+          this.router.navigate(["/"]);
         }
       },
       error: _ => {

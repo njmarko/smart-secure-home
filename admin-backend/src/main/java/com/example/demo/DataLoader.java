@@ -93,7 +93,8 @@ public class DataLoader implements ApplicationRunner {
                 readUsersPaginated
         );
         var tenantRole = createRole("ROLE_TENANT", 98,
-                readMyRealEstatesPrivilege
+                readMyRealEstatesPrivilege,
+                readUsersPaginated
         );
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole

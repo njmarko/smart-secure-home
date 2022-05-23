@@ -76,7 +76,6 @@ public class AuthenticationController {
             userToken.setEmail(user.getEmail());
             userToken.setName(user.getFirstName());
             userToken.setSurname(user.getLastName());
-            System.out.println(userToken.getAuthorities());
 
             // Vrati token kao odgovor na uspesnu autentifikaciju
             return ResponseEntity.ok().headers(headers).body(userToken);
