@@ -44,6 +44,7 @@ public class DataLoader implements ApplicationRunner {
         var registerUsersPrivilege = createPrivilege("REGISTER_USERS");
         var csrSignPrivilege = createPrivilege("SIGN_CSR");
         var readCsrDetailsPrivilege = createPrivilege("READ_CSR_DETAILS");
+        var readCsrsPrivilege = createPrivilege("READ_CSRS");
         var readCertificatesPrivilege = createPrivilege("READ_CERTIFICATES");
         privilegeRepository.save(createRealEstatePrivilege);
         privilegeRepository.save(readMyRealEstatesPrivilege);
@@ -55,6 +56,7 @@ public class DataLoader implements ApplicationRunner {
         privilegeRepository.save(csrSignPrivilege);
         privilegeRepository.save(readCsrDetailsPrivilege);
         privilegeRepository.save(readCertificatesPrivilege);
+        privilegeRepository.save(readCsrsPrivilege);
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
@@ -68,7 +70,8 @@ public class DataLoader implements ApplicationRunner {
                 registerUsersPrivilege,
                 csrSignPrivilege,
                 readCsrDetailsPrivilege,
-                readCertificatesPrivilege
+                readCertificatesPrivilege,
+                readCsrsPrivilege
         );
         var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
                 createRealEstatePrivilege,
@@ -80,7 +83,8 @@ public class DataLoader implements ApplicationRunner {
                 registerUsersPrivilege,
                 readCsrDetailsPrivilege,
                 csrSignPrivilege,
-                readCertificatesPrivilege
+                readCertificatesPrivilege,
+                readCsrsPrivilege
         );
         var ownerRole = createRole("ROLE_OWNER", 99,
                 createRealEstatePrivilege,

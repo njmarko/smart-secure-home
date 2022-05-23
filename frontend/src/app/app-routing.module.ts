@@ -18,7 +18,12 @@ import { AuthorizedGuard } from './guards/authorized/authorized.guard';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'new-csr', component: CsrFormComponent },
-  { path: 'csrs', component: CsrsViewComponent },
+  {
+    path: 'csrs',
+    component: CsrsViewComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['READ_CSRS'] },
+  },
   {
     path: 'certificates',
     component: CertificatesViewComponent,
