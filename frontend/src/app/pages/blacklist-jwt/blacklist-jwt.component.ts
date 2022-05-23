@@ -20,7 +20,7 @@ export class BlacklistJwtComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {
     this.form = this.formBuilder.group({
-      token: ['', Validators.required]
+      token: ['', Validators.compose([Validators.required, Validators.max(999)])]
     });
   }
 
