@@ -73,6 +73,9 @@ public class AuthenticationController {
             var userToken = new UserTokenState(jwt, expiresIn);
 
             userToken.setAuthorities(authorities);
+            userToken.setEmail(user.getEmail());
+            userToken.setName(user.getFirstName());
+            userToken.setSurname(user.getLastName());
 
             // Vrati token kao odgovor na uspesnu autentifikaciju
             return ResponseEntity.ok().headers(headers).body(userToken);
