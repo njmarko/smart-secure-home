@@ -1,6 +1,16 @@
 package com.example.demo.dto;
 
+import com.example.demo.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 // DTO koji preuzima podatke iz HTML forme za registraciju
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRequest {
 
 	private Long id;
@@ -9,58 +19,13 @@ public class UserRequest {
 
 	private String password;
 
-	private String firstname;
+	private String firstName;
 
-	private String lastname;
+	private String lastName;
 	
 	private String email;
 
-	public String getUsername() {
-		return username;
-	}
+	private Role role;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 }

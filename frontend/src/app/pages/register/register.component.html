@@ -1,0 +1,66 @@
+<app-toolbar></app-toolbar>
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>Register</h2>
+      <mat-form-field class="full-width-input">
+        <input
+          matInput
+          placeholder="Username"
+          formControlName="username"
+          required
+        />
+        <mat-error> Please provide a valid username. </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input
+          matInput
+          type="password"
+          placeholder="Password"
+          formControlName="password"
+          required
+        />
+        <mat-error> Please provide a valid password. </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input
+          matInput
+          placeholder="First name"
+          formControlName="firstName"
+          required
+        />
+        <mat-error> Please provide a valid first name. </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input
+          matInput
+          placeholder="Last name"
+          formControlName="lastName"
+          required
+        />
+        <mat-error> Please provide a valid last name. </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput placeholder="Email" formControlName="email" required />
+        <mat-error> Please provide a valid email. </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <mat-label>Role</mat-label>
+        <mat-select id="role" formControlName="role" required>
+          <mat-option value="ROLE_ADMIN">Admin</mat-option>
+          <mat-option value="ROLE_SUPER_ADMIN">Super admin</mat-option>
+          <mat-option value="ROLE_ADMINROLE_OWNER">Owner</mat-option>
+          <mat-option value="ROLE_ADMINROLE_TENANT">Tenant</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        id="signIn"
+        mat-raised-button
+        [disabled]="!form.valid"
+        color="primary"
+      >
+        Register
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

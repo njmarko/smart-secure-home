@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,8 +74,8 @@ public class AuthenticationController {
     }
 
     // Endpoint za registraciju novog korisnika
-    @PostMapping("/signup")
-    public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest, UriComponentsBuilder ucBuilder) {
+    @PostMapping("/register")
+    public ResponseEntity<User> addUser(@Valid @RequestBody UserRequest userRequest, UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(userRequest.getUsername());
 

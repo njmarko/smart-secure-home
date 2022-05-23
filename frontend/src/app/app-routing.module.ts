@@ -8,6 +8,7 @@ import { CsrFormComponent } from './pages/csr-form/csr-form.component';
 import { CsrsViewComponent } from './pages/csrs-view/csrs-view.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { SignCsrComponent } from './pages/sign-csr/sign-csr.component';
 import { UsersViewComponent } from './pages/users-view/users-view.component';
 
@@ -21,11 +22,12 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'users', component: UsersViewComponent },
   { path: 'create-real-estate', component: CreateRealEstateComponent },
-  { path: 'blacklist-jwt', component: BlacklistJwtComponent }
+  { path: 'blacklist-jwt', component: BlacklistJwtComponent },
+  { path: 'register', component: RegisterComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
