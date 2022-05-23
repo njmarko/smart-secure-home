@@ -23,7 +23,7 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private currentUserService: CurrentUserService,
+    public currentUserService: CurrentUserService,
     private router: Router
   ) { }
 
