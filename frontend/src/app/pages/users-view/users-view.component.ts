@@ -6,6 +6,7 @@ import { ConfirmationService } from 'src/app/shared/confirmation-service/confirm
 import { ErrorService } from 'src/app/shared/error-service/error.service';
 import { Observer } from 'rxjs';
 import { UserResponse } from 'src/app/model/users/UserResponse';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-view',
@@ -34,6 +35,7 @@ export class UsersViewComponent implements OnInit {
     private userService: UserService,
     private confirmationService: ConfirmationService,
     private errorService: ErrorService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -71,14 +73,18 @@ export class UsersViewComponent implements OnInit {
     };
   }
 
-  modifyRole(username : string, role: string){
+  modifyRole(username: string, role: string) {
     this.userService.modifyRole(username, role).subscribe();
     this.fetchData(0, this.defaultPageSize);
   }
 
-  deleteUser(username : string){
+  deleteUser(username: string) {
     this.userService.deleteUser(username).subscribe();
     this.fetchData(0, this.defaultPageSize);
+  }
+
+  manageRealEstates(id: number) {
+    this.router.navigate([`/manage-real-estates/${id}`]);
   }
 
 }

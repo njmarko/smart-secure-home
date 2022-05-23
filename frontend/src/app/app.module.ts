@@ -51,6 +51,7 @@ import { UsersViewComponent } from './pages/users-view/users-view.component';
 import { CreateRealEstateComponent } from './pages/create-real-estate/create-real-estate.component';
 import { BlacklistJwtComponent } from './pages/blacklist-jwt/blacklist-jwt.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-real-estates.component';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { RegisterComponent } from './pages/register/register.component';
     CreateRealEstateComponent,
     BlacklistJwtComponent,
     RegisterComponent,
+    ManageRealEstatesComponent,
   ],
   imports: [
     BrowserModule,

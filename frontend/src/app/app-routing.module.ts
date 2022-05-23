@@ -14,6 +14,7 @@ import { UsersViewComponent } from './pages/users-view/users-view.component';
 import { RoleGuard } from './guards/role/role.guard';
 import { LoginGuard } from './guards/login/login.guard';
 import { AuthorizedGuard } from './guards/authorized/authorized.guard';
+import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-real-estates.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -70,10 +71,16 @@ const routes: Routes = [
     canActivate: [RoleGuard],
     data: { roles: ['REGISTER_USERS'] },
   },
+  {
+    path: 'manage-real-estates/:id',
+    component: ManageRealEstatesComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ADD_REAL_ESTATE_TO_USER'] },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -1,0 +1,34 @@
+<app-toolbar></app-toolbar>
+<mat-card *ngIf="loaded">
+    <mat-card-title>
+        Manage real estates for {{user.firstName}} {{user.lastName}} (@{{user.username}})
+    </mat-card-title>
+    <mat-card-content>
+        <table mat-table [dataSource]="realEstates" class="mat-elevation-z8">
+
+            <!-- First name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Real estate </th>
+                <td mat-cell *matCellDef="let re"> {{re.realEstate.name}} </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let re">
+                    <button *ngIf="!re.added" mat-button color="primary" (click)="addRealEstate(re)">Add
+                        real estate</button>
+                    <button *ngIf="re.added" mat-button color="warn" (click)="removeRealEstate(re)">Remove
+                        real estate</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </mat-card-content>
+    <mat-card-actions>
+        <button (click)="saveChanges()" mat-button mat-flat-button color="primary">Save changes</button>
+        <button mat-button mat-flat-button>Discard changes</button>
+    </mat-card-actions>
+</mat-card>
