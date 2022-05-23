@@ -30,7 +30,7 @@ export class LoginComponent {
         Validators.compose([
           Validators.required,
           Validators.pattern(
-            '^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'
+            '^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'
           ),
         ]),
       ],
@@ -39,7 +39,7 @@ export class LoginComponent {
         Validators.compose([
           Validators.required,
           Validators.pattern(
-            '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,30}$'
+            '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,50}'
           ),
         ]),
       ],

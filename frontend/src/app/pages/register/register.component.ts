@@ -37,7 +37,7 @@ export class RegisterComponent implements OnInit {
         Validators.compose([
           Validators.required,
           Validators.pattern(
-            '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,30}$'
+            '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{7,50}'
           ),
         ]),
       ],
