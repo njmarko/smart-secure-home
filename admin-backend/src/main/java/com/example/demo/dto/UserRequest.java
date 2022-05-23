@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -29,11 +30,11 @@ public class UserRequest {
 	private String password;
 
 	@NotBlank(message = "First name is required.")
-	@Max(value = 100, message = "First name cannot be longer than 100 characters.")
+	@Length(max = 100, message = "First name cannot be longer than 100 characters.")
 	private String firstName;
 
 	@NotBlank(message = "Last name is required.")
-	@Max(value = 100, message = "Last name cannot be longer than 100 characters.")
+	@Length(max = 100, message = "Last name cannot be longer than 100 characters.")
 	private String lastName;
 
 	@NotBlank(message = "Email is required.")
@@ -42,7 +43,7 @@ public class UserRequest {
 
 	@NotBlank(message = "Role is required.")
 	@Pattern(regexp = "[a-zA-Z]+_[a-zA-Z]+")
-	@Max(value = 50, message = "Role cannot be longer than 50 characters.")
+	@Length(max = 50, message = "Role cannot be longer than 50 characters.")
 	private String role;
 
 
