@@ -100,16 +100,15 @@ public class DataLoader implements ApplicationRunner {
                 readMyRealEstatesPrivilege,
                 readUsersPaginated
         );
-        
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole
         ));
 
         // CREATE USERS HERE...
         var user1 = createUser("Pera", "Peric", "pera", "Test$123", superAdminRole);
-        var user2 = createUser("Pera", "Peric", "manji pera", "Test$123", adminRole);
-        var user3 = createUser("Pera", "Peric", "jos manji pera", "Test$123", ownerRole);
-        var user4 = createUser("Pera", "Peric", "najmanji pera", "Test$123", tenantRole);
+        var user2 = createUser("Pera", "Peric", "manji_pera", "Test$123", adminRole);
+        var user3 = createUser("Pera", "Peric", "jos_manji_pera", "Test$123", ownerRole);
+        var user4 = createUser("Pera", "Peric", "najmanji_pera", "Test$123", tenantRole);
         var hajduk = createUser("Hajduk", "Dusan", "hajduk", "Hajduk1!", adminRole);
 
 
