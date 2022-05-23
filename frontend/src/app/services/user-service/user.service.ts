@@ -29,4 +29,12 @@ export class UserService {
       }
     );
   }
+
+  modifyRole(username :string, roleName : string) {
+    return this.http.post(`${environment.adminAppUrl}users/${username}/modifyRole/${roleName}`, {})
+  }
+
+  deleteUser(username :string) {
+    return this.http.delete(`${environment.adminAppUrl}users/${username}`)
+  }
 }

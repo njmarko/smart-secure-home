@@ -126,7 +126,6 @@ public class UserServiceImpl implements UserService {
 
 		// not authorized
 		if (user == null){
-			System.out.println("=========================================== NOT AUTH ==========================================");
 			return;
 		}
 
