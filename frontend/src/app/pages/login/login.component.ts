@@ -8,10 +8,9 @@ import { CurrentUserService } from '../../services/currrent-user-service/current
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-
   @Input() error!: string | null;
   form: FormGroup;
 
@@ -26,8 +25,24 @@ export class LoginComponent {
     private route: ActivatedRoute
   ) {
     this.form = this.formBuilder.group({
-      username: ['', Validators.compose([Validators.required])],
-      password: ['', Validators.required]
+      username: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(
+            '^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'
+          ),
+        ]),
+      ],
+      password: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(
+            '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,30}$'
+          ),
+        ]),
+      ],
     });
   }
 
@@ -37,21 +52,21 @@ export class LoginComponent {
     }
     this.invalidUser = false;
     this.authService.login(this.form.value).subscribe({
-      next: response => {
+      next: (response) => {
         this.currentUserService.setCurrentUser(response);
         // TODO: Navigate to a page based on the user's role
         // this.snackBar.open(`Welcome, ${response.name} ${response.surname}!`, "Dismiss", { duration: 5000, verticalPosition: "top" });
-        const destination: string | null = this.route.snapshot.queryParamMap.get('to');
+        const destination: string | null =
+          this.route.snapshot.queryParamMap.get('to');
         if (destination) {
           this.router.navigate([destination]);
         } else {
-          this.router.navigate(["/"]);
+          this.router.navigate(['/']);
         }
       },
-      error: _ => {
+      error: (_) => {
         this.invalidUser = true;
-      }
+      },
     });
   }
-
 }
