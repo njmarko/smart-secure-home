@@ -32,10 +32,10 @@ export class CreateRealEstateComponent implements OnInit {
     private snackbar: MatSnackBar
   ) {
     this.searchForm = this.formBuilder.group({
-      query: [''],
+      query: ['', Validators.compose([Validators.max(100)])],
     });
     this.form = this.formBuilder.group({
-      name: ['', Validators.required]
+      name: ['', Validators.compose([Validators.required, Validators.max(100)])]
     });
   }
 
