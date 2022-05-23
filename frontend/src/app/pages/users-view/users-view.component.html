@@ -26,14 +26,6 @@
           </td>
         </ng-container>
 
-        <!-- Organization Column -->
-        <ng-container matColumnDef="HashedPassword">
-          <th mat-header-cell *matHeaderCellDef>Hashed Password</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.password }}
-          </td>
-        </ng-container>
-
         <!-- Email Column -->
         <ng-container matColumnDef="Email">
           <th mat-header-cell *matHeaderCellDef>Email</th>
@@ -42,35 +34,18 @@
           </td>
         </ng-container>
 
-        <!-- Enabled Column -->
-        <ng-container matColumnDef="Enabled">
-          <th mat-header-cell *matHeaderCellDef>Enabled</th>
-          <td mat-cell *matCellDef="let element">
-            {{ "element.enabled" }}
-          </td>
-        </ng-container>
-
-        <!-- LastPasswordResetDate Column -->
-        <ng-container matColumnDef="LastPasswordResetDate">
-          <th mat-header-cell *matHeaderCellDef>LastPasswordResetDate</th>
-          <td mat-cell *matCellDef="let element">
-            {{ "element.lastPasswordResetDate" }}
-          </td>
-        </ng-container>
-
-        <!-- RealEstates Column -->
-        <ng-container matColumnDef="RealEstates">
-          <th mat-header-cell *matHeaderCellDef>RealEstates</th>
-          <td mat-cell *matCellDef="let element">
-            {{ "" }}
-          </td>
-        </ng-container>
-
         <!-- Roles Column -->
         <ng-container matColumnDef="Roles">
           <th mat-header-cell *matHeaderCellDef>Roles</th>
           <td mat-cell *matCellDef="let element">
-            {{ "" }}
+            <mat-form-field class="full-width-input">
+              <mat-select id="role" [(ngModel)]="element.role">
+                <mat-option value="ROLE_ADMIN">Admin</mat-option>
+                <mat-option value="ROLE_SUPER_ADMIN">Super admin</mat-option>
+                <mat-option value="ROLE_OWNER">Owner</mat-option>
+                <mat-option value="ROLE_TENANT">Tenant</mat-option>
+              </mat-select>
+            </mat-form-field>
           </td>
         </ng-container>
 
@@ -81,7 +56,7 @@
             <div>
               <button
                 style="margin-right: 7px"
-                (click)="modifyRole(element.username)"
+                (click)="modifyRole(element.username, element.role)"
                 mat-stroked-button
                 >Modify Role</button
               >

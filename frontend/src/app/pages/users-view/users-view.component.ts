@@ -17,11 +17,7 @@ export class UsersViewComponent implements OnInit {
     'FirstName',
     'LastName',
     'Username',
-    'HashedPassword',
     'Email',
-    'Enabled',
-    'LastPasswordResetDate',
-    'RealEstates',
     'Roles',
     'Actions',
   ];
@@ -75,12 +71,14 @@ export class UsersViewComponent implements OnInit {
     };
   }
 
-  modifyRole(username : string){
-
+  modifyRole(username : string, role: string){
+    this.userService.modifyRole(username, role).subscribe();
+    this.fetchData(0, this.defaultPageSize);
   }
 
   deleteUser(username : string){
-
+    this.userService.deleteUser(username).subscribe();
+    this.fetchData(0, this.defaultPageSize);
   }
 
 }
