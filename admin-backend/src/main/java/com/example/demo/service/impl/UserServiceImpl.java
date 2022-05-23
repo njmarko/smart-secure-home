@@ -1,6 +1,9 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.UpdateUsersRealEstates;
 import com.example.demo.dto.UserRequest;
+import com.example.demo.exception.RealEstateNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.BaseEntity;
 import com.example.demo.model.RealEstate;
 import com.example.demo.model.Role;
@@ -89,6 +92,26 @@ public class UserServiceImpl implements UserService {
 		var myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
 		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 		return userRepository.findByIsActiveTrueAndRolesIn(rolesBellowMine, pageable);
+	}
+
+	@Override
+	@Transactional
+	public void updateRealEstates(Integer userId, UpdateUsersRealEstates usersRealEstates) {
+		var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+		for (var realEstate: user.getRealEstates()) {
+			realEstate.getStakeholders().remove(user);
+		}
+		user.setRealEstates(new HashSet<>());
+		for (var id: usersRealEstates.getRealEstates()) {
+			var realEstate = realEstateRepository.findById(id).orElseThrow(RealEstateNotFoundException::new);
+			realEstate.addStakeholder(user);
+			user.getRealEstates().add(realEstate);
+		}
+	}
+
+	@Override
+	public User getUserDetails(Integer id) {
+		return userRepository.readWithRealEstates(id).orElseThrow(UserNotFoundException::new);
 	}
 
 	private List<User> findWithRoles(Set<Role> rolesBellowMine) {

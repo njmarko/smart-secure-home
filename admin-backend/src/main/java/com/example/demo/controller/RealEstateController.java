@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/real-estates")
@@ -25,5 +26,12 @@ public class RealEstateController {
     public ReadRealEstateResponse create(@Valid @RequestBody CreateRealEstateRequest request) {
         var realEstate = realEstateService.create(request);
         return toResponse.convert(realEstate);
+    }
+
+    @PreAuthorize("hasAuthority('ADD_REAL_ESTATE_TO_USER')")
+    @GetMapping
+    public List<ReadRealEstateResponse> read() {
+        var realEstates = realEstateService.read();
+        return toResponse.convert(realEstates);
     }
 }

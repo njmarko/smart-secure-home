@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ReadCertificateResponse;
 import com.example.demo.dto.ReadRealEstateResponse;
+import com.example.demo.dto.UpdateUsersRealEstates;
+import com.example.demo.dto.UserDetailsResponse;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.model.RealEstate;
 import com.example.demo.model.User;
@@ -12,14 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -30,12 +26,26 @@ public class UserController {
     private final UserService userService;
     private final EntityConverter<RealEstate, ReadRealEstateResponse> toRealEstateResponse;
     private final EntityConverter<User, UserResponse> toUserResponse;
+    private final EntityConverter<User, UserDetailsResponse> toUserDetailsResponse;
 
     @PreAuthorize("hasAuthority('READ_MY_REAL_ESTATES')")
     @GetMapping("my-real-estates")
     public List<ReadRealEstateResponse> getMyRealEstates(Principal principal) {
         var realEstates = userService.getMyRealEstates(principal.getName());
         return toRealEstateResponse.convert(realEstates);
+    }
+
+    @PreAuthorize("hasAuthority('ADD_REAL_ESTATE_TO_USER')")
+    @GetMapping("/{id}/details")
+    public UserDetailsResponse readUserDetails(@PathVariable("id") Integer id) {
+        var user = userService.getUserDetails(id);
+        return toUserDetailsResponse.convert(user);
+    }
+
+    @PreAuthorize("hasAuthority('ADD_REAL_ESTATE_TO_USER')")
+    @PutMapping("/{id}/real-estates")
+    public void modifyUsersRealEstates(@PathVariable("id") Integer id, @Valid @RequestBody UpdateUsersRealEstates usersRealEstates) {
+        userService.updateRealEstates(id, usersRealEstates);
     }
 
     @PreAuthorize("hasAuthority('CREATE_REAL_ESTATE')")

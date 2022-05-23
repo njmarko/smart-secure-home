@@ -25,5 +25,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByUsernameAndIsActiveTrueAndRolesIn(String username, List<Role> rolesBellowMine);
 
     Page<User> findByIsActiveTrueAndRolesIn(List<Role> rolesBelow, Pageable pageable);
+
+    @Query("select u from User u left join fetch u.realEstates where u.id=:id and u.isActive=true")
+    Optional<User> readWithRealEstates(Integer id);
 }
 

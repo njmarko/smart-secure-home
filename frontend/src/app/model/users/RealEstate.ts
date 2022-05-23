@@ -1,3 +1,4 @@
 export default interface RealEstate {
-  name:string;
+  id: number;
+  name: string;
 }

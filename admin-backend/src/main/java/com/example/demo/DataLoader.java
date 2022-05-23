@@ -46,6 +46,7 @@ public class DataLoader implements ApplicationRunner {
         var readCsrDetailsPrivilege = createPrivilege("READ_CSR_DETAILS");
         var readCsrsPrivilege = createPrivilege("READ_CSRS");
         var readCertificatesPrivilege = createPrivilege("READ_CERTIFICATES");
+        var addRealEstatesPrivilege = createPrivilege("ADD_REAL_ESTATE_TO_USER");
         privilegeRepository.save(createRealEstatePrivilege);
         privilegeRepository.save(readMyRealEstatesPrivilege);
         privilegeRepository.save(deleteUsersPrivilege);
@@ -57,6 +58,7 @@ public class DataLoader implements ApplicationRunner {
         privilegeRepository.save(readCsrDetailsPrivilege);
         privilegeRepository.save(readCertificatesPrivilege);
         privilegeRepository.save(readCsrsPrivilege);
+        privilegeRepository.save(addRealEstatesPrivilege);
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
@@ -71,7 +73,8 @@ public class DataLoader implements ApplicationRunner {
                 csrSignPrivilege,
                 readCsrDetailsPrivilege,
                 readCertificatesPrivilege,
-                readCsrsPrivilege
+                readCsrsPrivilege,
+                addRealEstatesPrivilege
         );
         var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
                 createRealEstatePrivilege,
@@ -84,7 +87,8 @@ public class DataLoader implements ApplicationRunner {
                 readCsrDetailsPrivilege,
                 csrSignPrivilege,
                 readCertificatesPrivilege,
-                readCsrsPrivilege
+                readCsrsPrivilege,
+                addRealEstatesPrivilege
         );
         var ownerRole = createRole("ROLE_OWNER", 99,
                 createRealEstatePrivilege,
@@ -96,6 +100,7 @@ public class DataLoader implements ApplicationRunner {
                 readMyRealEstatesPrivilege,
                 readUsersPaginated
         );
+        
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole
         ));

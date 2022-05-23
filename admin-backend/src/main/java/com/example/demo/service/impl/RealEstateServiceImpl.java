@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -28,5 +29,10 @@ public class RealEstateServiceImpl implements RealEstateService {
             realEstate.addStakeholder(user);
         });
         return realEstateRepository.save(realEstate);
+    }
+
+    @Override
+    public List<RealEstate> read() {
+        return realEstateRepository.read();
     }
 }

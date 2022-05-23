@@ -15,4 +15,8 @@ export class RealEstateService {
   create(request: CreateRealEstateRequest): Observable<RealEstate> {
     return this.http.post<RealEstate>(`${environment.adminAppUrl}real-estates`, request);
   }
+
+  read(): Observable<RealEstate[]> {
+    return this.http.get<RealEstate[]>(`${environment.adminAppUrl}real-estates`);
+  }
 }
