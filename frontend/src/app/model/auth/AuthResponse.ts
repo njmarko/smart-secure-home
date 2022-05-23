@@ -5,4 +5,5 @@ export interface AuthResponse {
     email: string;
     accessToken: string;
     authorities: string[];
+    expiresIn: number;
 }

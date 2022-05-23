@@ -11,19 +11,60 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { SignCsrComponent } from './pages/sign-csr/sign-csr.component';
 import { UsersViewComponent } from './pages/users-view/users-view.component';
+import { RoleGuard } from './guards/role/role.guard';
+import { LoginGuard } from './guards/login/login.guard';
+import { AuthorizedGuard } from './guards/authorized/authorized.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'new-csr', component: CsrFormComponent },
   { path: 'csrs', component: CsrsViewComponent },
-  { path: 'certificates', component: CertificatesViewComponent },
-  { path: 'certificates/details/:id', component: CertificateDetailsComponent },
-  { path: 'csrs/sign-csr/:id', component: SignCsrComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'users', component: UsersViewComponent },
-  { path: 'create-real-estate', component: CreateRealEstateComponent },
-  { path: 'blacklist-jwt', component: BlacklistJwtComponent },
-  { path: 'register', component: RegisterComponent },
+  {
+    path: 'certificates',
+    component: CertificatesViewComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+  },
+  {
+    path: 'certificates/details/:id',
+    component: CertificateDetailsComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+  },
+  {
+    path: 'csrs/sign-csr/:id',
+    component: SignCsrComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [LoginGuard],
+  },
+  {
+    path: 'users',
+    component: UsersViewComponent,
+    canActivate: [AuthorizedGuard],
+  },
+  {
+    path: 'create-real-estate',
+    component: CreateRealEstateComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_OWNER'] },
+  },
+  {
+    path: 'blacklist-jwt',
+    component: BlacklistJwtComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+  },
 ];
 
 @NgModule({

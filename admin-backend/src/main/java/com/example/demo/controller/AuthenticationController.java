@@ -19,12 +19,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,8 +67,15 @@ public class AuthenticationController {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Set-Cookie", cookie);
 
+            // authorities
+            var authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+
+            var userToken = new UserTokenState(jwt, expiresIn);
+
+            userToken.setAuthorities(authorities);
+
             // Vrati token kao odgovor na uspesnu autentifikaciju
-            return ResponseEntity.ok().headers(headers).body(new UserTokenState(jwt, expiresIn));
+            return ResponseEntity.ok().headers(headers).body(userToken);
         } catch (BadCredentialsException exception) {
             userService.tryLockAccount(authenticationRequest.getUsername());
             throw exception;
