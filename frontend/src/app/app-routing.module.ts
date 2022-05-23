@@ -23,19 +23,19 @@ const routes: Routes = [
     path: 'certificates',
     component: CertificatesViewComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+    data: { roles: ['READ_CERTIFICATES'] },
   },
   {
     path: 'certificates/details/:id',
     component: CertificateDetailsComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+    data: { roles: ['READ_CSR_DETAILS'] },
   },
   {
     path: 'csrs/sign-csr/:id',
     component: SignCsrComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+    data: { roles: ['SIGN_CSR'] },
   },
   {
     path: 'login',
@@ -51,19 +51,19 @@ const routes: Routes = [
     path: 'create-real-estate',
     component: CreateRealEstateComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_OWNER'] },
+    data: { roles: ['CREATE_REAL_ESTATE'] },
   },
   {
     path: 'blacklist-jwt',
     component: BlacklistJwtComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+    data: { roles: ['BLACKLIST_JWT'] },
   },
   {
     path: 'register',
     component: RegisterComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] },
+    data: { roles: ['REGISTER_USERS'] },
   },
 ];
 

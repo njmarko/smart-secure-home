@@ -41,20 +41,56 @@ public class DataLoader implements ApplicationRunner {
         var modifyRolePrivilege = createPrivilege("MODIFY_USER_ROLE");
         var blacklistJwt = createPrivilege("BLACKLIST_JWT");
         var readUsersPaginated = createPrivilege("READ_USERS");
+        var registerUsersPrivilege = createPrivilege("REGISTER_USERS");
+        var csrSignPrivilege = createPrivilege("SIGN_CSR");
+        var readCsrDetailsPrivilege = createPrivilege("READ_CSR_DETAILS");
+        var readCertificatesPrivilege = createPrivilege("READ_CERTIFICATES");
         privilegeRepository.save(createRealEstatePrivilege);
         privilegeRepository.save(readMyRealEstatesPrivilege);
         privilegeRepository.save(deleteUsersPrivilege);
         privilegeRepository.save(modifyRolePrivilege);
         privilegeRepository.save(blacklistJwt);
         privilegeRepository.save(readUsersPaginated);
+        privilegeRepository.save(registerUsersPrivilege);
+        privilegeRepository.save(csrSignPrivilege);
+        privilegeRepository.save(readCsrDetailsPrivilege);
+        privilegeRepository.save(readCertificatesPrivilege);
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
         // this is used when we look for possible user to assigned them to objects
-        var adminRole = createRole("ROLE_ADMIN", 100, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege,readUsersPaginated);
-        var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000, createRealEstatePrivilege, readMyRealEstatesPrivilege, deleteUsersPrivilege, modifyRolePrivilege, blacklistJwt,readUsersPaginated);
-        var ownerRole = createRole("ROLE_OWNER", 99, createRealEstatePrivilege, readMyRealEstatesPrivilege, modifyRolePrivilege, readUsersPaginated);
-        var tenantRole = createRole("ROLE_TENANT", 98, readMyRealEstatesPrivilege);
+        var adminRole = createRole("ROLE_ADMIN", 100,
+                createRealEstatePrivilege,
+                readMyRealEstatesPrivilege,
+                deleteUsersPrivilege,
+                modifyRolePrivilege,
+                readUsersPaginated,
+                registerUsersPrivilege,
+                csrSignPrivilege,
+                readCsrDetailsPrivilege,
+                readCertificatesPrivilege
+        );
+        var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
+                createRealEstatePrivilege,
+                readMyRealEstatesPrivilege,
+                deleteUsersPrivilege,
+                modifyRolePrivilege,
+                blacklistJwt,
+                readUsersPaginated,
+                registerUsersPrivilege,
+                readCsrDetailsPrivilege,
+                csrSignPrivilege,
+                readCertificatesPrivilege
+        );
+        var ownerRole = createRole("ROLE_OWNER", 99,
+                createRealEstatePrivilege,
+                readMyRealEstatesPrivilege,
+                modifyRolePrivilege,
+                readUsersPaginated
+        );
+        var tenantRole = createRole("ROLE_TENANT", 98,
+                readMyRealEstatesPrivilege
+        );
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole
         ));
@@ -106,7 +142,7 @@ public class DataLoader implements ApplicationRunner {
         role.setName(name);
         role.setPriority(priority);
         role.setPrivileges(Set.of(privileges));
-        for (var p: privileges) {
+        for (var p : privileges) {
             var roles = Objects.requireNonNullElse(p.getRoles(), new HashSet<Role>());
             roles.add(role);
             p.setRoles(roles);
