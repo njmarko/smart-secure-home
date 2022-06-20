@@ -47,18 +47,8 @@ public class DataLoader implements ApplicationRunner {
         var readCsrsPrivilege = createPrivilege("READ_CSRS");
         var readCertificatesPrivilege = createPrivilege("READ_CERTIFICATES");
         var addRealEstatesPrivilege = createPrivilege("ADD_REAL_ESTATE_TO_USER");
-        privilegeRepository.save(createRealEstatePrivilege);
-        privilegeRepository.save(readMyRealEstatesPrivilege);
-        privilegeRepository.save(deleteUsersPrivilege);
-        privilegeRepository.save(modifyRolePrivilege);
-        privilegeRepository.save(blacklistJwt);
-        privilegeRepository.save(readUsersPaginated);
-        privilegeRepository.save(registerUsersPrivilege);
-        privilegeRepository.save(csrSignPrivilege);
-        privilegeRepository.save(readCsrDetailsPrivilege);
-        privilegeRepository.save(readCertificatesPrivilege);
-        privilegeRepository.save(readCsrsPrivilege);
-        privilegeRepository.save(addRealEstatesPrivilege);
+        var readRealEstateDevicesPrivilege = createPrivilege("READ_REAL_ESTATE_DEVICES");
+        var configureDevicesPrivilege = createPrivilege("CONFIGURE_DEVICES");
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
@@ -74,7 +64,9 @@ public class DataLoader implements ApplicationRunner {
                 readCsrDetailsPrivilege,
                 readCertificatesPrivilege,
                 readCsrsPrivilege,
-                addRealEstatesPrivilege
+                addRealEstatesPrivilege,
+                readRealEstateDevicesPrivilege,
+                configureDevicesPrivilege
         );
         var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
                 createRealEstatePrivilege,
@@ -88,7 +80,9 @@ public class DataLoader implements ApplicationRunner {
                 csrSignPrivilege,
                 readCertificatesPrivilege,
                 readCsrsPrivilege,
-                addRealEstatesPrivilege
+                addRealEstatesPrivilege,
+                readRealEstateDevicesPrivilege,
+                configureDevicesPrivilege
         );
         var ownerRole = createRole("ROLE_OWNER", 99,
                 createRealEstatePrivilege,
@@ -143,7 +137,7 @@ public class DataLoader implements ApplicationRunner {
     private Privilege createPrivilege(String name) {
         var privilege = new Privilege();
         privilege.setName(name);
-        return privilege;
+        return privilegeRepository.save(privilege);
     }
 
     private Role createRole(String name, Integer priority, Privilege... privileges) {

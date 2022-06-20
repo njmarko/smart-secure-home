@@ -3,10 +3,7 @@ package com.example.demo.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +18,9 @@ public class RealEstate extends BaseEntity {
     @ManyToMany(mappedBy = "realEstates")
     private Set<User> stakeholders = new HashSet<>();
 
+    @OneToMany(mappedBy = "realEstate")
+    private Set<Device> devices = new HashSet<>();
+
     public RealEstate() {
         super();
     }
@@ -28,6 +28,12 @@ public class RealEstate extends BaseEntity {
     public RealEstate(String name) {
         this();
         this.name = name;
+    }
+
+    public RealEstate addDevice(Device device) {
+        this.devices.add(device);
+        device.setRealEstate(this);
+        return this;
     }
 
     public RealEstate addStakeholder(User user) {
