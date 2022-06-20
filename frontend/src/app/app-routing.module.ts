@@ -15,6 +15,8 @@ import { RoleGuard } from './guards/role/role.guard';
 import { LoginGuard } from './guards/login/login.guard';
 import { AuthorizedGuard } from './guards/authorized/authorized.guard';
 import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-real-estates.component';
+import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-estates.component';
+import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -58,6 +60,18 @@ const routes: Routes = [
     component: CreateRealEstateComponent,
     canActivate: [RoleGuard],
     data: { roles: ['CREATE_REAL_ESTATE'] },
+  },
+  {
+    path: 'real-estates',
+    component: ViewRealEstatesComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['CONFIGURE_DEVICES'] }
+  },
+  {
+    path: 'real-estates/:id/configure-devices',
+    component: ConfigureDevicesComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['CONFIGURE_DEVICES'] }
   },
   {
     path: 'blacklist-jwt',

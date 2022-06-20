@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/real-estates")
@@ -46,7 +47,7 @@ public class RealEstateController {
     @GetMapping("/{id}/devices")
     public List<ReadDeviceResponse> readRealEstateDevices(@PathVariable Integer id) {
         var devices = realEstateService.readDevicesFor(id);
-        return null;
+        return devices.stream().map(d -> mapper.map(d, ReadDeviceResponse.class)).collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('CONFIGURE_DEVICES')")

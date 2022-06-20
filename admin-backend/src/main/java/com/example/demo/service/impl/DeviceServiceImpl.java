@@ -16,7 +16,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     @Transactional
     public Device configureDevice(Device device, RealEstate realEstate) {
-        realEstate.addDevice(device);
+        device.setRealEstate(realEstate);
         return deviceRepository.save(device);
     }
 }

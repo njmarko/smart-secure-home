@@ -1,0 +1,44 @@
+<app-toolbar></app-toolbar>
+<mat-card>
+    <mat-card-title>
+        Configure devices
+    </mat-card-title>
+    <mat-card-content>
+        <form [formGroup]="form" (submit)="configureDevice()">
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Device name..." formControlName="name" />
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Device regex filter..." formControlName="regexFilter" />
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Device send rate..." formControlName="sendRate" type="number" />
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary">Create device</button>
+        </form>
+        <table mat-table [dataSource]="devices" class="mat-elevation-z8">
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let d"> {{d.name}} </td>
+            </ng-container>
+
+            <!-- Regex filter Column -->
+            <ng-container matColumnDef="regexFilter">
+                <th mat-header-cell *matHeaderCellDef> Regex filter </th>
+                <td mat-cell *matCellDef="let d"> {{d.regexFilter}} </td>
+            </ng-container>
+
+            <!-- Send rate Column -->
+            <ng-container matColumnDef="sendRate">
+                <th mat-header-cell *matHeaderCellDef> Send rate </th>
+                <td mat-cell *matCellDef="let d"> {{d.sendRate}} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </mat-card-content>
+</mat-card>

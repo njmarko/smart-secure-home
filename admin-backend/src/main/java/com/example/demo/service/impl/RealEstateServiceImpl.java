@@ -5,6 +5,7 @@ import com.example.demo.exception.RealEstateNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Device;
 import com.example.demo.model.RealEstate;
+import com.example.demo.repository.DeviceRepository;
 import com.example.demo.repository.RealEstateRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.RealEstateService;
@@ -21,6 +22,7 @@ import java.util.Objects;
 public class RealEstateServiceImpl implements RealEstateService {
     private final RealEstateRepository realEstateRepository;
     private final UserRepository userRepository;
+    private final DeviceRepository deviceRepository;
 
     @Override
     @Transactional
@@ -47,7 +49,6 @@ public class RealEstateServiceImpl implements RealEstateService {
     @Override
     @Transactional
     public List<Device> readDevicesFor(Integer id) {
-        var realEstate = read(id);
-        return new ArrayList<>(realEstate.getDevices());
+        return deviceRepository.getForRealEstate(id);
     }
 }

@@ -52,6 +52,8 @@ import { CreateRealEstateComponent } from './pages/create-real-estate/create-rea
 import { BlacklistJwtComponent } from './pages/blacklist-jwt/blacklist-jwt.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-real-estates.component';
+import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-estates.component';
+import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
 
 
 @NgModule({
@@ -74,6 +76,8 @@ import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-r
     BlacklistJwtComponent,
     RegisterComponent,
     ManageRealEstatesComponent,
+    ViewRealEstatesComponent,
+    ConfigureDevicesComponent,
   ],
   imports: [
     BrowserModule,
