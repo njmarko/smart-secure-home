@@ -88,7 +88,8 @@ public class DataLoader implements ApplicationRunner {
                 createRealEstatePrivilege,
                 readMyRealEstatesPrivilege,
                 modifyRolePrivilege,
-                readUsersPaginated
+                readUsersPaginated,
+                readRealEstateDevicesPrivilege
         );
         var tenantRole = createRole("ROLE_TENANT", 98,
                 readMyRealEstatesPrivilege,
