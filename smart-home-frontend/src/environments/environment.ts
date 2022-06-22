@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  smartHomeApi: 'http://localhost:8081/api',
-  adminApi: 'http://localhost:8082/api',
+  smartHomeApi: 'https://localhost:8081/api',
+  adminApi: 'https://localhost:8082/api',
 };
 
 

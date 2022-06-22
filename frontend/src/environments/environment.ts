@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  mojaKucaUrl: 'http://localhost:8081/api/',
-  adminAppUrl: 'http://localhost:8082/api/',
+  mojaKucaUrl: 'https://localhost:8081/api/',
+  adminAppUrl: 'https://localhost:8082/api/',
 };
 
 /*
