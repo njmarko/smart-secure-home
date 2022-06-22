@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface RealEstateRepository extends JpaRepository<RealEstate, Integer> {
 
-    @Query("select re from RealEstate re where re.isActive=true")
+    @Query("select re from RealEstate re join fetch re.stakeholders where re.isActive=true")
     List<RealEstate> read();
 }
