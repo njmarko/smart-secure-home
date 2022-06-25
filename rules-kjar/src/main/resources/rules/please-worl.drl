@@ -2,12 +2,12 @@ package bseprules;
 
 global com.example.demo.bus.EventBus eventBus;
 
-import com.example.demo.dto.AlarmOccured;
+import com.example.demo.events.*;
 
 rule "Test rule to make sure this works"
 when
 	String(this == "Go")
 then
 	System.out.println("sending message with socekts...");
-	eventBus.onAlarm(new AlarmOccured("Hello from drools xD"));
+	eventBus.onAlarm(new AlarmOccurred("Hello from drools xD"));
 end

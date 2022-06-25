@@ -1,0 +1,31 @@
+package bseprules;
+
+global com.example.demo.bus.EventBus eventBus;
+
+import com.example.demo.events.*;
+
+rule "Detect multiple invalid loggin attempts by the same user"
+when
+	e1: InvalidLoginAttempt()
+    Number(intValue >= 2) from accumulate(
+    	e2: InvalidLoginAttempt(
+    		this != e1,
+    		username == e1.username,
+    		this meets[5m] e1
+    	),
+    	count(e2) 
+    )
+    not (
+    	MultipleLoginAttemptsDetected(username == e1.username)
+    )
+then
+	insert(new MultipleLoginAttemptsDetected(e1.getUsername()));
+end
+
+rule "Log multiple invalid login attempts"
+when
+	e: MultipleLoginAttemptsDetected()
+then
+	System.out.println("Multiple invalid login attempts detected.");
+	eventBus.onAlarm(new AlarmOccurred("Multiple invalid loing attempts detected."));
+end

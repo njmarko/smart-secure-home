@@ -1,7 +1,7 @@
 package com.example.demo.bus;
 
 
-import com.example.demo.dto.AlarmOccured;
+import com.example.demo.events.AlarmOccurred;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,7 +16,7 @@ public class EventBus {
 		this.simpMessagingTemplate = simpMessagingTemplate;
 	}
 
-	public void onAlarm(AlarmOccured alarmOccured) {
+	public void onAlarm(AlarmOccurred alarmOccured) {
 		this.simpMessagingTemplate.convertAndSend("/live-alarms", alarmOccured);
 	}
 	

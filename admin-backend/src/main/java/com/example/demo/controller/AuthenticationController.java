@@ -9,7 +9,9 @@ import javax.validation.Valid;
 import com.example.demo.dto.JwtAuthenticationRequest;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.dto.UserTokenState;
+import com.example.demo.events.InvalidLoginAttempt;
 import com.example.demo.exception.ResourceConflictException;
+import com.example.demo.logging.LogService;
 import com.example.demo.model.User;
 import com.example.demo.service.BlacklistedTokenService;
 import com.example.demo.service.UserService;
@@ -46,6 +48,7 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final BlacklistedTokenService blacklistedTokenService;
+    private final LogService logService;
 
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
@@ -91,6 +94,7 @@ public class AuthenticationController {
             return ResponseEntity.ok().headers(headers).body(userToken);
         } catch (BadCredentialsException exception) {
             userService.tryLockAccount(authenticationRequest.getUsername());
+            logService.save(new InvalidLoginAttempt(authenticationRequest.getUsername()));
             throw exception;
         }
     }

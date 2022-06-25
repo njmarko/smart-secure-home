@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.events;
 
 import java.time.LocalDateTime;
 
@@ -11,11 +11,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlarmOccured {
+public class AlarmOccurred {
 	private String message;
 	private LocalDateTime timestamp;
 	
-	public AlarmOccured(String message) {
+	public AlarmOccurred(String message) {
 		this.message = message;
 		this.timestamp = LocalDateTime.now();
 	}
