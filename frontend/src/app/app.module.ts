@@ -54,6 +54,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-real-estates.component';
 import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-estates.component';
 import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
+import { LogsViewComponent } from './pages/logs-view/logs-view.component';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { ConfigureDevicesComponent } from './pages/configure-devices/configure-d
     ManageRealEstatesComponent,
     ViewRealEstatesComponent,
     ConfigureDevicesComponent,
+    LogsViewComponent,
   ],
   imports: [
     BrowserModule,

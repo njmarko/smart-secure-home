@@ -17,6 +17,7 @@ import { AuthorizedGuard } from './guards/authorized/authorized.guard';
 import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-real-estates.component';
 import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-estates.component';
 import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
+import { LogsViewComponent } from './pages/logs-view/logs-view.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -91,6 +92,12 @@ const routes: Routes = [
     canActivate: [RoleGuard],
     data: { roles: ['ADD_REAL_ESTATE_TO_USER'] },
   },
+  {
+    path: 'logs',
+    component: LogsViewComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['READ_LOGS'] },
+  }
 ];
 
 @NgModule({

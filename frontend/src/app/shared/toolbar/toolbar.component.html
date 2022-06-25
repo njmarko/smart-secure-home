@@ -1,61 +1,28 @@
 <mat-toolbar color="primary">
-  <a mat-button routerLink="/" class="small" value="home_page"
-    ><span>Home</span></a
-  >
+  <a mat-button routerLink="/" class="small" value="home_page"><span>Home</span></a>
   <a mat-button routerLink="/new-csr" value="new_csr"><span>New CSR</span></a>
-  <a
-    mat-button
-    routerLink="/csrs"
-    value="csrs"
-    *ngIf="this.currentUserService.hasAuthority('READ_CSRS')"
-    ><span>CSRs</span></a
-  >
-  <a
-    mat-button
-    routerLink="/certificates"
-    value="view_certs"
-    *ngIf="this.currentUserService.hasAuthority('READ_CERTIFICATES')"
-    ><span>Certificates</span></a
-  >
-  <a mat-button routerLink="/users" value="users" *ngIf="this.currentUserService.getCurrentUser()"
-    ><span>Users</span></a
-  >
-  <a
-    mat-button
-    routerLink="/create-real-estate"
-    value="create_real_estate"
-    *ngIf="this.currentUserService.hasAuthority('CREATE_REAL_ESTATE')"
-    ><span>Create real estate</span></a
-  >
-  <a
-    mat-button
-    routerLink="/blacklist-jwt"
-    value="blacklist_jwt"
-    *ngIf="this.currentUserService.hasAuthority('BLACKLIST_JWT')"
-    ><span>Blacklist JWT</span></a
-  >
-  <a
-    mat-button
-    routerLink="/real-estates"
-    value="real_estates"
-    *ngIf="this.currentUserService.hasAuthority('CONFIGURE_DEVICES')"
-    ><span>Real estates</span></a
-  >
+  <a mat-button routerLink="/csrs" value="csrs"
+    *ngIf="this.currentUserService.hasAuthority('READ_CSRS')"><span>CSRs</span></a>
+  <a mat-button routerLink="/certificates" value="view_certs"
+    *ngIf="this.currentUserService.hasAuthority('READ_CERTIFICATES')"><span>Certificates</span></a>
+  <a mat-button routerLink="/users" value="users"
+    *ngIf="this.currentUserService.getCurrentUser()"><span>Users</span></a>
+  <a mat-button routerLink="/create-real-estate" value="create_real_estate"
+    *ngIf="this.currentUserService.hasAuthority('CREATE_REAL_ESTATE')"><span>Create real estate</span></a>
+  <a mat-button routerLink="/blacklist-jwt" value="blacklist_jwt"
+    *ngIf="this.currentUserService.hasAuthority('BLACKLIST_JWT')"><span>Blacklist JWT</span></a>
+  <a mat-button routerLink="/real-estates" value="real_estates"
+    *ngIf="this.currentUserService.hasAuthority('CONFIGURE_DEVICES')"><span>Real estates</span></a>
+  <a mat-button routerLink="/logs" value="logs"
+    *ngIf="this.currentUserService.hasAuthority('READ_LOGS')"><span>Logs</span></a>
   <span class="standard-spacer"></span>
-  <a mat-button routerLink="/login" value="login"  *ngIf="!this.currentUserService.getCurrentUser()"
-    ><span>Login</span></a
-  >
-  <a mat-button (click)="logout()" value="logout"  *ngIf="this.currentUserService.getCurrentUser()"
-    ><span>Logout</span></a
-  >
-  <a
-    mat-button
-    routerLink="/register"
-    value="register"
-    *ngIf="this.currentUserService.hasAuthority('REGISTER_USERS')"
-    ><span>Register</span></a
-  >
-  <a mat-icon-button aria-label="My account"
-    ><mat-icon>account_box</mat-icon></a
-  >
+  <a mat-button routerLink="/login" value="login"
+    *ngIf="!this.currentUserService.getCurrentUser()"><span>Login</span></a>
+  <a mat-button (click)="logout()" value="logout"
+    *ngIf="this.currentUserService.getCurrentUser()"><span>Logout</span></a>
+  <a mat-button routerLink="/register" value="register"
+    *ngIf="this.currentUserService.hasAuthority('REGISTER_USERS')"><span>Register</span></a>
+  <a mat-icon-button aria-label="My account">
+    <mat-icon>account_box</mat-icon>
+  </a>
 </mat-toolbar>

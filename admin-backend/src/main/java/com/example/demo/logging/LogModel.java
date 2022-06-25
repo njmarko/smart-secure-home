@@ -2,6 +2,9 @@ package com.example.demo.logging;
 
 import java.time.LocalDateTime;
 
+import com.example.demo.util.JsonDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +16,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class LogModel {
     private String content;
+    @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime timestamp;
     private LogType logType;
     

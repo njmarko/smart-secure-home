@@ -3,9 +3,12 @@ package com.example.demo.logging;
 import lombok.RequiredArgsConstructor;
 
 import org.kie.api.runtime.KieSession;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.example.demo.bus.EventBus;
 import com.example.demo.events.AlarmOccurred;
@@ -46,4 +49,8 @@ public class LogService {
     private void saveLogType(String message, LogType type) {
         save(new LogModel(message, LocalDateTime.now(), type));
     }
+
+	public Page<LogModel> read(Pageable pageable) {
+		return this.logRepository.findAll(pageable);
+	}
 }

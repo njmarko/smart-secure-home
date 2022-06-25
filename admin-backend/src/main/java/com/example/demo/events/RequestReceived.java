@@ -33,7 +33,7 @@ public class RequestReceived implements BaseEvent {
 
 	@Override
 	public LogModel log() {
-		return LogModel.info("Request received to method: " + method + ", to path: " + request.getRequestURI());
+		return LogModel.info("Request received to path: "+ request.getRequestURI() + ", from IP " + this.ip);
 	}
 
 }
