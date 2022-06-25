@@ -27,5 +27,5 @@ when
 	e: MultipleLoginAttemptsDetected()
 then
 	System.out.println("Multiple invalid login attempts detected.");
-	eventBus.onAlarm(new AlarmOccurred("Multiple invalid loing attempts detected."));
+	eventBus.onAlarm(e);
 end

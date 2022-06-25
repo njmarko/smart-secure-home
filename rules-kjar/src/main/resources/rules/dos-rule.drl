@@ -1,0 +1,32 @@
+package bseprules;
+
+global com.example.demo.bus.EventBus eventBus;
+
+import com.example.demo.events.*;
+
+// TODO: Later increase the threshold value and lower the intervale, this is just for testing/demonstration purposes
+rule "Too common request detection"
+when
+	e1: RequestReceived()
+    Number(intValue >= 10) from accumulate(
+    	e2: RequestReceived(
+    		this != e1,
+    		this meets[5m] e1
+    	),
+    	count(e2) 
+    )
+    not (
+    	DosDetected()
+    )
+then
+	insert(new DosDetected());
+end
+
+// TODO: Write a template for this type fo rule xD
+rule "Log DOS detected"
+when
+	e: DosDetected()
+then
+	System.out.println("DOS detected.");
+	eventBus.onAlarm(e);
+end

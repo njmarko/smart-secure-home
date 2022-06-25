@@ -1,5 +1,7 @@
 package com.example.demo.events;
 
+import com.example.demo.logging.LogModel;
+
 import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Role.Type;
@@ -10,15 +12,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Role(Type.EVENT)
-@Expires("30m")
+@Expires("10m")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class MultipleLoginAttemptsDetected implements BaseAlarm {
-	private String username;
+public class RequestReceived implements BaseEvent {
+	private String method;
 
 	@Override
-	public AlarmOccurred alarm() {
-		return new AlarmOccurred(
-				String.format("%s has tried to login multiple times and failed.", this.username)
-			);
+	public LogModel log() {
+		return LogModel.info("Request received to method: " + method);
 	}
+
 }

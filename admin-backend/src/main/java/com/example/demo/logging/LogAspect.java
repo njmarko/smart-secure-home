@@ -1,6 +1,9 @@
 package com.example.demo.logging;
 
 import lombok.RequiredArgsConstructor;
+
+import com.example.demo.events.RequestReceived;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -15,6 +18,7 @@ public class LogAspect {
     @Before("execution(* com.example.demo.controller.*.*(..))")
     public void log(JoinPoint joinPoint) {
         // TODO: Create some more complicated message here, containing IP address, some headers and what not
-        logService.info(joinPoint.toLongString());
+    	String method = joinPoint.toLongString();
+        logService.save(new RequestReceived(method));
     }
 }

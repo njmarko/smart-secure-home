@@ -27,11 +27,11 @@ public class AdminApplication {
 	public ApplicationRunner test() {
 		return args -> {
 			prepareTestMapping();
-			while (true) {
-				kieSession.insert(new String("Go"));
-				kieSession.fireAllRules();
-				Thread.sleep(1000L);
-			}
+//			while (true) {
+//				kieSession.insert(new String("Go"));
+//				kieSession.fireAllRules();
+//				Thread.sleep(1000L);
+//			}
 		};
 	}
 
