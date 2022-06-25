@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { AuthResponse } from 'src/app/model/auth/AuthResponse';
 
 @Injectable({
@@ -6,13 +6,20 @@ import { AuthResponse } from 'src/app/model/auth/AuthResponse';
 })
 export class CurrentUserService {
   private userKey: string = 'currentUser';
+  currentUserChanged: EventEmitter<void> = new EventEmitter<void>();
 
   setCurrentUser(user: AuthResponse) {
     sessionStorage.setItem(this.userKey, JSON.stringify(user));
+    this.currentUserChanged.emit();
+  }
+
+  onCurrentUserChanged(): EventEmitter<void> {
+    return this.currentUserChanged;
   }
 
   removeCurrentUser(): void {
     sessionStorage.removeItem(this.userKey);
+    this.currentUserChanged.emit();
   }
 
   hasUser(): boolean {
@@ -31,6 +38,7 @@ export class CurrentUserService {
       email: updated.email,
     };
     sessionStorage.setItem(this.userKey, JSON.stringify(user));
+    this.currentUserChanged.emit();
   }
 
   hasAuthority(authority: string): boolean {

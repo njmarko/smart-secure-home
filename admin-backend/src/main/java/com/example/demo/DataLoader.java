@@ -51,6 +51,7 @@ public class DataLoader implements ApplicationRunner {
         Privilege addRealEstatesPrivilege = createPrivilege("ADD_REAL_ESTATE_TO_USER");
         Privilege readRealEstateDevicesPrivilege = createPrivilege("READ_REAL_ESTATE_DEVICES");
         Privilege configureDevicesPrivilege = createPrivilege("CONFIGURE_DEVICES");
+        Privilege readAlarmsPriviledge = createPrivilege("READ_ALARMS");
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
@@ -68,7 +69,8 @@ public class DataLoader implements ApplicationRunner {
                 readCsrsPrivilege,
                 addRealEstatesPrivilege,
                 readRealEstateDevicesPrivilege,
-                configureDevicesPrivilege
+                configureDevicesPrivilege,
+                readAlarmsPriviledge
         );
         Role superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
                 createRealEstatePrivilege,
@@ -84,7 +86,8 @@ public class DataLoader implements ApplicationRunner {
                 readCsrsPrivilege,
                 addRealEstatesPrivilege,
                 readRealEstateDevicesPrivilege,
-                configureDevicesPrivilege
+                configureDevicesPrivilege,
+                readAlarmsPriviledge
         );
         Role ownerRole = createRole("ROLE_OWNER", 99,
                 createRealEstatePrivilege,
