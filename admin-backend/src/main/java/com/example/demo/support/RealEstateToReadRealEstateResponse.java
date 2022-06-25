@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 public class RealEstateToReadRealEstateResponse extends BaseConverter<RealEstate, ReadRealEstateResponse> {
     @Override
     public ReadRealEstateResponse convert(@NonNull RealEstate source) {
-        var readRealEstateResponse = new ReadRealEstateResponse();
+        ReadRealEstateResponse readRealEstateResponse = new ReadRealEstateResponse();
         readRealEstateResponse.setId(source.getId());
         readRealEstateResponse.setName(source.getName());
         readRealEstateResponse.setStakeholders(source.getStakeholders().stream().map(new Function<User, UserResponse>() {
             @Override
             public UserResponse apply(User user) {
-                var userResponse = new UserResponse();
+                UserResponse userResponse = new UserResponse();
                 userResponse.setId(user.getId());
                 userResponse.setEmail(user.getEmail());
                 userResponse.setUsername(user.getUsername());

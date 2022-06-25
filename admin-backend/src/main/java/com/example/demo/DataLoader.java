@@ -1,5 +1,12 @@
 package com.example.demo;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 import com.example.demo.model.Privilege;
 import com.example.demo.model.RealEstate;
 import com.example.demo.model.Role;
@@ -8,19 +15,14 @@ import com.example.demo.repository.PrivilegeRepository;
 import com.example.demo.repository.RealEstateRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -35,25 +37,25 @@ public class DataLoader implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
         // CREATE PRIVILEGES HERE...
-        var createRealEstatePrivilege = createPrivilege("CREATE_REAL_ESTATE");
-        var readMyRealEstatesPrivilege = createPrivilege("READ_MY_REAL_ESTATES");
-        var deleteUsersPrivilege = createPrivilege("DELETE_USERS");
-        var modifyRolePrivilege = createPrivilege("MODIFY_USER_ROLE");
-        var blacklistJwt = createPrivilege("BLACKLIST_JWT");
-        var readUsersPaginated = createPrivilege("READ_USERS");
-        var registerUsersPrivilege = createPrivilege("REGISTER_USERS");
-        var csrSignPrivilege = createPrivilege("SIGN_CSR");
-        var readCsrDetailsPrivilege = createPrivilege("READ_CSR_DETAILS");
-        var readCsrsPrivilege = createPrivilege("READ_CSRS");
-        var readCertificatesPrivilege = createPrivilege("READ_CERTIFICATES");
-        var addRealEstatesPrivilege = createPrivilege("ADD_REAL_ESTATE_TO_USER");
-        var readRealEstateDevicesPrivilege = createPrivilege("READ_REAL_ESTATE_DEVICES");
-        var configureDevicesPrivilege = createPrivilege("CONFIGURE_DEVICES");
+        Privilege createRealEstatePrivilege = createPrivilege("CREATE_REAL_ESTATE");
+        Privilege readMyRealEstatesPrivilege = createPrivilege("READ_MY_REAL_ESTATES");
+        Privilege deleteUsersPrivilege = createPrivilege("DELETE_USERS");
+        Privilege modifyRolePrivilege = createPrivilege("MODIFY_USER_ROLE");
+        Privilege blacklistJwt = createPrivilege("BLACKLIST_JWT");
+        Privilege readUsersPaginated = createPrivilege("READ_USERS");
+        Privilege registerUsersPrivilege = createPrivilege("REGISTER_USERS");
+        Privilege csrSignPrivilege = createPrivilege("SIGN_CSR");
+        Privilege readCsrDetailsPrivilege = createPrivilege("READ_CSR_DETAILS");
+        Privilege readCsrsPrivilege = createPrivilege("READ_CSRS");
+        Privilege readCertificatesPrivilege = createPrivilege("READ_CERTIFICATES");
+        Privilege addRealEstatesPrivilege = createPrivilege("ADD_REAL_ESTATE_TO_USER");
+        Privilege readRealEstateDevicesPrivilege = createPrivilege("READ_REAL_ESTATE_DEVICES");
+        Privilege configureDevicesPrivilege = createPrivilege("CONFIGURE_DEVICES");
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
         // this is used when we look for possible user to assigned them to objects
-        var adminRole = createRole("ROLE_ADMIN", 100,
+        Role adminRole = createRole("ROLE_ADMIN", 100,
                 createRealEstatePrivilege,
                 readMyRealEstatesPrivilege,
                 deleteUsersPrivilege,
@@ -68,7 +70,7 @@ public class DataLoader implements ApplicationRunner {
                 readRealEstateDevicesPrivilege,
                 configureDevicesPrivilege
         );
-        var superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
+        Role superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
                 createRealEstatePrivilege,
                 readMyRealEstatesPrivilege,
                 deleteUsersPrivilege,
@@ -84,14 +86,14 @@ public class DataLoader implements ApplicationRunner {
                 readRealEstateDevicesPrivilege,
                 configureDevicesPrivilege
         );
-        var ownerRole = createRole("ROLE_OWNER", 99,
+        Role ownerRole = createRole("ROLE_OWNER", 99,
                 createRealEstatePrivilege,
                 readMyRealEstatesPrivilege,
                 modifyRolePrivilege,
                 readUsersPaginated,
                 readRealEstateDevicesPrivilege
         );
-        var tenantRole = createRole("ROLE_TENANT", 98,
+        Role tenantRole = createRole("ROLE_TENANT", 98,
                 readMyRealEstatesPrivilege,
                 readUsersPaginated
         );
@@ -100,17 +102,17 @@ public class DataLoader implements ApplicationRunner {
         ));
 
         // CREATE USERS HERE...
-        var user1 = createUser("Pera", "Peric", "pera", "Test$123", superAdminRole);
-        var user2 = createUser("Pera", "Peric", "manji_pera", "Test$123", adminRole);
-        var user3 = createUser("Pera", "Peric", "jos_manji_pera", "Test$123", ownerRole);
-        var user4 = createUser("Pera", "Peric", "najmanji_pera", "Test$123", tenantRole);
-        var hajduk = createUser("Hajduk", "Dusan", "hajduk", "Hajduk1!", adminRole);
+        User user1 = createUser("Pera", "Peric", "pera", "Test$123", superAdminRole);
+        User user2 = createUser("Pera", "Peric", "manji_pera", "Test$123", adminRole);
+        User user3 = createUser("Pera", "Peric", "jos_manji_pera", "Test$123", ownerRole);
+        User user4 = createUser("Pera", "Peric", "najmanji_pera", "Test$123", tenantRole);
+        User hajduk = createUser("Hajduk", "Dusan", "hajduk", "Hajduk1!", adminRole);
 
 
         // CREATE REAL ESTATES HERE...
-        var home = new RealEstate("Kuca").addStakeholder(user1);
-        var dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);
-        var helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
+        RealEstate home = new RealEstate("Kuca").addStakeholder(user1);
+        RealEstate dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);
+        RealEstate helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
 
         user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
 
@@ -136,18 +138,18 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private Privilege createPrivilege(String name) {
-        var privilege = new Privilege();
+        Privilege privilege = new Privilege();
         privilege.setName(name);
         return privilegeRepository.save(privilege);
     }
 
     private Role createRole(String name, Integer priority, Privilege... privileges) {
-        var role = new Role();
+        Role role = new Role();
         role.setName(name);
         role.setPriority(priority);
         role.setPrivileges(Set.of(privileges));
-        for (var p : privileges) {
-            var roles = Objects.requireNonNullElse(p.getRoles(), new HashSet<Role>());
+        for (Privilege p : privileges) {
+            Set<Role> roles = Objects.requireNonNullElse(p.getRoles(), new HashSet<Role>());
             roles.add(role);
             p.setRoles(roles);
         }

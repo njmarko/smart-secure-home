@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class BlacklistedTokenServiceImpl implements BlacklistedTokenService {
     @Override
     @Transactional
     public void blacklist(String token) {
-        var entry = blacklistedTokenRepository.findByToken(token);
+        Optional<BlacklistedToken> entry = blacklistedTokenRepository.findByToken(token);
         if (entry.isPresent()) {
             entry.get().setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
         } else {

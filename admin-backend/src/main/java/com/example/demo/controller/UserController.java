@@ -31,14 +31,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('READ_MY_REAL_ESTATES')")
     @GetMapping("my-real-estates")
     public List<ReadRealEstateResponse> getMyRealEstates(Principal principal) {
-        var realEstates = userService.getMyRealEstates(principal.getName());
+        List<RealEstate> realEstates = userService.getMyRealEstates(principal.getName());
         return toRealEstateResponse.convert(realEstates);
     }
 
     @PreAuthorize("hasAuthority('ADD_REAL_ESTATE_TO_USER')")
     @GetMapping("/{id}/details")
     public UserDetailsResponse readUserDetails(@PathVariable("id") Integer id) {
-        var user = userService.getUserDetails(id);
+        User user = userService.getUserDetails(id);
         return toUserDetailsResponse.convert(user);
     }
 
@@ -51,14 +51,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('CREATE_REAL_ESTATE')")
     @GetMapping("bellow-my-role")
     public List<UserResponse> getUsersBellowMyRole(Principal principal) {
-        var users = userService.getUsersBellowMyRole(principal.getName());
+        List<User> users = userService.getUsersBellowMyRole(principal.getName());
         return toUserResponse.convert(users);
     }
 
     @PreAuthorize("hasAuthority('READ_USERS')")
     @GetMapping("bellow-my-role-paginated")
     public Page<UserResponse> getUsersBellowMyRolePaginated(Principal principal, @PageableDefault Pageable pageable) {
-        var users = userService.getUsersBellowMyRolePaginated(principal.getName(), pageable);
+        Page<User> users = userService.getUsersBellowMyRolePaginated(principal.getName(), pageable);
         return users.map(toUserResponse::convert);
     }
 

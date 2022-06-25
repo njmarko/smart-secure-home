@@ -1,5 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import com.example.demo.dto.JwtAuthenticationRequest;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.dto.UserTokenState;
@@ -8,8 +14,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.BlacklistedTokenService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.TokenUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,12 +26,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -68,9 +78,9 @@ public class AuthenticationController {
             headers.add("Set-Cookie", cookie);
 
             // authorities
-            var authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+            List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
-            var userToken = new UserTokenState(jwt, expiresIn);
+            UserTokenState userToken = new UserTokenState(jwt, expiresIn);
 
             userToken.setAuthorities(authorities);
             userToken.setEmail(user.getEmail());
@@ -102,7 +112,7 @@ public class AuthenticationController {
 
     @PutMapping("/logout")
     public void logout(@RequestHeader("Authorization") String authorizationHeader) {
-        var bearerToken = authorizationHeader.replace("Bearer ", "");
+        String bearerToken = authorizationHeader.replace("Bearer ", "");
         blacklistedTokenService.blacklist(bearerToken);
     }
 

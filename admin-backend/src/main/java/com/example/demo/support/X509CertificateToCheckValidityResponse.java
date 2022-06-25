@@ -11,7 +11,7 @@ import java.security.cert.X509Certificate;
 public class X509CertificateToCheckValidityResponse extends BaseConverter<X509Certificate, CheckValidityResponse> {
     @Override
     public CheckValidityResponse convert(X509Certificate source) {
-        var builder = CheckValidityResponse.builder()
+        CheckValidityResponse.CheckValidityResponseBuilder builder = CheckValidityResponse.builder()
                 .serialNumber(source.getSerialNumber().intValue())
                 .expired(false)
                 .started(true);

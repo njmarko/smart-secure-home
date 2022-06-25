@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class UserToUserDetailsResponse extends BaseConverter<User, UserDetailsResponse> {
     @Override
     public UserDetailsResponse convert(@NonNull User source) {
-        var details = new UserDetailsResponse();
+        UserDetailsResponse details = new UserDetailsResponse();
         details.setId(source.getId());
         details.setFirstName(source.getFirstName());
         details.setLastName(source.getLastName());

@@ -24,3 +24,7 @@ hs_err_pid*
 
 # vs
 .vscode
+/.metadata/
+
+# Eclipse
+RemoteSystemsTempFiles

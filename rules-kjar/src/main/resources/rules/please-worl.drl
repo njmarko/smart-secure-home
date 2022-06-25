@@ -1,0 +1,8 @@
+package bseprules;
+
+rule "Test rule to make sure this works"
+when
+	String(this == "Go")
+then
+	System.out.println("Finally got it to work...");
+end;

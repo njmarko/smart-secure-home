@@ -19,7 +19,7 @@ public class X500PrincipalToX500PrincipalData extends BaseConverter<X500Principa
 
     @Override
     public X500PrincipalData convert(X500Principal source) {
-        var x500Name = new X500Name(source.getName());
+        X500Name x500Name = new X500Name(source.getName());
         return X500PrincipalData.builder()
                 .email(detailsService.getEmail(x500Name))
                 .commonName(detailsService.getCommonName(x500Name))

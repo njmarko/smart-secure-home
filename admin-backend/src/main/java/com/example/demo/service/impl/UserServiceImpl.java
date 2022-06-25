@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public List<RealEstate> getMyRealEstates(String username) {
-		var user = findByUsername(username);
+		User user = findByUsername(username);
 		if (isAdminUser(user)) {
 			return realEstateRepository.read();
 		}
@@ -65,16 +65,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public List<User> getUsersBellowMyRole(String username) {
-		var user = findByUsername(username);
-		var myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+		User user = findByUsername(username);
+		Integer myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 		return findWithRoles(new HashSet<>(rolesBellowMine));
 	}
 
 	@Override
 	@Transactional
 	public void tryLockAccount(String username) {
-		var user = userRepository.findByUsernameAndIsActiveTrue(username);
+		User user = userRepository.findByUsernameAndIsActiveTrue(username);
 		if (Objects.isNull(user)) {
 			return;
 		}
@@ -88,22 +88,22 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<User> getUsersBellowMyRolePaginated(String name, Pageable pageable) {
-		var user = findByUsername(name);
-		var myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+		User user = findByUsername(name);
+		Integer myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 		return userRepository.findByIsActiveTrueAndRolesIn(rolesBellowMine, pageable);
 	}
 
 	@Override
 	@Transactional
 	public void updateRealEstates(Integer userId, UpdateUsersRealEstates usersRealEstates) {
-		var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-		for (var realEstate: user.getRealEstates()) {
+		User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+		for (RealEstate realEstate: user.getRealEstates()) {
 			realEstate.getStakeholders().remove(user);
 		}
 		user.setRealEstates(new HashSet<>());
-		for (var id: usersRealEstates.getRealEstates()) {
-			var realEstate = realEstateRepository.findById(id).orElseThrow(RealEstateNotFoundException::new);
+		for (Integer id: usersRealEstates.getRealEstates()) {
+			RealEstate realEstate = realEstateRepository.findById(id).orElseThrow(RealEstateNotFoundException::new);
 			realEstate.addStakeholder(user);
 			user.getRealEstates().add(realEstate);
 		}
@@ -142,10 +142,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void deleteUser(String username, String issuerName){
-		var myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+		Integer myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 
-		var user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+		User user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
 
 		// not authorized
 		if (user == null){
@@ -158,15 +158,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void modifyRole(String username, String roleName, String issuerName) {
-		var issuer = userRepository.findByUsernameAndIsActiveTrue(issuerName);
-		var myRoleLevel = issuer.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		var rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+		User issuer = userRepository.findByUsernameAndIsActiveTrue(issuerName);
+		Integer myRoleLevel = issuer.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 
 		// provera da li rola koja se dodeljuje nije iznad role korisnika koji je pokrenuo akciju
-		var role = roleService.findByNameAndPriorityLessThanEqual(roleName, myRoleLevel);
+		Role role = roleService.findByNameAndPriorityLessThanEqual(roleName, myRoleLevel);
 		
 		// provera da li je korisnik kome se dodeljuje rola ispod korisnika koji je pokrenuo akciju
-		var user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+		User user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
 
 		// not authorized
 		if (user == null || role == null){
@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private boolean isAdminUser(User user) {
-		var adminRoles = Set.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN");
+		Set<String> adminRoles = Set.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN");
 		return user.getRoles().stream().map(Role::getName).anyMatch(adminRoles::contains);
 	}
 

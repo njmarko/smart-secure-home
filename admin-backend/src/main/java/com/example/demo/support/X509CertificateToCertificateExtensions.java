@@ -8,13 +8,14 @@ import org.springframework.stereotype.Component;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Component
 public class X509CertificateToCertificateExtensions extends BaseConverter<X509Certificate, CertificateExtensions> {
     @Override
     public CertificateExtensions convert(X509Certificate source) {
-        var extensions = new CertificateExtensions();
+        CertificateExtensions extensions = new CertificateExtensions();
         // Basic constraints
         if (source.getBasicConstraints() != -1) {
             extensions.setIsCA(true);
@@ -22,7 +23,7 @@ public class X509CertificateToCertificateExtensions extends BaseConverter<X509Ce
         // Key usage
         if (!Objects.isNull(source.getKeyUsage())) {
             System.out.println(Arrays.toString(source.getKeyUsage()));
-            var usageArray = source.getKeyUsage();
+            boolean[] usageArray = source.getKeyUsage();
             extensions.setCertificateSigning(usageArray[log2(KeyUsage.keyCertSign)]);
             extensions.setCrlSigning(usageArray[log2(KeyUsage.cRLSign)]);
             extensions.setDigitalSignature(usageArray[log2(KeyUsage.digitalSignature)]);
@@ -31,8 +32,8 @@ public class X509CertificateToCertificateExtensions extends BaseConverter<X509Ce
         // Extended key usage
         try {
             if (!Objects.isNull(source.getExtendedKeyUsage())) {
-                var usageList = source.getExtendedKeyUsage();
-                for (var item: usageList) {
+                List<String> usageList = source.getExtendedKeyUsage();
+                for (String item: usageList) {
                     if (item.equals(KeyPurposeId.id_kp_serverAuth.toString())) {
                         extensions.setServerAuth(true);
                     } else if (item.equals(KeyPurposeId.id_kp_clientAuth.toString())) {

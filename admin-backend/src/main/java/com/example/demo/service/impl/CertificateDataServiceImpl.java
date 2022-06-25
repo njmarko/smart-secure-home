@@ -57,8 +57,8 @@ public class CertificateDataServiceImpl implements CertificateDataService {
     @Override
     @Transactional(readOnly = false)
     public void invalidate(Integer serialNumber, RevocationReason reason) {
-        var data = read(serialNumber);
-        var revocation = new Revocation(data, dateTimeService.now(), reason);
+        CertificateData data = read(serialNumber);
+        Revocation revocation = new Revocation(data, dateTimeService.now(), reason);
         data.setRevocation(revocation);
         revocationRepository.save(revocation);
     }

@@ -32,21 +32,21 @@ public class RealEstateController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReadRealEstateResponse create(@Valid @RequestBody CreateRealEstateRequest request) {
-        var realEstate = realEstateService.create(request);
+        RealEstate realEstate = realEstateService.create(request);
         return toResponse.convert(realEstate);
     }
 
     @PreAuthorize("hasAuthority('ADD_REAL_ESTATE_TO_USER')")
     @GetMapping
     public List<ReadRealEstateResponse> read() {
-        var realEstates = realEstateService.read();
+        List<RealEstate> realEstates = realEstateService.read();
         return toResponse.convert(realEstates);
     }
 
     @PreAuthorize("hasAuthority('READ_REAL_ESTATE_DEVICES')")
     @GetMapping("/{id}/devices")
     public List<ReadDeviceResponse> readRealEstateDevices(@PathVariable Integer id) {
-        var devices = realEstateService.readDevicesFor(id);
+        List<Device> devices = realEstateService.readDevicesFor(id);
         return devices.stream().map(d -> mapper.map(d, ReadDeviceResponse.class)).collect(Collectors.toList());
     }
 
@@ -54,8 +54,8 @@ public class RealEstateController {
     @PostMapping(value = "/{id}/devices")
     @ResponseStatus(HttpStatus.CREATED)
     public ConfigureDeviceResponse configureDevice(@PathVariable Integer id, @Valid @RequestBody ConfigureDeviceRequest request) {
-        var device = toDevice.convert(request);
-        var realEstate = realEstateService.read(id);
+        Device device = toDevice.convert(request);
+        RealEstate realEstate = realEstateService.read(id);
         device = deviceService.configureDevice(device, realEstate);
         return mapper.map(device, ConfigureDeviceResponse.class);
     }

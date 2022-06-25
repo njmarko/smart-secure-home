@@ -1,21 +1,57 @@
 package com.example.demo.service.impl;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.math.BigInteger;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
 import com.example.demo.dto.CsrSignDataDTO;
 import com.example.demo.dto.SignatureAlgEnumDTO;
+import com.example.demo.dto.extensions.BasicConstraintsDTO;
+import com.example.demo.dto.extensions.ExtendedKeyUsageDTO;
+import com.example.demo.dto.extensions.ExtensionsDTO;
+import com.example.demo.dto.extensions.KeyUsageDTO;
 import com.example.demo.model.CSR;
 import com.example.demo.model.CSRVerificationToken;
 import com.example.demo.model.CertificateData;
+import com.example.demo.model.IssuerData;
+import com.example.demo.model.Revocation;
 import com.example.demo.model.RevocationReason;
 import com.example.demo.repository.CSRRepository;
 import com.example.demo.repository.CSRVerificationTokenRepository;
-import com.example.demo.service.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.example.demo.service.CertificateDataService;
+import com.example.demo.service.CertificatesService;
+import com.example.demo.service.EmailService;
+import com.example.demo.service.KeystoreService;
+import com.example.demo.service.X500DetailsService;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.asn1.x509.*;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.Certificate;
+import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.ocsp.CertificateStatus;
@@ -34,20 +70,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.io.*;
-import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CertificatesServiceImpl implements CertificatesService {
@@ -77,7 +101,7 @@ public class CertificatesServiceImpl implements CertificatesService {
 
     @Override
     public Page<X509Certificate> read(Pageable pageable) {
-        var results = certificateDataService.readNonInvalidated(pageable);
+        Page<CertificateData> results = certificateDataService.readNonInvalidated(pageable);
         return new PageImpl<>(results.getContent()
                 .stream()
                 .map(CertificateData::getAlias)
@@ -95,8 +119,8 @@ public class CertificatesServiceImpl implements CertificatesService {
 
     @Override
     public X509Certificate read(Integer serialNumber) {
-        var data = certificateDataService.readNonInvalidated(serialNumber);
-        var alias = data.getAlias();
+        CertificateData data = certificateDataService.readNonInvalidated(serialNumber);
+        String alias = data.getAlias();
         return keystoreService.readOne(alias).orElseThrow(
                 () -> new RuntimeException(String.format("Could not find certificate with alias: %s.", alias))
         );
@@ -140,20 +164,20 @@ public class CertificatesServiceImpl implements CertificatesService {
     }
 
     private void sendVerificationEmail(CSR csr) {
-        var token = new CSRVerificationToken(csr);
+    	CSRVerificationToken token = new CSRVerificationToken(csr);
         verificationTokenRepository.save(token);
         // TODO: Update this :)
-        var tokenUrl = "http://localhost:8082/api/certificates/csr-verification?token=" + token;
+        String tokenUrl = "http://localhost:8082/api/certificates/csr-verification?token=" + token;
         String message = String.format("Click on this totally not suspicious link '%s' to verify CSR.", tokenUrl);
-        emailService.sendMessage(csr.getEmail(), "CSR verification token", tokenUrl);
+        emailService.sendMessage(csr.getEmail(), "CSR verification token", message);
     }
 
     @Override
     @Transactional
     public CertificateStatus readCertificateStatus(Integer serialNumber) {
         try {
-            var certificate = certificateDataService.read(serialNumber);
-            var revocation = certificate.getRevocation();
+            CertificateData certificate = certificateDataService.read(serialNumber);
+            Revocation revocation = certificate.getRevocation();
             if (Objects.isNull(revocation)) {
                 return CertificateStatus.GOOD;
             }
@@ -171,15 +195,15 @@ public class CertificatesServiceImpl implements CertificatesService {
     @Override
     @Transactional
     public void deleteCsr(Integer id) {
-        var csr = readForUpdate(id);
+        CSR csr = readForUpdate(id);
         csr.setIsActive(Boolean.FALSE);
     }
 
     @Override
     @Transactional
     public void create(CsrSignDataDTO request) throws Exception {
-        var csr = readForUpdate(request.getCsr().getId());
-        var keyPair = generateKeyPair();
+        CSR csr = readForUpdate(request.getCsr().getId());
+        KeyPair keyPair = generateKeyPair();
         PKCS10CertificationRequest pkcs;
         if (Objects.isNull(csr.getPemCSR())) {
             pkcs = fromDto(csr, keyPair, request.getSignatureAlg());
@@ -199,8 +223,8 @@ public class CertificatesServiceImpl implements CertificatesService {
     @Override
     @Transactional
     public void verifyCSR(String token) {
-        var verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(IllegalArgumentException::new);
-        var csr = verificationToken.getCsr();
+        CSRVerificationToken verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(IllegalArgumentException::new);
+        CSR csr = verificationToken.getCsr();
         if (verificationToken.isExpired()) {
             throw new RuntimeException("Token expired.");
         }
@@ -208,12 +232,12 @@ public class CertificatesServiceImpl implements CertificatesService {
     }
 
     private void signCertificate(KeyPair keyPair, PKCS10CertificationRequest request, CsrSignDataDTO dto, SignatureAlgEnumDTO algo) throws Exception {
-        var alias = UUID.randomUUID().toString();
-        var certificateData = certificateDataService.save(new CertificateData(alias));
+        String alias = UUID.randomUUID().toString();
+        CertificateData certificateData = certificateDataService.save(new CertificateData(alias));
         JcaContentSignerBuilder builder = new JcaContentSignerBuilder(signAlgoFromEnum(algo) + "Encryption");
         builder = builder.setProvider("BC");
 
-        var issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreFile, superAdminAlias, keystorePassword.toCharArray(), superAdminPassword.toCharArray());
+        IssuerData issuerData = keystoreService.readIssuerFromStore("src/main/resources/static/" + keystoreFile, superAdminAlias, keystorePassword.toCharArray(), superAdminPassword.toCharArray());
 
         ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
         X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(
@@ -221,19 +245,19 @@ public class CertificatesServiceImpl implements CertificatesService {
                 dto.getValidityEnd(), request.getSubject(), request.getSubjectPublicKeyInfo());
 
         // Add extensions
-        var extensions = dto.getExtensions();
+        ExtensionsDTO extensions = dto.getExtensions();
         // Basic constraints
-        var basicConstraints = extensions.getBasicConstraints();
+        BasicConstraintsDTO basicConstraints = extensions.getBasicConstraints();
         if (basicConstraints.getIsUsed()) {
             certificateBuilder.addExtension(Extension.basicConstraints, false, new BasicConstraints(basicConstraints.getSubjectIsCa()));
         }
         // Key usage
-        var keyUsage = extensions.getKeyUsage();
+        KeyUsageDTO keyUsage = extensions.getKeyUsage();
         if (keyUsage.getIsUsed()) {
             certificateBuilder.addExtension(Extension.keyUsage, false, new KeyUsage(keyUsage.toBitMask()));
         }
         // Extended key usage
-        var extendedKeyUsage = extensions.getExtendedKeyUsage();
+        ExtendedKeyUsageDTO extendedKeyUsage = extensions.getExtendedKeyUsage();
         if (extendedKeyUsage.getIsUsed()) {
             certificateBuilder.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsage.toKeyPurposeIds()));
         }
@@ -256,7 +280,7 @@ public class CertificatesServiceImpl implements CertificatesService {
     }
 
     private PKCS10CertificationRequest fromDto(CSR csr, KeyPair keyPair, SignatureAlgEnumDTO algo) throws Exception {
-        var builder = new X500NameBuilder(BCStyle.INSTANCE);
+        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
         builder.addRDN(BCStyle.CN, csr.getCommonName());
         builder.addRDN(BCStyle.O, csr.getOrganization());
         builder.addRDN(BCStyle.OU, csr.getOrganizationUnit());
@@ -264,7 +288,7 @@ public class CertificatesServiceImpl implements CertificatesService {
         builder.addRDN(BCStyle.EmailAddress, csr.getEmail());
         builder.addRDN(BCStyle.L, csr.getLocale());
         builder.addRDN(BCStyle.ST, csr.getState());
-        var name = builder.build();
+        X500Name name = builder.build();
         PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(name, keyPair.getPublic());
         JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder(signAlgoFromEnum(algo));
         ContentSigner signer = csBuilder.build(keyPair.getPrivate());
@@ -283,8 +307,8 @@ public class CertificatesServiceImpl implements CertificatesService {
     }
 
     private KeyPair generateKeyPair() throws Exception {
-        var keyGen = KeyPairGenerator.getInstance("RSA");
-        var random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
         keyGen.initialize(2048, random);
         return keyGen.generateKeyPair();
     }

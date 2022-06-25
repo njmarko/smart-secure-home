@@ -45,7 +45,7 @@ public class CertificatesController {
     @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
     @GetMapping
         public Page<ReadCertificateResponse> read(@PageableDefault Pageable pageable) {
-        var certificates = certificatesService.read(pageable);
+        Page<X509Certificate> certificates = certificatesService.read(pageable);
         return certificates.map(toReadResponse::convert);
     }
 
@@ -59,14 +59,14 @@ public class CertificatesController {
     @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
     @GetMapping(value = "/{serialNumber}")
     public ReadCertificateResponse read(@PathVariable Integer serialNumber) {
-        var certificate = certificatesService.read(serialNumber);
+    	X509Certificate certificate = certificatesService.read(serialNumber);
         return toReadResponse.convert(certificate);
     }
 
     @PreAuthorize("hasAuthority('READ_CERTIFICATES')")
     @GetMapping(value = "/{serialNumber}/validity")
     public CheckValidityResponse validity(@PathVariable Integer serialNumber) {
-        var certificate = certificatesService.read(serialNumber);
+        X509Certificate certificate = certificatesService.read(serialNumber);
         return toCheckValidityResponse.convert(certificate);
     }
 
@@ -106,7 +106,7 @@ public class CertificatesController {
     @PreAuthorize("hasAuthority('READ_CSRS')")
     @GetMapping(value = "/csr")
     public Page<CsrDTO> getCertificateStatus(@PageableDefault Pageable pageable) {
-        var page = certificatesService.readCsrData(pageable);
+        Page<CSR> page = certificatesService.readCsrData(pageable);
         return page.map(csrCsrDTOEntityConverter::convert);
     }
 

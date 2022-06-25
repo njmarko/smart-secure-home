@@ -44,11 +44,11 @@ public class KeystoreServiceImpl implements KeystoreService {
     }
 
     public List<X509Certificate> readCertificates() {
-        var certificates = new ArrayList<X509Certificate>();
+        ArrayList<X509Certificate> certificates = new ArrayList<X509Certificate>();
         try {
-            var aliases = keyStore.aliases();
+            Enumeration<String> aliases = keyStore.aliases();
             while (aliases.hasMoreElements()) {
-                var certificate = keyStore.getCertificate(aliases.nextElement());
+                Certificate certificate = keyStore.getCertificate(aliases.nextElement());
                 log.info(certificate.toString());
                 certificates.add((X509Certificate) certificate);
             }
@@ -61,7 +61,7 @@ public class KeystoreServiceImpl implements KeystoreService {
     @Override
     public Optional<X509Certificate> readOne(String alias) {
         try {
-            var certificate = keyStore.getCertificate(alias);
+            Certificate certificate = keyStore.getCertificate(alias);
             if (certificate == null) {
                 return Optional.empty();
             }

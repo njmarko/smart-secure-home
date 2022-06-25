@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="template-simple-KBase" packages="bseprules">
+        <ksession name="templateSimpleKsession" type="stateful"/>
+    </kbase>
+    <kbase name="cepConfigKbase" eventProcessingMode="stream" packages="bseprules">
+        <ksession name="cepConfigKsessionPseudoClock" clockType="pseudo" type="stateful"/>
+        <ksession name="cepConfigKsessionRealtimeClock" clockType="realtime" type="stateful"/>
+    </kbase>
+</kmodule>
