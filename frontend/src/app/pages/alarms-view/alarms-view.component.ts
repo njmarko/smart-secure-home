@@ -1,24 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observer } from 'rxjs';
-import { Log } from 'src/app/model/log/Log';
+import { Alarm } from 'src/app/model/log/Alarm';
+import { EventBusService } from 'src/app/services/event-bus/event-bus.service';
 import { LogService } from 'src/app/servies/log-service/log.service';
 import { ErrorService } from 'src/app/shared/error-service/error.service';
 
 @Component({
-  selector: 'app-logs-view',
-  templateUrl: './logs-view.component.html',
-  styleUrls: ['./logs-view.component.scss']
+  selector: 'app-alarms-view',
+  templateUrl: './alarms-view.component.html',
+  styleUrls: ['./alarms-view.component.scss']
 })
-export class LogsViewComponent implements OnInit {
+export class AlarmsViewComponent implements OnInit {
   displayedColumns: string[] = [
     'timestamp',
-    'logType',
-    'content',
+    'message',
   ];
 
-  dataSource: MatTableDataSource<Log> =
-    new MatTableDataSource<Log>();
+  dataSource: MatTableDataSource<Alarm> =
+    new MatTableDataSource<Alarm>();
   pageNum: number = 0;
   pageSize: number = 0;
   totalPages: number = 0;
@@ -28,17 +28,19 @@ export class LogsViewComponent implements OnInit {
 
   constructor(
     private logService: LogService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private eventBus: EventBusService
   ) { }
 
   ngOnInit(): void {
     this.fetchData(0, this.defaultPageSize);
+    this.eventBus.onAlarmOccurred.subscribe(_ => this.fetchData(0, this.defaultPageSize));
   }
 
   fetchData(pageIdx: number, pageSize: number): void {
     this.waitingResults = true;
     this.logService
-      .read(pageIdx, pageSize)
+      .readAlarms(pageIdx, pageSize)
       .subscribe((page) => {
         this.pageNum = page.pageable.pageNumber;
         this.pageSize = page.pageable.pageSize;
@@ -66,5 +68,4 @@ export class LogsViewComponent implements OnInit {
       },
     };
   }
-
 }

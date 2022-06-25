@@ -1,26 +1,19 @@
 <app-toolbar></app-toolbar>
 <div class="centeringDiv">
-    <h2>Server logs</h2>
+    <h2>Alarms view</h2>
     <div class="tableWrapper mat-elevation-z8">
         <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="logType">
-                <th scope="col" mat-header-cell *matHeaderCellDef>Log type</th>
-                <td mat-cell *matCellDef="let log">
-                    {{ log.logType }}
-                </td>
-            </ng-container>
-
             <ng-container matColumnDef="timestamp">
                 <th scope="col" mat-header-cell *matHeaderCellDef>Timestamp</th>
-                <td mat-cell *matCellDef="let log">
-                    {{ log.timestamp }}
+                <td mat-cell *matCellDef="let alarm">
+                    {{ alarm.timestamp }}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="content">
-                <th scope="col" mat-header-cell *matHeaderCellDef>Content</th>
-                <td mat-cell *matCellDef="let log">
-                    {{ log.content }}
+            <ng-container matColumnDef="message">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Message</th>
+                <td mat-cell *matCellDef="let alarm">
+                    {{ alarm.message }}
                 </td>
             </ng-container>
 

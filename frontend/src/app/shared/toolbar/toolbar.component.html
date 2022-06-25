@@ -15,6 +15,8 @@
     *ngIf="this.currentUserService.hasAuthority('CONFIGURE_DEVICES')"><span>Real estates</span></a>
   <a mat-button routerLink="/logs" value="logs"
     *ngIf="this.currentUserService.hasAuthority('READ_LOGS')"><span>Logs</span></a>
+  <a mat-button routerLink="/alarms" value="alarms"
+    *ngIf="this.currentUserService.hasAuthority('READ_ALARMS')"><span>Alarms</span></a>
   <span class="standard-spacer"></span>
   <a mat-button routerLink="/login" value="login"
     *ngIf="!this.currentUserService.getCurrentUser()"><span>Login</span></a>

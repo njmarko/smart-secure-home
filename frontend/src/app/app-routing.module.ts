@@ -18,6 +18,7 @@ import { ManageRealEstatesComponent } from './pages/manage-real-estates/manage-r
 import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-estates.component';
 import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
 import { LogsViewComponent } from './pages/logs-view/logs-view.component';
+import { AlarmsViewComponent } from './pages/alarms-view/alarms-view.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -97,6 +98,12 @@ const routes: Routes = [
     component: LogsViewComponent,
     canActivate: [RoleGuard],
     data: { roles: ['READ_LOGS'] },
+  },
+  {
+    path: 'alarms',
+    component: AlarmsViewComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['READ_ALARMS'] },
   }
 ];
 

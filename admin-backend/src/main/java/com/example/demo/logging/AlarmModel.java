@@ -13,7 +13,7 @@ import lombok.Setter;
 @Document
 @Getter @Setter
 public class AlarmModel {
-    private String content;
+    private String message;
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime timestamp;
     
@@ -21,8 +21,8 @@ public class AlarmModel {
     	this.timestamp = LocalDateTime.now();
     }
     
-    public AlarmModel(String content) {
+    public AlarmModel(String message) {
     	this();
-    	this.content = content;
+    	this.message = message;
     }
 }
