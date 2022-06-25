@@ -9,7 +9,7 @@ import { Alarm } from 'src/app/model/log/Alarm';
   providedIn: 'root'
 })
 export class WebSocketService {
-  url: string = 'https://localhost:8082/socket/';
+  url: string = 'https://localhost:8082/socket';
   private stompClient!: any;
   public isLoaded: boolean = false;
   alarmNotifier: EventEmitter<Alarm> = new EventEmitter<Alarm>();

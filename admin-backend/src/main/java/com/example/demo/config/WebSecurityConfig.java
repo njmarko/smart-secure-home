@@ -80,9 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 								.antMatchers("/api/certificates/csr-verification").permitAll()
 								.antMatchers("/api/certificates/generateCSR").permitAll()
 								.antMatchers("/api/certificates/addCSR").permitAll()
-								
-								// TODO: REVISIT WHY WITHOUT THIS FAILS IF THE USER IS AUTHENTICATED!!!
 								.antMatchers("/socket/**").permitAll()
+								.antMatchers("/live-alarms").hasAuthority("READ_ALARMS")
 
 								
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
