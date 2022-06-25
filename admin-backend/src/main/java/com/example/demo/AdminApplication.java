@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.List;
 
+import com.example.demo.events.RequestReceived;
 import com.example.demo.model.CertificateData;
 import com.example.demo.repository.CertificateDataRepository;
 
@@ -32,6 +33,11 @@ public class AdminApplication {
 //				kieSession.fireAllRules();
 //				Thread.sleep(1000L);
 //			}
+			RequestReceived req = new RequestReceived();
+			req.setIp("adresa 1");
+			kieSession.insert(req);
+			kieSession.fireAllRules();
+			System.out.println(req.getProcessed());
 		};
 	}
 

@@ -1,0 +1,38 @@
+package bseprules;
+global com.example.demo.bus.EventBus eventBus;
+import com.example.demo.events.*;
+
+rule "Detect request from malicious IP adresa 3_2"
+when
+	$e: RequestReceived(ip == "adresa 3", processed == false)
+then
+	modify ($e) {
+		setProcessed(true);
+	}
+	System.out.println("Access from malicious IP address: adresa 3");
+	eventBus.onAlarm(new AlarmOccurred("Access from malicious IP address: adresa 3"));
+end
+
+rule "Detect request from malicious IP adresa 2_1"
+when
+	$e: RequestReceived(ip == "adresa 2", processed == false)
+then
+	modify ($e) {
+		setProcessed(true);
+	}
+	System.out.println("Access from malicious IP address: adresa 2");
+	eventBus.onAlarm(new AlarmOccurred("Access from malicious IP address: adresa 2"));
+end
+
+rule "Detect request from malicious IP adresa 1_0"
+when
+	$e: RequestReceived(ip == "adresa 1", processed == false)
+then
+	modify ($e) {
+		setProcessed(true);
+	}
+	System.out.println("Access from malicious IP address: adresa 1");
+	eventBus.onAlarm(new AlarmOccurred("Access from malicious IP address: adresa 1"));
+end
+
+

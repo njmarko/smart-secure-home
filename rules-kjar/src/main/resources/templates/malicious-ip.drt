@@ -1,0 +1,23 @@
+template header
+maliciousIp
+
+package bseprules;
+
+global com.example.demo.bus.EventBus eventBus;
+
+import com.example.demo.events.*;
+
+template "malicious-ip-rules"
+
+rule "Detect request from malicious IP @{maliciousIp}_@{row.rowNumber}"
+when
+	$e: RequestReceived(ip == "@{maliciousIp}", processed == false)
+then
+	modify ($e) {
+		setProcessed(true);
+	}
+	System.out.println("Access from malicious IP address: @{maliciousIp}");
+	eventBus.onAlarm(new AlarmOccurred("Access from malicious IP address: @{maliciousIp}"));
+end
+
+end template

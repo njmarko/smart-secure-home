@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import com.example.demo.bus.EventBus;
+import com.example.demo.events.AlarmOccurred;
 import com.example.demo.events.BaseEvent;
 
 @Service
@@ -14,15 +16,19 @@ import com.example.demo.events.BaseEvent;
 public class LogService {
     private final LogRepository logRepository;
     private final KieSession kieSession;
+    private final EventBus eventBus;
     
     public void save(BaseEvent event) {
-    	logRepository.save(event.log());
+    	this.save(event.log());
     	kieSession.insert(event);
     	kieSession.fireAllRules();
     }
 
     public void save(LogModel log) {
         logRepository.save(log);
+        if (log.getLogType() == LogType.ERROR) {
+        	eventBus.onAlarm(new AlarmOccurred("ERROR log occured."));
+        }
     }
 
     public void info(String message) {
