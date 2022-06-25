@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import com.example.demo.bus.EventBus;
+
 import org.drools.core.ClockType;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
@@ -29,7 +31,7 @@ public class AppConfiguration {
     }
     
     @Bean
-	public KieSession kieSession() {
+	public KieSession kieSession(EventBus eventBus) {
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kContainer = ks
 				.newKieContainer(ks.newReleaseId("rs.bsep", "rules-kjar", "0.0.1-SNAPSHOT"));
@@ -41,7 +43,8 @@ public class AppConfiguration {
 		kieSessionConfiguration.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));
 		KieSession kieSession = kieBase.newKieSession(kieSessionConfiguration, null);
 		
-		// TODO: Add required globals to session later on (once we introduce sockets)
+		kieSession.setGlobal("eventBus", eventBus);
+		
 		return kieSession;
 	}
 

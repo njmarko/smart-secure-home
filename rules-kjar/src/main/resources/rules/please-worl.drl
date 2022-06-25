@@ -1,8 +1,13 @@
 package bseprules;
 
+global com.example.demo.bus.EventBus eventBus;
+
+import com.example.demo.dto.AlarmOccured;
+
 rule "Test rule to make sure this works"
 when
 	String(this == "Go")
 then
-	System.out.println("Finally got it to work...");
-end;
+	System.out.println("sending message with socekts...");
+	eventBus.onAlarm(new AlarmOccured("Hello from drools xD"));
+end

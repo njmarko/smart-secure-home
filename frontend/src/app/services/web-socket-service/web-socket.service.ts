@@ -54,7 +54,9 @@ export class WebSocketService {
   }
 
   disconnect(): void {
-    this.stompClient.disconnect();
-    this.isLoaded = false;
+    if (this.isLoaded) {
+      this.stompClient.disconnect();
+      this.isLoaded = false;
+    }
   }
 }

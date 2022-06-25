@@ -2,8 +2,6 @@ package com.example.demo;
 
 import java.util.List;
 
-import com.example.demo.bus.EventBus;
-import com.example.demo.dto.AlarmOccured;
 import com.example.demo.model.CertificateData;
 import com.example.demo.repository.CertificateDataRepository;
 
@@ -20,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 public class AdminApplication {
 	private final CertificateDataRepository certificateDataRepository;
 	private final KieSession kieSession;
-	private final EventBus eventBus;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AdminApplication.class, args);
@@ -30,10 +27,9 @@ public class AdminApplication {
 	public ApplicationRunner test() {
 		return args -> {
 			prepareTestMapping();
-			kieSession.insert("Go");
-			kieSession.fireAllRules();
 			while (true) {
-				eventBus.onAlarm(new AlarmOccured("Okinuo se alarm..."));
+				kieSession.insert(new String("Go"));
+				kieSession.fireAllRules();
 				Thread.sleep(1000L);
 			}
 		};
