@@ -2,6 +2,32 @@
 <div class="centeringDiv">
     <h2>Alarms view</h2>
     <div class="tableWrapper mat-elevation-z8">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <h4><b>Rule</b></h4>
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Rule name..." formControlName="name" />
+                <mat-error> Please provide a valid rule anem.</mat-error>
+            </mat-form-field>
+            <h4><b>When</b></h4>
+            <mat-form-field class="full-width-input">
+                <textarea cdkAutosizeMinRows="10" cdkAutosizeMaxRows="20" matInput placeholder="When..."
+                    formControlName="when" required></textarea>
+                <mat-error> Please provide a valid when section.</mat-error>
+            </mat-form-field>
+            <h4><b>Then</b></h4>
+            <mat-form-field class="full-width-input">
+                <textarea cdkAutosizeMinRows="10" cdkAutosizeMaxRows="20" matInput placeholder="Then..."
+                    formControlName="then"></textarea>
+                <mat-error> Please provide a valid then section.</mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Message..." formControlName="message" />
+                <mat-error> Please provide a valid alarm message.</mat-error>
+            </mat-form-field>
+            <button mat-raised-button [disabled]="!form.valid || loading" color="primary">
+                Create alarm rule
+            </button>
+        </form>
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="name">
                 <th scope="col" mat-header-cell *matHeaderCellDef>Alarm name</th>
@@ -27,7 +53,7 @@
             <ng-container matColumnDef="deactivate">
                 <th scope="col" mat-header-cell *matHeaderCellDef>Deactivate rule</th>
                 <td mat-cell *matCellDef="let alarm">
-                    <button mat-button color="primary" (click)="deactivateRule(alarm)">Deactivate rule</button>
+                    <button mat-button color="primary" [disabled]="loading" (click)="deactivateRule(alarm)">Deactivate rule</button>
                 </td>
             </ng-container>
 

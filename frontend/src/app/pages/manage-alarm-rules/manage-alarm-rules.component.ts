@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observer } from 'rxjs';
@@ -28,12 +29,23 @@ export class ManageAlarmRulesComponent implements OnInit {
   defaultPageSize: number = 10;
   totalElements: number = 0;
   waitingResults: boolean = true;
+  loading: boolean = false;
+
+  form: FormGroup;
 
   constructor(
     private alarmRuleService: AlarmRuleService,
     private errorService: ErrorService,
+    private formBuilder: FormBuilder,
     public dialog: MatDialog
-  ) { }
+  ) {
+    this.form = this.formBuilder.group({
+      name: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
+      when: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])],
+      then: ['', Validators.maxLength(2000)],
+      message: ['', Validators.compose([Validators.required, Validators.maxLength(2000)])]
+    });
+  }
 
   ngOnInit(): void {
     this.fetchData(0, this.defaultPageSize);
@@ -53,6 +65,14 @@ export class ManageAlarmRulesComponent implements OnInit {
       });
   }
 
+  onSubmit(): void {
+    if (!this.form.valid) {
+      return;
+    }
+    this.loading = true;
+    this.alarmRuleService.create(this.form.value).subscribe(this.getDefaultEntityServiceHandler());
+  }
+
   onSelectPage(event: any): void {
     this.fetchData(event.pageIndex, event.pageSize);
   }
@@ -65,6 +85,7 @@ export class ManageAlarmRulesComponent implements OnInit {
   }
 
   deactivateRule(alarm: AlarmRule): void {
+    this.loading = true;
     this.alarmRuleService.deactivate(alarm.id).subscribe(this.getDefaultEntityServiceHandler());
   }
 
@@ -74,10 +95,12 @@ export class ManageAlarmRulesComponent implements OnInit {
     return {
       next: (_) => {
         this.fetchData(page ?? this.pageNum, this.pageSize);
+        this.loading = false;
       },
       error: (err) => {
         this.errorService.handle(err);
         this.waitingResults = false;
+        this.loading = false;
       },
     };
   }

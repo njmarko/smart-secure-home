@@ -3,6 +3,25 @@ global com.example.demo.bus.EventBus eventBus;
 import com.example.demo.events.*;
 import com.example.demo.logging.*;
 
+rule "Detect alarm novo pravilo_2"
+when
+	String(this == "pera")
+String(this == "mika")
+then
+
+	System.out.println("Detected: pera i mika okinuli alarm");
+	eventBus.onAlarm(new AlarmOccurred("pera i mika okinuli alarm"));
+end
+
+rule "Detect alarm Test pravilo_1"
+when
+	String(this == "test pravilo")
+then
+
+	System.out.println("Detected: Okinuto test pravilo");
+	eventBus.onAlarm(new AlarmOccurred("Okinuto test pravilo"));
+end
+
 rule "Detect alarm Stupid alarm rule 1_0"
 when
 	String(this == "This should never happen.")
