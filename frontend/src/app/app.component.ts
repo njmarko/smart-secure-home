@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { CurrentUserService } from './services/currrent-user-service/current-user.service';
 import { EventBusService } from './services/event-bus/event-bus.service';
 import { WebSocketService } from './services/web-socket-service/web-socket.service';
@@ -16,13 +17,14 @@ export class AppComponent implements OnInit {
     private currentUserService: CurrentUserService,
     private socketService: WebSocketService,
     private eventBus: EventBusService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
-
   }
 
   ngOnInit(): void {
     this.currentUserService.onCurrentUserChanged().subscribe(_ => this.onUserChanged());
+    this.onUserChanged();
   }
 
   onUserChanged(): void {
@@ -30,7 +32,10 @@ export class AppComponent implements OnInit {
       this.socketService.initializeWebSocketConnection();
       this.socketService.onAlarmOccured().subscribe(alarm => {
         this.eventBus.onAlarmOccurred.emit();
-        this.snackBar.open(alarm.message, "Confirm", { duration: 3000 });
+        const alarmMessage = this.snackBar.open(alarm.message, "View alarms", { duration: 3000 });
+        alarmMessage.onAction().subscribe(_ => {
+          this.router.navigate(['/alarms']);
+        });
       })
     } else {
       this.socketService.disconnect();
