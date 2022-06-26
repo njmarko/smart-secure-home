@@ -11,13 +11,17 @@ import { MaterialModule } from './material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { MessageViewComponent } from './pages/message-view/message-view.component';
+import { SuchEmptyComponent } from './components/such-empty/such-empty.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     MyObjectsComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    SuchEmptyComponent,
+    MessageViewComponent
   ],
   imports: [
     BrowserModule,

@@ -1,27 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { Observer } from 'rxjs';
-import { Log } from 'src/app/model/log/Log';
-import { SearchLogsRequest } from 'src/app/model/log/SearchLogsRequest';
-import { LogService } from 'src/app/services/log-service/log.service';
-import { ErrorService } from 'src/app/shared/error-service/error.service';
+import { DeviceMessage } from 'src/app/model/DeviceMessage';
+import { SearchMessagesRequest } from 'src/app/model/SearchMessagesRequest';
+import { DeviceMessageService } from 'src/app/services/device-message-service/device-message.service';
+import { ErrorService } from 'src/app/services/error-service/error.service';
 
 @Component({
-  selector: 'app-logs-view',
-  templateUrl: './logs-view.component.html',
-  styleUrls: ['./logs-view.component.scss']
+  selector: 'app-message-view',
+  templateUrl: './message-view.component.html',
+  styleUrls: ['./message-view.component.css']
 })
-export class LogsViewComponent implements OnInit {
+export class MessageViewComponent implements OnInit {
   displayedColumns: string[] = [
+    'messageType',
     'timestamp',
-    'logType',
     'content',
+    'deviceId'
   ];
 
-  dataSource: MatTableDataSource<Log> =
-    new MatTableDataSource<Log>();
+  dataSource: MatTableDataSource<DeviceMessage> =
+    new MatTableDataSource<DeviceMessage>();
   pageNum: number = 0;
   pageSize: number = 0;
   totalPages: number = 0;
@@ -31,11 +33,13 @@ export class LogsViewComponent implements OnInit {
 
   dateForm: FormGroup;
   form: FormGroup;
+  realEstateId: number;
 
   constructor(
-    private logService: LogService,
+    private deviceMessageService: DeviceMessageService,
     private errorService: ErrorService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute
   ) {
     this.dateForm = this.formBuilder.group({
       from: [new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), Validators.required],
@@ -45,6 +49,7 @@ export class LogsViewComponent implements OnInit {
       regex: [''],
       type: ['INFO', Validators.required]
     });
+    this.realEstateId = this.route.snapshot.params['id'];
   }
 
   ngOnInit(): void {
@@ -74,22 +79,22 @@ export class LogsViewComponent implements OnInit {
   }
 
   fetchData(pageIdx: number, pageSize: number): void {
-    const request: SearchLogsRequest = {
-      type: this.form.value.type,
+    const request: SearchMessagesRequest = {
+      realEstateId: this.realEstateId,
+      messageType: this.form.value.type,
       regex: this.form.value.regex,
       from: moment(this.dateForm.value.from).format('yyy-MM-DD'),
       to: moment(this.dateForm.value.to).format('yyy-MM-DD')
     };
     this.waitingResults = true;
-    this.logService
-      .readLogs(request, pageIdx, pageSize)
+    this.deviceMessageService
+      .read(request, pageIdx, pageSize)
       .subscribe((page) => {
         this.pageNum = page.pageable.pageNumber;
         this.pageSize = page.pageable.pageSize;
         this.totalPages = page.totalPages;
         this.dataSource.data = page.content;
         this.totalElements = page.totalElements;
-        this.waitingResults = false;
       });
   }
 
@@ -110,5 +115,4 @@ export class LogsViewComponent implements OnInit {
       },
     };
   }
-
 }

@@ -1,9 +1,12 @@
 package kiber.bezbednjaci.service;
 
 import kiber.bezbednjaci.dto.message.DeviceMessageRequest;
+import kiber.bezbednjaci.dto.message.SearchMessagesRequest;
 import kiber.bezbednjaci.model.DeviceMessage;
 import kiber.bezbednjaci.repository.DeviceMessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -25,5 +28,9 @@ public class DeviceMessageService {
         }
         // TODO: Insert the message in KieSession here...
         return deviceMessageRepository.save(message);
+    }
+
+    public Page<DeviceMessage> read(SearchMessagesRequest request, Pageable pageable) {
+        return deviceMessageRepository.search(request.getRealEstateId(), request.getMessageType(), request.getRegex(), request.fromTimestamp(), request.toTimestamp(), pageable);
     }
 }

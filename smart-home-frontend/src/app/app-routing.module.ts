@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthorizedGuard } from './guards/authorized/authorized.guard';
 import { LoginGuard } from './guards/login/login.guard';
 import { LoginComponent } from './pages/login/login.component';
+import { MessageViewComponent } from './pages/message-view/message-view.component';
 import { MyObjectsComponent } from './pages/my-objects/my-objects.component';
 
 const routes: Routes = [
@@ -18,10 +19,15 @@ const routes: Routes = [
     pathMatch: 'full',
     canActivate: [AuthorizedGuard],
   },
+  {
+    path: 'real-estates/:id/messages',
+    component: MessageViewComponent,
+    canActivate: [AuthorizedGuard]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -1,0 +1,38 @@
+.tableWrapper {
+    width: 100%;
+    max-width: 1600px;
+}
+
+.centeringDiv {
+    display: grid;
+    place-items: center;
+    margin-top: 24px;
+    margin: 15px;
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+}
+
+#pagination-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+#spinner-box {
+    margin-top: auto;
+}
+
+button {
+    margin: auto;
+}
+
+mat-form-field {
+    width: 100%;
+    margin-right: 1em;
+}
+
+form {
+    margin: 15px;
+}
