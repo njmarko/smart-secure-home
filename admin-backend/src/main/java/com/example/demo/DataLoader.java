@@ -121,9 +121,8 @@ public class DataLoader implements ApplicationRunner {
 
         // CREATE REAL ESTATES HERE...
         RealEstate home = new RealEstate("Kuca").addStakeholder(user1);
-        RealEstate dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);
+        RealEstate dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1).addStakeholder(user4);
         RealEstate helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
-        dogHouse.addStakeholder(user4);
 
         user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
         user4.addRealEstate(dogHouse);
