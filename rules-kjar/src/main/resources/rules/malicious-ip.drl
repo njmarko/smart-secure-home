@@ -2,6 +2,17 @@ package bseprules;
 global com.example.demo.bus.EventBus eventBus;
 import com.example.demo.events.*;
 
+rule "Detect request from malicious IP adresa 4_3"
+when
+	$e: RequestReceived(ip == "adresa 4", processed == false)
+then
+	modify ($e) {
+		setProcessed(true);
+	}
+	System.out.println("Access from malicious IP address: adresa 4");
+	eventBus.onAlarm(new AlarmOccurred("Access from malicious IP address: adresa 4"));
+end
+
 rule "Detect request from malicious IP adresa 3_2"
 when
 	$e: RequestReceived(ip == "adresa 3", processed == false)

@@ -1,12 +1,9 @@
 package com.example.demo.config;
 
 import com.example.demo.bus.EventBus;
-import com.example.demo.service.KjarProjectService;
-import com.example.demo.service.TemplateService;
+import com.example.demo.service.MaliciousIpService;
 import lombok.extern.slf4j.Slf4j;
 import org.drools.core.ClockType;
-import org.drools.template.DataProvider;
-import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
@@ -36,21 +33,13 @@ public class AppConfiguration {
     }
     
     @Bean
-	public KieSession kieSession(EventBus eventBus, KjarProjectService kjarProjectService, TemplateService templateService) {
+	public KieSession kieSession(EventBus eventBus, MaliciousIpService maliciousIpService) {
     	log.info("Starting template compilation...");
     	try {
-			processMaliciousIpAddresses(templateService);
+			maliciousIpService.loadAndInsertMaliciousIps();
 			log.info("Compiled templates...");
 		} catch (Exception e) {
 			log.error("Failed to generate rules for processing malicious IP addresses");
-		}
-    	
-    	log.info("Starting kjar compilation...");
-    	try {
-			kjarProjectService.compileKjarProject();
-			log.info("Compiled kjar project...");
-		} catch (Exception e) {
-			log.error("Failed to compile kjar project.");
 		}
     	
 		KieServices ks = KieServices.Factory.get();
@@ -74,14 +63,5 @@ public class AppConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-    
-    private void processMaliciousIpAddresses(TemplateService templateService) throws Exception {
-        DataProvider dataProvider = new ArrayDataProvider(new String[][]{
-            new String[]{"adresa 1"},
-            new String[]{"adresa 2"},
-            new String[]{"adresa 3"}
-        });
-		templateService.instantiateTemplate("malicious-ip", dataProvider);
     }
 }
