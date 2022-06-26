@@ -13,8 +13,7 @@ public class DeviceMessageService {
 
     public DeviceMessage save(Integer realEstateId, DeviceMessageRequest request) {
         var message = new DeviceMessage(request.getDeviceId(), realEstateId, request.getContent(), request.getMessageType(), request.getValue());
-        // TODO: Fetch device configuration
-        // If the device id does not belong to this house raise an error event and send it to admin application
+
         return deviceMessageRepository.save(message);
     }
 }
