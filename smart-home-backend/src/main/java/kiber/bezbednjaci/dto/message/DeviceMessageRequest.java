@@ -16,4 +16,7 @@ public class DeviceMessageRequest {
 
     @NotNull(message = "Message type is required.")
     private MessageType messageType;
+
+    @NotNull(message = "Value is required.")
+    private Double value;
 }

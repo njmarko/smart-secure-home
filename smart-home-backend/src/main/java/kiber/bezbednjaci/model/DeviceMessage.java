@@ -28,16 +28,20 @@ public class DeviceMessage extends BaseEntity {
     @Column(name = "message_type", nullable = false)
     private MessageType messageType;
 
+    @Column(name = "value", nullable = false)
+    private Double value;
+
     public DeviceMessage() {
         super();
     }
 
-    public DeviceMessage(Integer deviceId, Integer realEstateId, String content, MessageType messageType) {
+    public DeviceMessage(Integer deviceId, Integer realEstateId, String content, MessageType messageType, Double value) {
         this();
         this.deviceId = deviceId;
         this.realEstateId = realEstateId;
         this.content = content;
         this.messageType = messageType;
+        this.value = value;
         this.timestamp = LocalDateTime.now();
     }
 }
