@@ -1,0 +1,11 @@
+<h4><b>Rule "{{alarmRule.name}}" </b></h4>
+<h4><b>When</b></h4>
+<p>
+    {{alarmRule.when}}
+</p>
+<h4><b>Then</b></h4>
+<p>
+    {{alarmRule.then}}
+    eventBusNotifyAlarm("{{alarmRule.message}}");
+</p>
+<h4><b>End</b></h4>

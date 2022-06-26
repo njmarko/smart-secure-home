@@ -1,1 +1,1 @@
-mvn install -f "../rules-kjar/pom.xml"
+mvn clean -f "../rules-kjar/pom.xml" && mvn install -f "../rules-kjar/pom.xml"

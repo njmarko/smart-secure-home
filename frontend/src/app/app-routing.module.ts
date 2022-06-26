@@ -19,6 +19,7 @@ import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-es
 import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
 import { LogsViewComponent } from './pages/logs-view/logs-view.component';
 import { AlarmsViewComponent } from './pages/alarms-view/alarms-view.component';
+import { ManageAlarmRulesComponent } from './pages/manage-alarm-rules/manage-alarm-rules.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -104,6 +105,12 @@ const routes: Routes = [
     component: AlarmsViewComponent,
     canActivate: [RoleGuard],
     data: { roles: ['READ_ALARMS'] },
+  },
+  {
+    path: 'alarm-rules',
+    component: ManageAlarmRulesComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['MANAGE_ALARM_RULES'] },
   }
 ];
 

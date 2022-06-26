@@ -56,6 +56,8 @@ import { ViewRealEstatesComponent } from './pages/view-real-estates/view-real-es
 import { ConfigureDevicesComponent } from './pages/configure-devices/configure-devices.component';
 import { LogsViewComponent } from './pages/logs-view/logs-view.component';
 import { AlarmsViewComponent } from './pages/alarms-view/alarms-view.component';
+import { ManageAlarmRulesComponent } from './pages/manage-alarm-rules/manage-alarm-rules.component';
+import { AlarmRuleDialogComponent } from './components/alarm-rule-dialog/alarm-rule-dialog.component';
 
 
 @NgModule({
@@ -82,6 +84,8 @@ import { AlarmsViewComponent } from './pages/alarms-view/alarms-view.component';
     ConfigureDevicesComponent,
     LogsViewComponent,
     AlarmsViewComponent,
+    ManageAlarmRulesComponent,
+    AlarmRuleDialogComponent,
   ],
   imports: [
     BrowserModule,

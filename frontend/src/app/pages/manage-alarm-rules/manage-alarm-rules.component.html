@@ -1,0 +1,49 @@
+<app-toolbar></app-toolbar>
+<div class="centeringDiv">
+    <h2>Alarms view</h2>
+    <div class="tableWrapper mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="name">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Alarm name</th>
+                <td mat-cell *matCellDef="let alarm">
+                    {{ alarm.name }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="message">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Message</th>
+                <td mat-cell *matCellDef="let alarm">
+                    {{ alarm.message }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="viewDetails">
+                <th scope="col" mat-header-cell *matHeaderCellDef>View rule</th>
+                <td mat-cell *matCellDef="let alarm">
+                    <button mat-button color="primary" (click)="openAlarmRuleDialog(alarm)">View rule</button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="deactivate">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Deactivate rule</th>
+                <td mat-cell *matCellDef="let alarm">
+                    <button mat-button color="primary" (click)="deactivateRule(alarm)">Deactivate rule</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <div *ngIf="dataSource.data.length === 0">
+            <app-such-empty></app-such-empty>
+        </div>
+        <div id="pagination-row">
+            <div id="spinner-box">
+                <mat-spinner [diameter]="40" [hidden]="!waitingResults" id="loading-spinner"></mat-spinner>
+            </div>
+            <mat-paginator [pageSizeOptions]="[1, 5, 10, 20]" [pageSize]="pageSize" [pageIndex]="pageNum"
+                [length]="totalElements" showFirstLastButtons aria-label="Select page" (page)="onSelectPage($event)">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
