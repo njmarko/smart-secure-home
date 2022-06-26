@@ -113,9 +113,9 @@ public class DataLoader implements ApplicationRunner {
 
         // CREATE USERS HERE...
         User user1 = createUser("Pera", "Peric", "pera", "Test$123", superAdminRole);
-        User user2 = createUser("Pera", "Peric", "manji_pera", "Test$123", adminRole);
-        User user3 = createUser("Pera", "Peric", "jos_manji_pera", "Test$123", ownerRole);
-        User user4 = createUser("Pera", "Peric", "najmanji_pera", "Test$123", tenantRole);
+        User user2 = createUser("Manji", "Pera", "manji_pera", "Test$123", adminRole);
+        User user3 = createUser("Jos manji", "Pera", "jos_manji_pera", "Test$123", ownerRole);
+        User user4 = createUser("Najmanji", "Pera", "najmanji_pera", "Test$123", tenantRole);
         User hajduk = createUser("Hajduk", "Dusan", "hajduk", "Hajduk1!", adminRole);
 
 
@@ -123,8 +123,10 @@ public class DataLoader implements ApplicationRunner {
         RealEstate home = new RealEstate("Kuca").addStakeholder(user1);
         RealEstate dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1);
         RealEstate helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
+        dogHouse.addStakeholder(user4);
 
         user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
+        user4.addRealEstate(dogHouse);
 
         userRepository.saveAll(
                 List.of(user1, user2, user3, user4, hajduk)

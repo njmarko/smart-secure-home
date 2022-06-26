@@ -31,156 +31,165 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-	private static final Integer CONSECUTIVE_SIGN_IN_MISTAKES_LIMIT = 5;
-	// TODO: Change this to smaller number if we are required to demonstrate this feature
-	private static final long LOCK_DURATION_SECONDS = 15*60L;
-	private final UserRepository userRepository;
-	private final RealEstateRepository realEstateRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final RoleService roleService;
+    private static final Integer CONSECUTIVE_SIGN_IN_MISTAKES_LIMIT = 5;
+    // TODO: Change this to smaller number if we are required to demonstrate this feature
+    private static final long LOCK_DURATION_SECONDS = 15 * 60L;
+    private final UserRepository userRepository;
+    private final RealEstateRepository realEstateRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-	@Override
-	public User findByUsername(String username) throws UsernameNotFoundException {
-		return userRepository.findByUsernameAndIsActiveTrue(username);
-	}
+    @Override
+    @Transactional
+    public User findByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsernameAndIsActiveTrue(username);
+    }
 
-	public User findById(Integer id) throws AccessDeniedException {
-		return userRepository.findById(id).orElseGet(null);
-	}
+    @Override
+    @Transactional
+    public Optional<User> findByUsernameWithRealEstates(String username) {
+        return userRepository.readByUsernameWithRealEstates(username);
+    }
 
-	public List<User> findAll() throws AccessDeniedException {
-		return userRepository.findAll();
-	}
+    ;
 
-	@Override
-	@Transactional
-	public List<RealEstate> getMyRealEstates(String username) {
-		User user = findByUsername(username);
-		if (isAdminUser(user)) {
-			return realEstateRepository.read();
-		}
-		return user.getRealEstates().stream().filter(BaseEntity::getIsActive).collect(Collectors.toList());
-	}
+    public User findById(Integer id) throws AccessDeniedException {
+        return userRepository.findById(id).orElseGet(null);
+    }
 
-	@Override
-	@Transactional
-	public List<User> getUsersBellowMyRole(String username) {
-		User user = findByUsername(username);
-		Integer myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
-		return findWithRoles(new HashSet<>(rolesBellowMine));
-	}
+    public List<User> findAll() throws AccessDeniedException {
+        return userRepository.findAll();
+    }
 
-	@Override
-	@Transactional
-	public void tryLockAccount(String username) {
-		User user = userRepository.findByUsernameAndIsActiveTrue(username);
-		if (Objects.isNull(user)) {
-			return;
-		}
-		user.incorrectSignIn();
-		if (user.getConsecutiveSignInMistakes() >= CONSECUTIVE_SIGN_IN_MISTAKES_LIMIT) {
-			user.setConsecutiveSignInMistakes(0);
-			user.setLockedUntil(Timestamp.valueOf(LocalDateTime.now().plusSeconds(LOCK_DURATION_SECONDS)));
-			log.info(String.format("Banning user %s for %d seconds.", user, LOCK_DURATION_SECONDS));
-		}
-	}
+    @Override
+    @Transactional
+    public List<RealEstate> getMyRealEstates(String username) {
+        User user = findByUsernameWithRealEstates(username).orElseThrow();
+        if (isAdminUser(user)) {
+            return realEstateRepository.read();
+        }
+        return user.getRealEstates().stream().filter(BaseEntity::getIsActive).collect(Collectors.toList());
+    }
 
-	@Override
-	public Page<User> getUsersBellowMyRolePaginated(String name, Pageable pageable) {
-		User user = findByUsername(name);
-		Integer myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
-		return userRepository.findByIsActiveTrueAndRolesIn(rolesBellowMine, pageable);
-	}
+    @Override
+    @Transactional
+    public List<User> getUsersBellowMyRole(String username) {
+        User user = findByUsername(username);
+        Integer myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+        List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+        return findWithRoles(new HashSet<>(rolesBellowMine));
+    }
 
-	@Override
-	@Transactional
-	public void updateRealEstates(Integer userId, UpdateUsersRealEstates usersRealEstates) {
-		User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-		for (RealEstate realEstate: user.getRealEstates()) {
-			realEstate.getStakeholders().remove(user);
-		}
-		user.setRealEstates(new HashSet<>());
-		for (Integer id: usersRealEstates.getRealEstates()) {
-			RealEstate realEstate = realEstateRepository.findById(id).orElseThrow(RealEstateNotFoundException::new);
-			realEstate.addStakeholder(user);
-			user.getRealEstates().add(realEstate);
-		}
-	}
+    @Override
+    @Transactional
+    public void tryLockAccount(String username) {
+        User user = userRepository.findByUsernameAndIsActiveTrue(username);
+        if (Objects.isNull(user)) {
+            return;
+        }
+        user.incorrectSignIn();
+        if (user.getConsecutiveSignInMistakes() >= CONSECUTIVE_SIGN_IN_MISTAKES_LIMIT) {
+            user.setConsecutiveSignInMistakes(0);
+            user.setLockedUntil(Timestamp.valueOf(LocalDateTime.now().plusSeconds(LOCK_DURATION_SECONDS)));
+            log.info(String.format("Banning user %s for %d seconds.", user, LOCK_DURATION_SECONDS));
+        }
+    }
 
-	@Override
-	public User getUserDetails(Integer id) {
-		return userRepository.readWithRealEstates(id).orElseThrow(UserNotFoundException::new);
-	}
+    @Override
+    public Page<User> getUsersBellowMyRolePaginated(String name, Pageable pageable) {
+        User user = findByUsername(name);
+        Integer myRoleLevel = user.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+        List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+        return userRepository.findByIsActiveTrueAndRolesIn(rolesBellowMine, pageable);
+    }
 
-	private List<User> findWithRoles(Set<Role> rolesBellowMine) {
-		return userRepository.read().stream().filter(u -> u.getRoles().stream().anyMatch(rolesBellowMine::contains)).collect(Collectors.toList());
-	}
+    @Override
+    @Transactional
+    public void updateRealEstates(Integer userId, UpdateUsersRealEstates usersRealEstates) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        for (RealEstate realEstate : user.getRealEstates()) {
+            realEstate.getStakeholders().remove(user);
+        }
+        user.setRealEstates(new HashSet<>());
+        for (Integer id : usersRealEstates.getRealEstates()) {
+            RealEstate realEstate = realEstateRepository.findById(id).orElseThrow(RealEstateNotFoundException::new);
+            realEstate.addStakeholder(user);
+            user.getRealEstates().add(realEstate);
+        }
+    }
 
-	@Override
-	public User save(UserRequest userRequest) {
-		User u = new User();
-		u.setUsername(userRequest.getUsername());
-		
-		// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
-		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
-		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		
-		u.setFirstName(userRequest.getFirstName());
-		u.setLastName(userRequest.getLastName());
-		u.setEnabled(true);
-		u.setEmail(userRequest.getEmail());
+    @Override
+    public User getUserDetails(Integer id) {
+        return userRepository.readWithRealEstates(id).orElseThrow(UserNotFoundException::new);
+    }
 
-		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
-		List<Role> roles = roleService.findByName(userRequest.getRole());
-		u.setRoles(roles);
-		
-		return this.userRepository.save(u);
-	}
+    private List<User> findWithRoles(Set<Role> rolesBellowMine) {
+        return userRepository.read().stream().filter(u -> u.getRoles().stream().anyMatch(rolesBellowMine::contains)).collect(Collectors.toList());
+    }
 
-	@Override
-	@Transactional
-	public void deleteUser(String username, String issuerName){
-		Integer myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+    @Override
+    public User save(UserRequest userRequest) {
+        User u = new User();
+        u.setUsername(userRequest.getUsername());
 
-		User user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+        // pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
+        // treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
+        u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
-		// not authorized
-		if (user == null){
-			return;
-		}
+        u.setFirstName(userRequest.getFirstName());
+        u.setLastName(userRequest.getLastName());
+        u.setEnabled(true);
+        u.setEmail(userRequest.getEmail());
 
-		user.setIsActive(false);
-		userRepository.save(user);
-	}
+        // u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
+        List<Role> roles = roleService.findByName(userRequest.getRole());
+        u.setRoles(roles);
 
-	@Override
-	public void modifyRole(String username, String roleName, String issuerName) {
-		User issuer = userRepository.findByUsernameAndIsActiveTrue(issuerName);
-		Integer myRoleLevel = issuer.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
-		List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+        return this.userRepository.save(u);
+    }
 
-		// provera da li rola koja se dodeljuje nije iznad role korisnika koji je pokrenuo akciju
-		Role role = roleService.findByNameAndPriorityLessThanEqual(roleName, myRoleLevel);
-		
-		// provera da li je korisnik kome se dodeljuje rola ispod korisnika koji je pokrenuo akciju
-		User user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+    @Override
+    @Transactional
+    public void deleteUser(String username, String issuerName) {
+        Integer myRoleLevel = userRepository.findByUsernameAndIsActiveTrue(issuerName).getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+        List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
 
-		// not authorized
-		if (user == null || role == null){
-			return;
-		}
+        User user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
 
-		user.setRoles(List.of(role));
-		
-		userRepository.save(user);
-	}
+        // not authorized
+        if (user == null) {
+            return;
+        }
 
-	private boolean isAdminUser(User user) {
-		Set<String> adminRoles = Set.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN");
-		return user.getRoles().stream().map(Role::getName).anyMatch(adminRoles::contains);
-	}
+        user.setIsActive(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void modifyRole(String username, String roleName, String issuerName) {
+        User issuer = userRepository.findByUsernameAndIsActiveTrue(issuerName);
+        Integer myRoleLevel = issuer.getRoles().stream().map(Role::getPriority).min(Integer::compareTo).orElse(0);
+        List<Role> rolesBellowMine = roleService.getRolesBellowPriority(myRoleLevel);
+
+        // provera da li rola koja se dodeljuje nije iznad role korisnika koji je pokrenuo akciju
+        Role role = roleService.findByNameAndPriorityLessThanEqual(roleName, myRoleLevel);
+
+        // provera da li je korisnik kome se dodeljuje rola ispod korisnika koji je pokrenuo akciju
+        User user = userRepository.findByUsernameAndIsActiveTrueAndRolesIn(username, rolesBellowMine);
+
+        // not authorized
+        if (user == null || role == null) {
+            return;
+        }
+
+        user.setRoles(List.of(role));
+
+        userRepository.save(user);
+    }
+
+    private boolean isAdminUser(User user) {
+        Set<String> adminRoles = Set.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN");
+        return user.getRoles().stream().map(Role::getName).anyMatch(adminRoles::contains);
+    }
 
 }
