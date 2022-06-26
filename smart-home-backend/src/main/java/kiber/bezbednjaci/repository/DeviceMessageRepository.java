@@ -1,9 +1,11 @@
 package kiber.bezbednjaci.repository;
 
 import kiber.bezbednjaci.model.DeviceMessage;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.context.annotation.RequestScope;
 
 @Repository
-public interface DeviceMessageRepository extends JpaRepository<DeviceMessage, Integer> {
+@RequestScope
+public interface DeviceMessageRepository extends MongoRepository<DeviceMessage, String> {
 }

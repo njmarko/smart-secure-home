@@ -2,33 +2,22 @@ package kiber.bezbednjaci.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+@Document
 @Getter
 @Setter
-@Entity
-@Table(name = "device_message")
-public class DeviceMessage extends BaseEntity {
-    @Column(name = "timestamp", nullable = false)
+public class DeviceMessage {
+    @Id
+    private String id;
     private LocalDateTime timestamp;
-
-    @Column(name = "device_id", nullable = false)
     private Integer deviceId;
-
-    @Column(name = "real_estate_id", nullable = false)
     private Integer realEstateId;
-
-    @Column(name = "content", length = 2000, nullable = false)
     private String content;
-
-    @Column(name = "message_type", nullable = false)
     private MessageType messageType;
-
-    @Column(name = "value", nullable = false)
     private Double value;
 
     public DeviceMessage() {
