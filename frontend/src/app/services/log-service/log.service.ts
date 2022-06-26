@@ -34,4 +34,8 @@ export class LogService {
       }
     });
   }
+
+  acknowledge(id: string) {
+    return this.http.delete(`${environment.adminAppUrl}logs/alarms/${id}`);
+  }
 }

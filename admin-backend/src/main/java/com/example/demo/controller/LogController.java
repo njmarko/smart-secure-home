@@ -1,21 +1,15 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
 import com.example.demo.dto.SearchLogsRequest;
 import com.example.demo.logging.AlarmModel;
 import com.example.demo.logging.AlarmService;
 import com.example.demo.logging.LogModel;
 import com.example.demo.logging.LogService;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/logs")
@@ -34,5 +28,11 @@ public class LogController {
 	@GetMapping("/alarms")
 	public Page<AlarmModel> readAlarms(Pageable pageable) {
 		return alarmService.read(pageable);
+	}
+
+	@PreAuthorize("hasAuthority('ACKNOWLEDGE_ALARMS')")
+	@DeleteMapping("/alarms/{id}")
+	public void acknowledgeAlarm(@PathVariable String id) {
+		alarmService.acknowledge(id);
 	}
 }

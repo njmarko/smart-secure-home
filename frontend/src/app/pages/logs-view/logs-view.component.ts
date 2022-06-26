@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { Observer } from 'rxjs';
 import { Log } from 'src/app/model/log/Log';
 import { SearchLogsRequest } from 'src/app/model/log/SearchLogsRequest';
-import { LogService } from 'src/app/servies/log-service/log.service';
+import { LogService } from 'src/app/services/log-service/log.service';
 import { ErrorService } from 'src/app/shared/error-service/error.service';
 
 @Component({

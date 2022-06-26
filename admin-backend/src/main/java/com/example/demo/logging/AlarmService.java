@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
@@ -16,6 +18,15 @@ public class AlarmService {
 	}
 
 	public Page<AlarmModel> read(Pageable pageable) {
-		return alarmRepository.findAll(pageable);
+		return alarmRepository.readNonAcknowledged(pageable);
+	}
+
+	public void acknowledge(String id) {
+		AlarmModel alarm = alarmRepository.findById(id).orElse(null);
+		if (alarm == null) {
+			return;
+		}
+		alarm.setAcknowledged(true);
+		alarmRepository.save(alarm);
 	}
 }

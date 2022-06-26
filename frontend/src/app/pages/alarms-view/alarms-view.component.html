@@ -17,6 +17,14 @@
                 </td>
             </ng-container>
 
+            <ng-container matColumnDef="ack">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Acknowledge</th>
+                <td mat-cell *matCellDef="let alarm">
+                    <button [disabled]="!currentUserService.hasAuthority('ACKNOWLEDGE_ALARMS')" mat-button
+                        color="primary" (click)="onAcknowledge(alarm)">Acknowledge</button>
+                </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>

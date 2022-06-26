@@ -53,27 +53,11 @@ public class DataLoader implements ApplicationRunner {
         Privilege configureDevicesPrivilege = createPrivilege("CONFIGURE_DEVICES");
         Privilege readAlarmsPrivilege = createPrivilege("READ_ALARMS");
         Privilege readLogsPrivilege = createPrivilege("READ_LOGS");
+        Privilege acknowledgeAlarmsPrivilege = createPrivilege("ACKNOWLEDGE_ALARMS");
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
         // this is used when we look for possible user to assigned them to objects
-        Role adminRole = createRole("ROLE_ADMIN", 100,
-                createRealEstatePrivilege,
-                readMyRealEstatesPrivilege,
-                deleteUsersPrivilege,
-                modifyRolePrivilege,
-                readUsersPaginated,
-                registerUsersPrivilege,
-                csrSignPrivilege,
-                readCsrDetailsPrivilege,
-                readCertificatesPrivilege,
-                readCsrsPrivilege,
-                addRealEstatesPrivilege,
-                readRealEstateDevicesPrivilege,
-                configureDevicesPrivilege,
-                readAlarmsPrivilege,
-                readLogsPrivilege
-        );
         Role superAdminRole = createRole("ROLE_SUPER_ADMIN", 1000,
                 createRealEstatePrivilege,
                 readMyRealEstatesPrivilege,
@@ -84,6 +68,24 @@ public class DataLoader implements ApplicationRunner {
                 registerUsersPrivilege,
                 readCsrDetailsPrivilege,
                 csrSignPrivilege,
+                readCertificatesPrivilege,
+                readCsrsPrivilege,
+                addRealEstatesPrivilege,
+                readRealEstateDevicesPrivilege,
+                configureDevicesPrivilege,
+                readAlarmsPrivilege,
+                readLogsPrivilege,
+                acknowledgeAlarmsPrivilege
+        );
+        Role adminRole = createRole("ROLE_ADMIN", 100,
+                createRealEstatePrivilege,
+                readMyRealEstatesPrivilege,
+                deleteUsersPrivilege,
+                modifyRolePrivilege,
+                readUsersPaginated,
+                registerUsersPrivilege,
+                csrSignPrivilege,
+                readCsrDetailsPrivilege,
                 readCertificatesPrivilege,
                 readCsrsPrivilege,
                 addRealEstatesPrivilege,

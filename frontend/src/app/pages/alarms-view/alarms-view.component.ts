@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observer } from 'rxjs';
 import { Alarm } from 'src/app/model/log/Alarm';
+import { CurrentUserService } from 'src/app/services/currrent-user-service/current-user.service';
 import { EventBusService } from 'src/app/services/event-bus/event-bus.service';
-import { LogService } from 'src/app/servies/log-service/log.service';
+import { LogService } from 'src/app/services/log-service/log.service';
 import { ErrorService } from 'src/app/shared/error-service/error.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class AlarmsViewComponent implements OnInit {
   displayedColumns: string[] = [
     'timestamp',
     'message',
+    'ack'
   ];
 
   dataSource: MatTableDataSource<Alarm> =
@@ -29,7 +31,8 @@ export class AlarmsViewComponent implements OnInit {
   constructor(
     private logService: LogService,
     private errorService: ErrorService,
-    private eventBus: EventBusService
+    private eventBus: EventBusService,
+    public currentUserService: CurrentUserService
   ) { }
 
   ngOnInit(): void {
@@ -53,6 +56,10 @@ export class AlarmsViewComponent implements OnInit {
 
   onSelectPage(event: any): void {
     this.fetchData(event.pageIndex, event.pageSize);
+  }
+
+  onAcknowledge(alarm: Alarm): void {
+    this.logService.acknowledge(alarm.id).subscribe(this.getDefaultEntityServiceHandler());
   }
 
   getDefaultEntityServiceHandler<TResponse = void>(

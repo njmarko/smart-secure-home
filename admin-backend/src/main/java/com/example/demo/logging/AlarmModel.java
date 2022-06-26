@@ -17,9 +17,11 @@ public class AlarmModel {
     private String message;
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime timestamp;
+    private Boolean acknowledged;
     
     public AlarmModel() {
     	this.timestamp = LocalDateTime.now();
+        this.acknowledged = false;
     }
     
     public AlarmModel(String message) {
