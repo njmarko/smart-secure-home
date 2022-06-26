@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import com.example.demo.dto.SearchLogsRequest;
 import com.example.demo.logging.AlarmModel;
 import com.example.demo.logging.AlarmService;
 import com.example.demo.logging.LogModel;
@@ -25,8 +26,8 @@ public class LogController {
 	
 	@PreAuthorize("hasAuthority('READ_LOGS')")
 	@GetMapping
-	public Page<LogModel> readLogs(Pageable pageable) {
-		return logService.read(pageable);
+	public Page<LogModel> readLogs(SearchLogsRequest searchLogsRequest, Pageable pageable) {
+		return logService.read(searchLogsRequest, pageable);
 	}
 	
 	@PreAuthorize("hasAuthority('READ_ALARMS')")

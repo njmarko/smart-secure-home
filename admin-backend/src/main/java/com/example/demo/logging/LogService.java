@@ -1,18 +1,14 @@
 package com.example.demo.logging;
 
+import com.example.demo.bus.EventBus;
+import com.example.demo.dto.SearchLogsRequest;
+import com.example.demo.events.AlarmOccurred;
+import com.example.demo.events.BaseEvent;
 import lombok.RequiredArgsConstructor;
-
 import org.kie.api.runtime.KieSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.example.demo.bus.EventBus;
-import com.example.demo.events.AlarmOccurred;
-import com.example.demo.events.BaseEvent;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +26,7 @@ public class LogService {
     public void save(LogModel log) {
         logRepository.save(log);
         if (log.getLogType() == LogType.ERROR) {
-        	eventBus.onAlarm(new AlarmOccurred("ERROR log occured."));
+        	eventBus.onAlarm(new AlarmOccurred("ERROR log occurred."));
         }
     }
 
@@ -47,10 +43,10 @@ public class LogService {
     }
 
     private void saveLogType(String message, LogType type) {
-        save(new LogModel(message, LocalDateTime.now(), type));
+        save(new LogModel(message, type));
     }
 
-	public Page<LogModel> read(Pageable pageable) {
-		return this.logRepository.findAll(pageable);
+	public Page<LogModel> read(SearchLogsRequest request, Pageable pageable) {
+		return this.logRepository.search(request.getType(), request.getRegex(), request.fromTimestamp(), request.toTimestamp(), pageable);
 	}
 }

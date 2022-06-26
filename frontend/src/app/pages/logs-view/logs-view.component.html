@@ -2,6 +2,54 @@
 <div class="centeringDiv">
     <h2>Server logs</h2>
     <div class="tableWrapper mat-elevation-z8">
+        <form [formGroup]="form" (reset)="onReset()" (ngSubmit)="onSubmit()">
+            <mat-grid-list cols="4" rowHeight="4:1">
+                <mat-grid-tile>
+                    <mat-form-field class="full-width-input">
+                        <mat-label>Log type</mat-label>
+                        <mat-select formControlName="type">
+                            <mat-option value="INFO">Info</mat-option>
+                            <mat-option value="WARNING">Warning</mat-option>
+                            <mat-option value="ERROR">Error</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field class="full-width-input">
+                        <input matInput placeholder="Search logs..." formControlName="regex" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field class="full-width-input">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
+                            <input matStartDate formControlName="from" placeholder="Start date" />
+                            <input matEndDate formControlName="to" placeholder="End date"
+                                (dateInput)="onDateRangeSubmit()" />
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+
+                        <mat-error *ngIf="dateForm.controls['from'].hasError('matStartDateInvalid')">Invalid start date.
+                        </mat-error>
+                        <mat-error *ngIf="dateForm.controls['to'].hasError('matEndDateInvalid')">Invalid end date.
+                        </mat-error>
+                        <mat-error *ngIf="dateForm.controls['from'].hasError('required')">Please provide start date.
+                        </mat-error>
+                        <mat-error *ngIf="dateForm.controls['to'].hasError('required')">Please provide end date.
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button type="reset" id="reset" mat-flat-button color="basic">
+                        Reset
+                    </button>
+                    <button id="search" type="submit" mat-flat-button color="primary" [disabled]="!form.valid">
+                        Search
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="logType">
                 <th scope="col" mat-header-cell *matHeaderCellDef>Log type</th>
