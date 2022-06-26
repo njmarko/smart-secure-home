@@ -1,0 +1,25 @@
+template header
+name
+when
+then
+message
+
+package bseprules;
+
+global com.example.demo.bus.EventBus eventBus;
+
+import com.example.demo.events.*;
+import com.example.demo.logging.*;
+
+template "alarm-template"
+
+rule "Detect alarm @{name}_@{row.rowNumber}"
+when
+	@{when}
+then
+    @{then}
+	System.out.println("Detected: @{message}");
+	eventBus.onAlarm(new AlarmOccurred("@{message}"));
+end
+
+end template

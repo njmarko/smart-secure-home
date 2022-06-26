@@ -1,16 +1,11 @@
 package com.example.demo.config;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.example.demo.bus.EventBus;
-
+import com.example.demo.service.KjarProjectService;
+import com.example.demo.service.TemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.drools.core.ClockType;
 import org.drools.template.DataProvider;
-import org.drools.template.DataProviderCompiler;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
@@ -28,8 +23,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Configuration
 @EnableAsync
 @Slf4j
@@ -43,10 +36,10 @@ public class AppConfiguration {
     }
     
     @Bean
-	public KieSession kieSession(EventBus eventBus) {
+	public KieSession kieSession(EventBus eventBus, KjarProjectService kjarProjectService, TemplateService templateService) {
     	log.info("Starting template compilation...");
     	try {
-			processMaliciousIpAddresses();
+			processMaliciousIpAddresses(templateService);
 			log.info("Compiled templates...");
 		} catch (Exception e) {
 			log.error("Failed to generate rules for processing malicious IP addresses");
@@ -54,7 +47,7 @@ public class AppConfiguration {
     	
     	log.info("Starting kjar compilation...");
     	try {
-			compileKrajProject();
+			kjarProjectService.compileKjarProject();
 			log.info("Compiled kjar project...");
 		} catch (Exception e) {
 			log.error("Failed to compile kjar project.");
@@ -83,24 +76,12 @@ public class AppConfiguration {
         return new BCryptPasswordEncoder();
     }
     
-    private void processMaliciousIpAddresses() throws Exception {
-        InputStream template = new FileInputStream("../rules-kjar/src/main/resources/templates/malicious-ip.drt");
-        // TODO: Load from some configuration file or something like that
+    private void processMaliciousIpAddresses(TemplateService templateService) throws Exception {
         DataProvider dataProvider = new ArrayDataProvider(new String[][]{
             new String[]{"adresa 1"},
             new String[]{"adresa 2"},
             new String[]{"adresa 3"}
         });
-        DataProviderCompiler converter = new DataProviderCompiler();
-        String compiledTemplateInstance = converter.compile(dataProvider, template);
-        try (FileWriter writter = new FileWriter("../rules-kjar/src/main/resources/rules/malicious-ip.drl")) {
-        	writter.write(compiledTemplateInstance);
-        }
-    }
-    
-    private void compileKrajProject() throws Exception {
-    	String workingDir = System.getProperty("user.dir");
-    	String command = workingDir + "\\compileKjar.bat";
-    	Runtime.getRuntime().exec(command).waitFor();
+		templateService.instantiateTemplate("malicious-ip", dataProvider);
     }
 }
