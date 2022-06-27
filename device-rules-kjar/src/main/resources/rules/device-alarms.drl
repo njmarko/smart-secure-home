@@ -1,6 +1,0 @@
-package bseprules;
-global com.example.demo.bus.EventBus eventBus;
-import com.example.demo.events.*;
-import com.example.demo.logging.*;
-
-

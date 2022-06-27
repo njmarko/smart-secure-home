@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("/my-real-estates")
     public List<RealEstateResponse> myRealEstates() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        var realEstates = restTemplate.getForObject("https://localhost:8082/api/users/my-real-estates", RealEstateResponse[].class);
+        RealEstateResponse[] realEstates = restTemplate.getForObject("https://localhost:8082/api/users/my-real-estates", RealEstateResponse[].class);
         if (Objects.isNull(realEstates)) {
             return List.of();
         }

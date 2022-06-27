@@ -18,8 +18,8 @@ public class DeviceMessageService {
     private final DeviceConfigurationService deviceConfigurationService;
 
     public DeviceMessage save(Integer realEstateId, DeviceMessageRequest request) {
-        var message = new DeviceMessage(request.getDeviceId(), realEstateId, request.getContent(), request.getMessageType(), request.getValue());
-        var deviceConfiguration = deviceConfigurationService.read(request.getDeviceId());
+        DeviceMessage message = new DeviceMessage(request.getDeviceId(), realEstateId, request.getContent(), request.getMessageType(), request.getValue());
+        kiber.bezbednjaci.model.DeviceConfiguration deviceConfiguration = deviceConfigurationService.read(request.getDeviceId());
         if (!deviceConfiguration.getRealEstateId().equals(realEstateId)) {
             throw new RuntimeException("Device id does not belong to this real estate.");
         }

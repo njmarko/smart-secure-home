@@ -6,14 +6,14 @@ message
 
 package bseprules;
 
-global com.example.demo.bus.EventBus eventBus;
+global kiber.bezbednjaci.bus.EventBus eventBus;
 
-import com.example.demo.events.*;
-import com.example.demo.logging.*;
+import kiber.bezbednjaci.events.*;
+import kiber.bezbednjaci.logging.*;
 
 template "device-alarm-template"
 
-rule "Detect alarm @{name}_@{row.rowNumber}"
+rule "Detect device alarm @{name}_@{row.rowNumber}"
 when
 	@{when}
 then
