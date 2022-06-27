@@ -20,6 +20,7 @@ import { ConfigureDevicesComponent } from './pages/configure-devices/configure-d
 import { LogsViewComponent } from './pages/logs-view/logs-view.component';
 import { AlarmsViewComponent } from './pages/alarms-view/alarms-view.component';
 import { ManageAlarmRulesComponent } from './pages/manage-alarm-rules/manage-alarm-rules.component';
+import { ManageDeviceAlarmRulesComponent } from './pages/manage-device-alarm-rules/manage-device-alarm-rules.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -114,7 +115,7 @@ const routes: Routes = [
   },
   {
     path: 'device-alarm-rules',
-    component: ManageAlarmRulesComponent,
+    component: ManageDeviceAlarmRulesComponent,
     canActivate: [RoleGuard],
     data: { roles: ['MANAGE_DEVICE_ALARM_RULES'] },
   }

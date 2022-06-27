@@ -1,0 +1,76 @@
+<app-toolbar></app-toolbar>
+<div class="centeringDiv">
+    <h2>Device alarms view</h2>
+    <div class="tableWrapper mat-elevation-z8">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <h4><b>Rule</b></h4>
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Rule name..." formControlName="name" />
+                <mat-error> Please provide a valid rule anem.</mat-error>
+            </mat-form-field>
+            <h4><b>When</b></h4>
+            <mat-form-field class="full-width-input">
+                <textarea cdkAutosizeMinRows="10" cdkAutosizeMaxRows="20" matInput placeholder="When..."
+                    formControlName="when" required></textarea>
+                <mat-error> Please provide a valid when section.</mat-error>
+            </mat-form-field>
+            <h4><b>Then</b></h4>
+            <mat-form-field class="full-width-input">
+                <textarea cdkAutosizeMinRows="10" cdkAutosizeMaxRows="20" matInput placeholder="Then..."
+                    formControlName="then"></textarea>
+                <mat-error> Please provide a valid then section.</mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+                <input matInput placeholder="Message..." formControlName="message" />
+                <mat-error> Please provide a valid alarm message.</mat-error>
+            </mat-form-field>
+            <button mat-raised-button [disabled]="!form.valid || loading" color="primary">
+                Create alarm rule
+            </button>
+        </form>
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="name">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Alarm name</th>
+                <td mat-cell *matCellDef="let alarm">
+                    {{ alarm.name }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="message">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Message</th>
+                <td mat-cell *matCellDef="let alarm">
+                    {{ alarm.message }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="viewDetails">
+                <th scope="col" mat-header-cell *matHeaderCellDef>View rule</th>
+                <td mat-cell *matCellDef="let alarm">
+                    <button mat-button color="primary" (click)="openAlarmRuleDialog(alarm)">View rule</button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="deactivate">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Deactivate rule</th>
+                <td mat-cell *matCellDef="let alarm">
+                    <button mat-button color="primary" [disabled]="loading" (click)="deactivateRule(alarm)">Deactivate
+                        rule</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <div *ngIf="dataSource.data.length === 0">
+            <app-such-empty></app-such-empty>
+        </div>
+        <div id="pagination-row">
+            <div id="spinner-box">
+                <mat-spinner [diameter]="40" [hidden]="!waitingResults" id="loading-spinner"></mat-spinner>
+            </div>
+            <mat-paginator [pageSizeOptions]="[1, 5, 10, 20]" [pageSize]="pageSize" [pageIndex]="pageNum"
+                [length]="totalElements" showFirstLastButtons aria-label="Select page" (page)="onSelectPage($event)">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
