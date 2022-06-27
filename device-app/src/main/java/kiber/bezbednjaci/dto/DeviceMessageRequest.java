@@ -1,4 +1,4 @@
-package kiber.bezbednjaci.dto.message;
+package kiber.bezbednjaci.dto;
 
 import kiber.bezbednjaci.model.MessageType;
 import lombok.Data;

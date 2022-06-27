@@ -1,2 +1,5 @@
-package kiber.bezbednjaci.model;public class MessageType {
+package kiber.bezbednjaci.model;
+
+public enum MessageType {
+    INFO, WARNING, ERROR
 }
