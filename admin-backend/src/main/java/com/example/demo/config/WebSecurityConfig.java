@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 								.antMatchers("/api/certificates/csr-verification").permitAll()
 								.antMatchers("/api/certificates/generateCSR").permitAll()
 								.antMatchers("/api/certificates/addCSR").permitAll()
+								.antMatchers("/api/devices/**").permitAll()
 								.antMatchers("/socket/**").permitAll()
 								.antMatchers("/live-alarms").hasAuthority("READ_ALARMS")
 

@@ -40,6 +40,6 @@ public class MessageService {
         requestFactory.setHttpClient(httpClient);
 
        var restTemplate = new RestTemplate(requestFactory);
-        restTemplate.postForEntity("https://localhost:8081/api/" + r.getDeviceId() + "/device-messages", r, Object.class);
+        restTemplate.postForEntity("https://localhost:8081/api/device-messages/1", r, Object.class);
     }
 }

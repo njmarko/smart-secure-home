@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 @Repository
 @RequestScope
 public interface DeviceMessageRepository extends MongoRepository<DeviceMessage, String> {
-    @Query("{$and: [{'realEstateId': ?0}, {'messageType': ?1}, {'content': {$regex: ?2}}, {'timestamp': {$gt: ?2, $lt: ?3}}]}")
+    @Query("{$and: [{'realEstateId': ?0}, {'messageType': ?1}, {'content': {$regex: ?2}}, {'timestamp': {$gt: ?3, $lt: ?4}}]}")
     Page<DeviceMessage> search(Integer realEstateId, MessageType messageType, String regex, LocalDateTime localDateTime, LocalDateTime dateTime, Pageable pageable);
 }

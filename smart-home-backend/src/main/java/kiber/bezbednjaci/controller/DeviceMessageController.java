@@ -20,7 +20,7 @@ public class DeviceMessageController {
     private final DeviceConfigurationService deviceConfigurationService;
 
     // TODO: Later, change this to RabbitListener once we switch to RabbitMQ
-    @PostMapping
+    @PostMapping("{id}")
     public void onMessageReceived(@PathVariable Integer id, @Valid @RequestBody DeviceMessageRequest request) {
         deviceMessageService.save(id, request);
     }

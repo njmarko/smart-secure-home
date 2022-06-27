@@ -72,7 +72,7 @@ export class MessageViewComponent implements OnInit {
   }
 
   onDateRangeSubmit(): void {
-    if (!this.form.valid) {
+    if (!this.dateForm.valid) {
       return;
     }
     this.fetchData(0, this.defaultPageSize);
@@ -95,6 +95,7 @@ export class MessageViewComponent implements OnInit {
         this.totalPages = page.totalPages;
         this.dataSource.data = page.content;
         this.totalElements = page.totalElements;
+        this.waitingResults = false;
       });
   }
 
