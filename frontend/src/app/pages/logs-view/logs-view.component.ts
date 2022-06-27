@@ -77,8 +77,8 @@ export class LogsViewComponent implements OnInit {
     const request: SearchLogsRequest = {
       type: this.form.value.type,
       regex: this.form.value.regex,
-      from: moment(this.form.value.from).format('yyy-MM-DD'),
-      to: moment(this.form.value.to).format('yyy-MM-DD')
+      from: moment(this.dateForm.value.from).format('yyy-MM-DD'),
+      to: moment(this.dateForm.value.to).format('yyy-MM-DD')
     };
     this.waitingResults = true;
     this.logService

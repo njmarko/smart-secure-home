@@ -27,5 +27,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("select u from User u left join fetch u.realEstates where u.id=:id and u.isActive=true")
     Optional<User> readWithRealEstates(Integer id);
+
+    @Query("select u from User u left join fetch u.realEstates where u.username=:username and u.isActive=true")
+    Optional<User> readByUsernameWithRealEstates(String username);
 }
 

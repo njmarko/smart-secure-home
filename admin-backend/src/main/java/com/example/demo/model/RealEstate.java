@@ -15,7 +15,10 @@ public class RealEstate extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "realEstates")
+    @ManyToMany(
+            mappedBy = "realEstates",
+            fetch = FetchType.EAGER
+    )
     private Set<User> stakeholders = new HashSet<>();
 
     @OneToMany(mappedBy = "realEstate")

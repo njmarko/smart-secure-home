@@ -5,4 +5,6 @@ import com.example.demo.model.RealEstate;
 
 public interface DeviceService {
     Device configureDevice(Device device, RealEstate realEstate);
+
+    Device read(Integer id);
 }

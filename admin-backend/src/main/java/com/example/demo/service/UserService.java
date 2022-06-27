@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     User findById(Integer id);
@@ -26,4 +27,6 @@ public interface UserService {
     void updateRealEstates(Integer userId, UpdateUsersRealEstates usersRealEstates);
 
     User getUserDetails(Integer id);
+
+    public Optional<User> findByUsernameWithRealEstates(String username);
 }
