@@ -46,7 +46,7 @@ public class DeviceAlarmTemplateServiceImpl implements DeviceAlarmTemplateServic
         List<DeviceAlarmTemplate> alarmTemplates = alarmTemplateRepository.findActive();
         try {
             templateService.instantiateTemplate("alarms", alarmTemplates);
-            kjarProjectService.compileKjarProject();
+            kjarProjectService.compileDeviceKjarProject();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,4 +13,11 @@ public class KjarProjectServiceImpl implements KjarProjectService {
         String command = workingDir + "\\compileKjar.bat";
         Runtime.getRuntime().exec(command).waitFor();
     }
+
+    @Override
+    public void compileDeviceKjarProject() throws IOException, InterruptedException {
+        String workingDir = System.getProperty("user.dir");
+        String command = workingDir + "\\compileDevicesKjar.bat";
+        Runtime.getRuntime().exec(command).waitFor();
+    }
 }

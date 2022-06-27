@@ -1,0 +1,1 @@
+mvn clean -f "../device-rules-kjar/pom.xml" && mvn install -f "../device-rules-kjar/pom.xml"
