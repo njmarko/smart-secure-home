@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>rs.bsep</groupId>
-	<artifactId>device-rules</artifactId>
+	<artifactId>device-rules-kjar</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>device-rules</name>
+	<name>device-rules-kjar</name>
 	<description>Rules for device alarms</description>
 	<packaging>jar</packaging>
 </project>

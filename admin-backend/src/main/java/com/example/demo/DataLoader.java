@@ -55,6 +55,7 @@ public class DataLoader implements ApplicationRunner {
         Privilege readLogsPrivilege = createPrivilege("READ_LOGS");
         Privilege acknowledgeAlarmsPrivilege = createPrivilege("ACKNOWLEDGE_ALARMS");
         Privilege manageAlarmRulesPrivilege = createPrivilege("MANAGE_ALARM_RULES");
+        Privilege manageDeviceAlarmRulesPrivilege = createPrivilege("MANAGE_DEVICE_ALARM_RULES");
 
         // CREATE ROLES HERE...
         // Higher priority means that the role is more important
@@ -77,7 +78,8 @@ public class DataLoader implements ApplicationRunner {
                 readAlarmsPrivilege,
                 readLogsPrivilege,
                 acknowledgeAlarmsPrivilege,
-                manageAlarmRulesPrivilege
+                manageAlarmRulesPrivilege,
+                manageDeviceAlarmRulesPrivilege
         );
         Role adminRole = createRole("ROLE_ADMIN", 100,
                 createRealEstatePrivilege,

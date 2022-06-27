@@ -111,6 +111,12 @@ const routes: Routes = [
     component: ManageAlarmRulesComponent,
     canActivate: [RoleGuard],
     data: { roles: ['MANAGE_ALARM_RULES'] },
+  },
+  {
+    path: 'device-alarm-rules',
+    component: ManageAlarmRulesComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['MANAGE_DEVICE_ALARM_RULES'] },
   }
 ];
 

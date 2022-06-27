@@ -19,6 +19,8 @@
     *ngIf="this.currentUserService.hasAuthority('READ_ALARMS')"><span>Alarms</span></a>
   <a mat-button routerLink="/alarm-rules" value="alarm_rules"
     *ngIf="this.currentUserService.hasAuthority('MANAGE_ALARM_RULES')"><span>Alarm rules</span></a>
+  <a mat-button routerLink="/device-alarm-rules" value="device_alarm_rules"
+    *ngIf="this.currentUserService.hasAuthority('MANAGE_DEVICE_ALARM_RULES')"><span>Device alarm rules</span></a>
   <span class="standard-spacer"></span>
   <a mat-button routerLink="/login" value="login"
     *ngIf="!this.currentUserService.getCurrentUser()"><span>Login</span></a>
