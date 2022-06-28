@@ -20,7 +20,7 @@ import java.security.cert.X509Certificate;
 @RequiredArgsConstructor
 public class MessageService {
 
-    public void sendMessageHttps(DeviceMessageRequest r){
+    public void sendMessageHttps(Integer estateId, DeviceMessageRequest r){
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
         SSLContext sslContext = null;
         try {
@@ -40,6 +40,6 @@ public class MessageService {
         requestFactory.setHttpClient(httpClient);
 
        var restTemplate = new RestTemplate(requestFactory);
-        restTemplate.postForEntity("https://localhost:8081/api/device-messages/1", r, Object.class);
+        restTemplate.postForEntity("https://localhost:8081/api/device-messages/" + estateId, r, Object.class);
     }
 }

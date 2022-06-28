@@ -7,14 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.example.demo.model.Privilege;
-import com.example.demo.model.RealEstate;
-import com.example.demo.model.Role;
-import com.example.demo.model.User;
-import com.example.demo.repository.PrivilegeRepository;
-import com.example.demo.repository.RealEstateRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -30,6 +24,7 @@ public class DataLoader implements ApplicationRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final RealEstateRepository realEstateRepository;
+    private final DeviceRepository deviceRepository;
     private final PrivilegeRepository privilegeRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -122,11 +117,33 @@ public class DataLoader implements ApplicationRunner {
 
 
         // CREATE REAL ESTATES HERE...
-        RealEstate home = new RealEstate("Kuca").addStakeholder(user1);
-        RealEstate dogHouse = new RealEstate("Kuca za kera").addStakeholder(user1).addStakeholder(user4);
-        RealEstate helperObject = new RealEstate("Pomocni objekat").addStakeholder(user1);
+        RealEstate home = new RealEstate("Kuca").addStakeholder(user3);
+        RealEstate dogHouse = new RealEstate("Kuca za kera").addStakeholder(user3).addStakeholder(user4);
+        RealEstate helperObject = new RealEstate("Pomocni objekat").addStakeholder(user3);
 
-        user1.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
+        // CREATE DEVICE CONFIGURATIONS HERE
+        Device d1 = new Device("CCTV Camera", ".*", 1000);
+        Device d2 = new Device("Light Sensor", ".*", 1000);
+        Device d3 = new Device("Door Sensor", ".*", 1000);
+        Device d4 = new Device("Air Humidity Meter", ".*", 1000);
+        Device d5 = new Device("Thermometer", ".*", 1000);
+
+        home.addDevice(d1);
+        home.addDevice(d2);
+        d1.setRealEstate(home);
+        d2.setRealEstate(home);
+
+        dogHouse.addDevice(d3);
+        d3.setRealEstate(dogHouse);
+
+        helperObject.addDevice(d4);
+        helperObject.addDevice(d5);
+        d4.setRealEstate(helperObject);
+        d5.setRealEstate(helperObject);
+
+
+
+        user3.addRealEstate(home).addRealEstate(dogHouse).addRealEstate(helperObject);
         user4.addRealEstate(dogHouse);
 
         userRepository.saveAll(
@@ -135,6 +152,10 @@ public class DataLoader implements ApplicationRunner {
         realEstateRepository.saveAll(
                 List.of(home, dogHouse, helperObject)
         );
+        deviceRepository.saveAll(
+                List.of(d1, d2, d3, d4, d5)
+        );
+
     }
 
     private User createUser(String firstName, String lastName, String username, String password, Role... roles) {

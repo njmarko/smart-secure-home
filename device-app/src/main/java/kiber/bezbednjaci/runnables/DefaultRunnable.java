@@ -41,7 +41,7 @@ public class DefaultRunnable implements Runnable {
                 else msg.setContent(state.getMessageContent() + " " + String.format("%.2f", msg.getValue()) + state.getMeasureUnit());
 
                 System.out.println(msg.getContent());
-                msgSer.sendMessageHttps(msg);
+                msgSer.sendMessageHttps(state.getEstateId(), msg);
 
                 try {
                     Thread.sleep(r.nextInt(10000));

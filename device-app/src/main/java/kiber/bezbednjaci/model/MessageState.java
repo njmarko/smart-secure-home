@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MessageState {
+    private int estateId;
     private double minVal;
     private double maxVal;
     private int numMessages;
