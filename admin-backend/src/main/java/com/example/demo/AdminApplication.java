@@ -2,8 +2,10 @@ package com.example.demo;
 
 import com.example.demo.model.AlarmTemplate;
 import com.example.demo.model.CertificateData;
+import com.example.demo.model.DeviceAlarmTemplate;
 import com.example.demo.repository.CertificateDataRepository;
 import com.example.demo.service.AlarmTemplateService;
+import com.example.demo.service.DeviceAlarmTemplateService;
 import lombok.RequiredArgsConstructor;
 import org.kie.api.runtime.KieSession;
 import org.springframework.boot.ApplicationRunner;
@@ -20,6 +22,8 @@ public class AdminApplication {
 	private final KieSession kieSession;
 	private final AlarmTemplateService alarmTemplateService;
 
+	private final DeviceAlarmTemplateService deviceAlarmTemplateService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(AdminApplication.class, args);
 	}
@@ -29,6 +33,7 @@ public class AdminApplication {
 		return args -> {
 			prepareTestMapping();
 			prepareTestAlarmRules();
+			prepareTestDeviceAlarmRules();
 		};
 	}
 
@@ -37,6 +42,13 @@ public class AdminApplication {
 		AlarmTemplate a2 = new AlarmTemplate("Stupid alarm rule 2", "$s: String(this == \"This should never happen.\")", "System.out.println($s);", "Inaccessible alarm.");
 		alarmTemplateService.createAlarmRule(a1);
 		alarmTemplateService.createAlarmRule(a2);
+	}
+
+	private void prepareTestDeviceAlarmRules() {
+		DeviceAlarmTemplate  a1 = new DeviceAlarmTemplate("Camera", "String(this == \"This should never happen.\")", "", "I told you this should never happen.");
+		DeviceAlarmTemplate a2 = new DeviceAlarmTemplate("Sensor", "$s: String(this == \"This should never happen.\")", "System.out.println($s);", "Inaccessible alarm.");
+		deviceAlarmTemplateService.createAlarmRule(a1);
+		deviceAlarmTemplateService.createAlarmRule(a2);
 	}
 
 	private void prepareTestMapping() {

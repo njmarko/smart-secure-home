@@ -1,0 +1,24 @@
+package bseprules;
+global kiber.bezbednjaci.bus.EventBus eventBus;
+import kiber.bezbednjaci.events.*;
+import kiber.bezbednjaci.logging.*;
+
+rule "Detect device alarm Sensor_1"
+when
+	$s: String(this == "This should never happen.")
+then
+    System.out.println($s);
+	System.out.println("Detected: Inaccessible alarm.");
+	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
+end
+
+rule "Detect device alarm Camera_0"
+when
+	String(this == "This should never happen.")
+then
+
+	System.out.println("Detected: I told you this should never happen.");
+	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
+end
+
+

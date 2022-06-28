@@ -5,6 +5,7 @@ import kiber.bezbednjaci.dto.message.SearchMessagesRequest;
 import kiber.bezbednjaci.model.DeviceMessage;
 import kiber.bezbednjaci.repository.DeviceMessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.kie.api.runtime.KieSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import org.springframework.web.context.annotation.RequestScope;
 public class DeviceMessageService {
     private final DeviceMessageRepository deviceMessageRepository;
     private final DeviceConfigurationService deviceConfigurationService;
+
+    private final KieSession kieSession;
+
 
     public DeviceMessage save(Integer realEstateId, DeviceMessageRequest request) {
         DeviceMessage message = new DeviceMessage(request.getDeviceId(), realEstateId, request.getContent(), request.getMessageType(), request.getValue());
@@ -31,6 +35,9 @@ public class DeviceMessageService {
             throw new RuntimeException("Message received does not pass device's regex filter.");
         }
         // TODO: Insert the message in KieSession here...
+        kieSession.insert(request);
+        kieSession.fireAllRules();
+
         return deviceMessageRepository.save(message);
     }
 
