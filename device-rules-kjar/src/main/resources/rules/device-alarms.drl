@@ -8,7 +8,7 @@ import kiber.bezbednjaci.model.*;
 rule "Detect device alarm Sensor_1"
 when
     e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, value >= 1)
-    Number(intValue >= 10) from accumulate(
+    Number(intValue >= 3) from accumulate(
         e2: DeviceMessageReceived(
         deviceId == 1, realEstateId == 1,value >= 1,
             this != e1,
@@ -17,12 +17,11 @@ when
         count(e2)
     )
     not(
-        DeviceAlarmTriggered()
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
     )
 then
-	insert(new DeviceAlarmTriggered());
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Sensor value too high"));
 	System.out.println("Detected: Sensor value too high");
-	eventBus.onAlarm(new AlarmOccurred("Sensor value too high"));
 end
 
 rule "Log alarm detected"
@@ -46,7 +45,6 @@ when
 then
 
 	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
 

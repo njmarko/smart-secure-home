@@ -1,28 +1,24 @@
 package kiber.bezbednjaci.bus;
 
 
-import kiber.bezbednjaci.events.AlarmOccurred;
 import kiber.bezbednjaci.events.BaseAlarm;
-import kiber.bezbednjaci.logging.AlarmModel;
-import kiber.bezbednjaci.logging.AlarmService;
+import kiber.bezbednjaci.model.DeviceAlarmModel;
+import kiber.bezbednjaci.repository.DeviceAlarmModelRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class EventBus {
-
-    private final AlarmService alarmService;
-
-    public void onAlarm(AlarmOccurred alarmOccured) {
-        System.out.println(alarmOccured.getMessage());
-    }
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final DeviceAlarmModelRepository deviceAlarmModelRepository;
 
     public void onAlarm(BaseAlarm alarm) {
-        AlarmOccurred alarmOccurred = alarm.alarm();
-        AlarmModel alarmModel = new AlarmModel(alarmOccurred.getMessage());
-        this.onAlarm(alarmOccurred);
-        this.alarmService.save(alarmModel);
+        DeviceAlarmModel alarmModel = new DeviceAlarmModel(alarm.getRealEstateId(), alarm.getDeviceId(), alarm.getMessage());
+        System.out.println(alarm.getRealEstateId());
+        this.simpMessagingTemplate.convertAndSend("/live-alarms/" + alarm.getRealEstateId(), alarm);
+        this.deviceAlarmModelRepository.save(alarmModel);
     }
 
 }

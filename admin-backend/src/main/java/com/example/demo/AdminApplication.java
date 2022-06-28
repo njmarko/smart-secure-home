@@ -33,7 +33,7 @@ public class AdminApplication {
 		return args -> {
 			prepareTestMapping();
 			prepareTestAlarmRules();
-			prepareTestDeviceAlarmRules();
+//			prepareTestDeviceAlarmRules();
 		};
 	}
 

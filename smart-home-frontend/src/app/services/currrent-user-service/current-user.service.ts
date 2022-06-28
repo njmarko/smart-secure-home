@@ -1,19 +1,25 @@
-import { Injectable } from '@angular/core';
-import { AuthResponse } from '../../model/AuthResponse';
+import { EventEmitter, Injectable } from '@angular/core';
+import { AuthResponse } from 'src/app/model/AuthResponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurrentUserService {
-
-  private userKey: string = "currentUser";
+  private userKey: string = 'currentUser';
+  currentUserChanged: EventEmitter<void> = new EventEmitter<void>();
 
   setCurrentUser(user: AuthResponse) {
     sessionStorage.setItem(this.userKey, JSON.stringify(user));
+    this.currentUserChanged.emit();
+  }
+
+  onCurrentUserChanged(): EventEmitter<void> {
+    return this.currentUserChanged;
   }
 
   removeCurrentUser(): void {
     sessionStorage.removeItem(this.userKey);
+    this.currentUserChanged.emit();
   }
 
   hasUser(): boolean {
@@ -25,8 +31,14 @@ export class CurrentUserService {
     if (user == null) {
       return;
     }
-    user = { ...user, name: updated.name, surname: updated.surname, email: updated.email };
+    user = {
+      ...user,
+      name: updated.name,
+      surname: updated.surname,
+      email: updated.email,
+    };
     sessionStorage.setItem(this.userKey, JSON.stringify(user));
+    this.currentUserChanged.emit();
   }
 
   hasAuthority(authority: string): boolean {

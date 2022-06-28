@@ -22,6 +22,7 @@ public class UserTokenState {
     private String email;
 
     List<String> authorities;
+    List<Integer> realEstates;
 
     public UserTokenState(String accessToken, long expiresIn) {
         this.accessToken = accessToken;

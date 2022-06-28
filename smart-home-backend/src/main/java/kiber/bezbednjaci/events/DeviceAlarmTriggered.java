@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Role(Role.Type.EVENT)
-@Expires("3m")
+@Expires("1m")
 public class DeviceAlarmTriggered implements BaseAlarm{
 
     private String id;
     private LocalDateTime timestamp;
     private Integer deviceId;
     private Integer realEstateId;
-    private String content;
+    private String message;
     private MessageType messageType;
     private Double value;
 
@@ -30,12 +30,18 @@ public class DeviceAlarmTriggered implements BaseAlarm{
     public DeviceAlarmTriggered() {
     }
 
-    public DeviceAlarmTriggered(String id, LocalDateTime timestamp, Integer deviceId, Integer realEstateId, String content, MessageType messageType, Double value) {
+    public DeviceAlarmTriggered(Integer realEstateId, Integer deviceId, String message) {
+        this.realEstateId = realEstateId;
+        this.deviceId = deviceId;
+        this.message = message;
+    }
+
+    public DeviceAlarmTriggered(String id, LocalDateTime timestamp, Integer deviceId, Integer realEstateId, String message, MessageType messageType, Double value) {
         this.id = id;
         this.timestamp = timestamp;
         this.deviceId = deviceId;
         this.realEstateId = realEstateId;
-        this.content = content;
+        this.message = message;
         this.messageType = messageType;
         this.value = value;
     }

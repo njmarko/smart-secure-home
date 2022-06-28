@@ -12,6 +12,7 @@ import com.example.demo.dto.UserTokenState;
 import com.example.demo.events.InvalidLoginAttempt;
 import com.example.demo.exception.ResourceConflictException;
 import com.example.demo.logging.LogService;
+import com.example.demo.model.RealEstate;
 import com.example.demo.model.User;
 import com.example.demo.service.BlacklistedTokenService;
 import com.example.demo.service.UserService;
@@ -85,7 +86,10 @@ public class AuthenticationController {
 
             UserTokenState userToken = new UserTokenState(jwt, expiresIn);
 
+            List<RealEstate> realEstates = userService.getMyRealEstates(user.getUsername());
+
             userToken.setAuthorities(authorities);
+            userToken.setRealEstates(realEstates.stream().map(RealEstate::getId).collect(Collectors.toList()));
             userToken.setEmail(user.getEmail());
             userToken.setName(user.getFirstName());
             userToken.setSurname(user.getLastName());

@@ -3,7 +3,7 @@ global com.example.demo.bus.EventBus eventBus;
 import com.example.demo.events.*;
 import com.example.demo.logging.*;
 
-rule "Detect alarm Stupid alarm rule 2_61"
+rule "Detect alarm Stupid alarm rule 2_20"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -12,7 +12,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_60"
+rule "Detect alarm Stupid alarm rule 1_19"
 when
 	String(this == "This should never happen.")
 then
@@ -21,7 +21,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_59"
+rule "Detect alarm Stupid alarm rule 2_18"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -30,7 +30,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_58"
+rule "Detect alarm Stupid alarm rule 1_17"
 when
 	String(this == "This should never happen.")
 then
@@ -39,7 +39,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_57"
+rule "Detect alarm Stupid alarm rule 2_16"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -48,7 +48,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_56"
+rule "Detect alarm Stupid alarm rule 1_15"
 when
 	String(this == "This should never happen.")
 then
@@ -57,7 +57,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_55"
+rule "Detect alarm Stupid alarm rule 2_14"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -66,7 +66,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_54"
+rule "Detect alarm Stupid alarm rule 1_13"
 when
 	String(this == "This should never happen.")
 then
@@ -75,7 +75,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_53"
+rule "Detect alarm Stupid alarm rule 2_12"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -84,7 +84,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_52"
+rule "Detect alarm Stupid alarm rule 1_11"
 when
 	String(this == "This should never happen.")
 then
@@ -93,7 +93,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_51"
+rule "Detect alarm Stupid alarm rule 2_10"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -102,7 +102,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_50"
+rule "Detect alarm Stupid alarm rule 1_9"
 when
 	String(this == "This should never happen.")
 then
@@ -111,7 +111,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_49"
+rule "Detect alarm Stupid alarm rule 2_8"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -120,7 +120,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_48"
+rule "Detect alarm Stupid alarm rule 1_7"
 when
 	String(this == "This should never happen.")
 then
@@ -129,7 +129,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_47"
+rule "Detect alarm Stupid alarm rule 2_6"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -138,7 +138,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_46"
+rule "Detect alarm Stupid alarm rule 1_5"
 when
 	String(this == "This should never happen.")
 then
@@ -147,7 +147,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_45"
+rule "Detect alarm Stupid alarm rule 2_4"
 when
 	$s: String(this == "This should never happen.")
 then
@@ -156,7 +156,7 @@ then
 	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
 end
 
-rule "Detect alarm Stupid alarm rule 1_44"
+rule "Detect alarm Stupid alarm rule 1_3"
 when
 	String(this == "This should never happen.")
 then
@@ -165,391 +165,23 @@ then
 	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
 end
 
-rule "Detect alarm Stupid alarm rule 2_43"
+rule "Detect alarm novo pravilo_2"
 when
-	$s: String(this == "This should never happen.")
+	String(this == "pera")
+String(this == "mika")
 then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
+
+	System.out.println("Detected: pera i mika okinuli alarm");
+	eventBus.onAlarm(new AlarmOccurred("pera i mika okinuli alarm"));
 end
 
-rule "Detect alarm Stupid alarm rule 1_42"
+rule "Detect alarm Test pravilo_1"
 when
-	String(this == "This should never happen.")
+	String(this == "test pravilo")
 then
 
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_41"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_40"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_39"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_38"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_37"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_36"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_35"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_34"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_33"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_32"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_31"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_30"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_29"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_28"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_27"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_26"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_25"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_24"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_23"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_22"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_21"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_20"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_19"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_18"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_17"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_16"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_15"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_14"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_13"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_12"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_11"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_10"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_9"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_8"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_7"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_6"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_5"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_4"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_3"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
-end
-
-rule "Detect alarm Stupid alarm rule 1_2"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
-	eventBus.onAlarm(new AlarmOccurred("I told you this should never happen."));
-end
-
-rule "Detect alarm Stupid alarm rule 2_1"
-when
-	$s: String(this == "This should never happen.")
-then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
+	System.out.println("Detected: Okinuto test pravilo");
+	eventBus.onAlarm(new AlarmOccurred("Okinuto test pravilo"));
 end
 
 rule "Detect alarm Stupid alarm rule 1_0"
