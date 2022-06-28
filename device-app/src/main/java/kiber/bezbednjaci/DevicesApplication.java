@@ -2,6 +2,8 @@ package kiber.bezbednjaci;
 
 import kiber.bezbednjaci.model.MessageState;
 import kiber.bezbednjaci.runnables.DefaultRunnable;
+import kiber.bezbednjaci.service.MessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +15,9 @@ import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class DevicesApplication {
+
+    @Autowired
+    private MessageService msgSer;
 
     public static void main(String[] args) {
         SpringApplication.run(DevicesApplication.class, args);
@@ -36,7 +41,7 @@ public class DevicesApplication {
                         new MessageState(stateid1, 1.0, 2.0, 6, "Camera detected a vehicle", null),
                         new MessageState(stateid1, 2.0, 3.0, 1, "Camera detected a person", null)
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         // lights
@@ -47,7 +52,7 @@ public class DevicesApplication {
                         new MessageState(stateid2, 0.0, 1.0, 2, "Light Switch Turned On", null),
                         new MessageState(stateid2, 1.0, 2.0, 3, "Light Switch Turned Off", null),
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         // doors
@@ -60,7 +65,7 @@ public class DevicesApplication {
                         new MessageState(stateid3, 2.0, 3.0, 1, "Door handle pulled while doors were locked", null),
                         new MessageState(stateid3, 3.0, 4.0, 1, "Unsuccessful unlock attempt", null)
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         // air humidity meter
@@ -72,7 +77,7 @@ public class DevicesApplication {
                         new MessageState(stateid4, 55.0, 100.0, 1, "Air Humidity Meter Measured Humidity at", "%"),
                         new MessageState(stateid4, 0.0, 35.0, 1, "Air Humidity Meter Measured Humidity at", "%")
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         // thermometer
@@ -84,7 +89,7 @@ public class DevicesApplication {
                         new MessageState(stateid5, 10.0, 18.0, 6, "Thermometer measured Temperature at", " Degrees Celsius"),
                         new MessageState(stateid5, 22.0, 35.0, 1, "Thermometer measured Temperature at", " Degrees Celsius")
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         Thread t1 = new Thread(df1);
