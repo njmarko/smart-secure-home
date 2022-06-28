@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,8 +33,8 @@ public class DeviceController {
     }
 
     @GetMapping
-    public List<DeviceDTO> read(SearchDeviceReport report, Pageable pageable) {
-        var devices = deviceService.read();
+    public List<DeviceDTO> read(Principal principal) {
+        var devices = deviceService.read(principal.getName());
         return devices.stream().map(new Function<Device, DeviceDTO>() {
             @Override
             public DeviceDTO apply(Device device) {

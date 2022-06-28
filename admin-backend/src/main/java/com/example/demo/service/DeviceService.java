@@ -14,5 +14,5 @@ public interface DeviceService {
     Device read(Integer id);
 
     Page<Device> read(SearchDeviceReport report, Pageable pageable);
-    List<Device> read();
+    List<Device> read(String name);
 }

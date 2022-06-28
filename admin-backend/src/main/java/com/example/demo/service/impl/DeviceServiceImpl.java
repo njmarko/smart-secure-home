@@ -5,6 +5,7 @@ import com.example.demo.model.Device;
 import com.example.demo.model.RealEstate;
 import com.example.demo.repository.DeviceRepository;
 import com.example.demo.service.DeviceService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DeviceServiceImpl implements DeviceService {
     private final DeviceRepository deviceRepository;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -45,7 +47,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> read(){
-        return deviceRepository.getAllByIsActive(true);
+    public List<Device> read(String username){
+        return deviceRepository.getAllByRealEstateIn(userService.getMyRealEstates(username));
     }
 }
