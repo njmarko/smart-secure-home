@@ -122,7 +122,7 @@ public class DataLoader implements ApplicationRunner {
         RealEstate helperObject = new RealEstate("Pomocni objekat").addStakeholder(user3);
 
         // CREATE DEVICE CONFIGURATIONS HERE
-        Device d1 = new Device("CCTV Camera", "[a-zA-Z]*", 1000);
+        Device d1 = new Device("CCTV Camera", "[a-zA-Z\\s]*", 1000);
         Device d2 = new Device("Light Sensor", ".*", 1000);
         Device d3 = new Device("Door Sensor", ".*", 1000);
         Device d4 = new Device("Air Humidity Meter", ".*", 1000);

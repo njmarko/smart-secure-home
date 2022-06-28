@@ -34,8 +34,10 @@ public class RabbitMQConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
-        var template = new RabbitTemplate(connectionFactory());
+
+        RabbitTemplate template = new RabbitTemplate(connectionFactory());
         template.setMessageConverter(messageConverter());
         return template;
     }
+
 }

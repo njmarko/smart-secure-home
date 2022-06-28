@@ -4,9 +4,10 @@ import kiber.bezbednjaci.dto.DeviceMessageRequest;
 import kiber.bezbednjaci.model.MessageState;
 import kiber.bezbednjaci.model.MessageType;
 import kiber.bezbednjaci.service.MessageService;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Random;
@@ -38,7 +39,8 @@ public class DefaultRunnable implements Runnable {
                 msg.setObjectId(state.getEstateId());
                 if (state.getMeasureUnit() == null)
                     msg.setContent(state.getMessageContent());
-                else msg.setContent(state.getMessageContent() + " " + String.format("%.2f", msg.getValue()) + state.getMeasureUnit());
+                else
+                    msg.setContent(state.getMessageContent() + " " + String.format("%.2f", msg.getValue()) + state.getMeasureUnit());
 
                 System.out.println(msg.getContent());
 //                msgSer.sendMessageHttps(state.getEstateId(), msg);

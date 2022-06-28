@@ -8,6 +8,14 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.drools.core.ClockType;
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
+import org.kie.api.conf.EventProcessingOption;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.KieSessionConfiguration;
+import org.kie.api.runtime.conf.ClockTypeOption;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -23,15 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import org.kie.api.KieBase;
-import org.kie.api.KieBaseConfiguration;
-import org.kie.api.KieServices;
-import org.kie.api.conf.EventProcessingOption;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.KieSessionConfiguration;
-import org.kie.api.runtime.conf.ClockTypeOption;
 
 @Configuration
 @Slf4j
@@ -69,6 +68,28 @@ public class BeanConfig {
         restTemplate.setInterceptors(interceptors);
         return restTemplate;
     }
+
+//    @Bean
+//    public RestTemplate restTemplateDevice() {
+//        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+//        SSLContext sslContext = null;
+//        try {
+//            sslContext = org.apache.http.ssl.SSLContexts.custom()
+//                    .loadTrustMaterial(null, acceptingTrustStrategy)
+//                    .build();
+//        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+//            e.printStackTrace();
+//        }
+//        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+//        CloseableHttpClient httpClient = HttpClients.custom()
+//                .setSSLSocketFactory(csf)
+//                .build();
+//        HttpComponentsClientHttpRequestFactory requestFactory =
+//                new HttpComponentsClientHttpRequestFactory();
+//        requestFactory.setHttpClient(httpClient);
+//
+//        return new RestTemplate(requestFactory);
+//    }
 
     @Bean
     public KieSession kieSession(EventBus eventBus) {

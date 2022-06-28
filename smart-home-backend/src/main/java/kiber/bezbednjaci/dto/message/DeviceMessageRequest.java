@@ -1,13 +1,22 @@
 package kiber.bezbednjaci.dto.message;
 
 import kiber.bezbednjaci.model.MessageType;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-@Data
-public class DeviceMessageRequest {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class DeviceMessageRequest implements Serializable {
+
+    @NotNull(message = "Object ID is required.")
+    private Integer objectId;
+
     @NotNull(message = "Device ID is required.")
     private Integer deviceId;
 

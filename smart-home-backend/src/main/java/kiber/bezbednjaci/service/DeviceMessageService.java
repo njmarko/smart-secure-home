@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
 @Service
-@RequestScope
 @RequiredArgsConstructor
 public class DeviceMessageService {
     private final DeviceMessageRepository deviceMessageRepository;
@@ -19,7 +18,12 @@ public class DeviceMessageService {
 
     public DeviceMessage save(Integer realEstateId, DeviceMessageRequest request) {
         DeviceMessage message = new DeviceMessage(request.getDeviceId(), realEstateId, request.getContent(), request.getMessageType(), request.getValue());
-        kiber.bezbednjaci.model.DeviceConfiguration deviceConfiguration = deviceConfigurationService.read(request.getDeviceId());
+        kiber.bezbednjaci.model.DeviceConfiguration deviceConfiguration;
+        try {
+            deviceConfiguration = deviceConfigurationService.read(request.getDeviceId());
+        }catch (Exception e){
+            throw new RuntimeException("No device for the given object id.");
+        }
         if (!deviceConfiguration.getRealEstateId().equals(realEstateId)) {
             throw new RuntimeException("Device id does not belong to this real estate.");
         }

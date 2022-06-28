@@ -98,11 +98,11 @@ public class DevicesApplication {
         var df6 = new DefaultRunnable(
                 6,
                 Arrays.stream(new MessageState[]{
-                        new MessageState(stateid6, 1000.0, 1030.0, 4, "Barometer measured Air Temperature at", "mb"),
-                        new MessageState(stateid6, 900.0, 1000.0, 6, "Barometer measured Air Temperature at", "mb"),
-                        new MessageState(stateid6, 1030.0, 1100.0, 1, "Barometer measured Air Temperature at", "mb")
+                        new MessageState(stateid6, 1000.0, 1030.0, 4, "Barometer measured Air pressure at", "mb"),
+                        new MessageState(stateid6, 900.0, 1000.0, 6, "Barometer measured Air pressure at", "mb"),
+                        new MessageState(stateid6, 1030.0, 1100.0, 1, "Barometer measured Air pressure at", "mb")
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         // heart rate monitor
@@ -115,7 +115,7 @@ public class DevicesApplication {
                         new MessageState(stateid7, 170.0, 220.0, 1, "Heart rate monitor measured Heart rate at", " bpm"),
                         new MessageState(stateid7, 20.0, 70.0, 1, "Heart rate monitor measured Heart rate at", " bpm")
                 }).collect(Collectors.toList())
-
+                , msgSer
         );
 
         Thread t1 = new Thread(df1);
