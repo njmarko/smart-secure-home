@@ -34,7 +34,8 @@ public class DevicesApplication {
                 Arrays.stream(new MessageState[]{
                         new MessageState(stateid1, 0.0, 1.0, 4, "Camera detected a dog", null),
                         new MessageState(stateid1, 1.0, 2.0, 6, "Camera detected a vehicle", null),
-                        new MessageState(stateid1, 2.0, 3.0, 1, "Camera detected a person", null)
+                        new MessageState(stateid1, 2.0, 3.0, 1, "Camera detected a person", null),
+                        new MessageState(stateid1, 2.0, 3.0, 1, "This message is filtered because of regex 123456789 ,./!@#$%^&*()_+", null)
                 }).collect(Collectors.toList())
 
         );
@@ -87,17 +88,46 @@ public class DevicesApplication {
 
         );
 
+        // barometer
+        int stateid6 = 1;
+        var df6 = new DefaultRunnable(
+                6,
+                Arrays.stream(new MessageState[]{
+                        new MessageState(stateid6, 1000.0, 1030.0, 4, "Barometer measured Air Temperature at", "mb"),
+                        new MessageState(stateid6, 900.0, 1000.0, 6, "Barometer measured Air Temperature at", "mb"),
+                        new MessageState(stateid6, 1030.0, 1100.0, 1, "Barometer measured Air Temperature at", "mb")
+                }).collect(Collectors.toList())
+
+        );
+
+        // heart rate monitor
+        int stateid7 = 1;
+        var df7 = new DefaultRunnable(
+                7,
+                Arrays.stream(new MessageState[]{
+                        new MessageState(stateid7, 70.0, 90.0, 4, "Heart rate monitor measured Heart rate at", "bpm"),
+                        new MessageState(stateid7, 90.0, 170.0, 6, "Heart rate monitor measured Heart rate at", " bpm"),
+                        new MessageState(stateid7, 170.0, 220.0, 1, "Heart rate monitor measured Heart rate at", " bpm"),
+                        new MessageState(stateid7, 20.0, 70.0, 1, "Heart rate monitor measured Heart rate at", " bpm")
+                }).collect(Collectors.toList())
+
+        );
+
         Thread t1 = new Thread(df1);
 		Thread t2 = new Thread(df2);
 		Thread t3 = new Thread(df3);
 		Thread t4 = new Thread(df4);
 		Thread t5 = new Thread(df5);
+		Thread t6 = new Thread(df6);
+		Thread t7 = new Thread(df7);
 
         t1.start();
 		t2.start();
 		t3.start();
 		t4.start();
 		t5.start();
+		t6.start();
+		t7.start();
     }
 
 }
