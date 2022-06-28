@@ -107,7 +107,7 @@ public class BeanConfig {
         kieSessionConfiguration.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));
         KieSession kieSession = kieBase.newKieSession(kieSessionConfiguration, null);
 
-//        kieSession.setGlobal("eventBus", eventBus);
+        kieSession.setGlobal("eventBus", eventBus);
 
         return kieSession;
     }

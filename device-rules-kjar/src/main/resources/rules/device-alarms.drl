@@ -2,14 +2,42 @@ package bseprules;
 global kiber.bezbednjaci.bus.EventBus eventBus;
 import kiber.bezbednjaci.events.*;
 import kiber.bezbednjaci.logging.*;
+import kiber.bezbednjaci.dto.message.*;
+import kiber.bezbednjaci.model.*;
 
 rule "Detect device alarm Sensor_1"
 when
-	$s: String(this == "This should never happen.")
+    e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, value >= 1)
+    Number(intValue >= 10) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 1, realEstateId == 1,value >= 1,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered()
+    )
 then
-    System.out.println($s);
-	System.out.println("Detected: Inaccessible alarm.");
-	eventBus.onAlarm(new AlarmOccurred("Inaccessible alarm."));
+	insert(new DeviceAlarmTriggered());
+	System.out.println("Detected: Sensor value too high");
+	eventBus.onAlarm(new AlarmOccurred("Sensor value too high"));
+end
+
+rule "Log alarm detected"
+when
+	e: DeviceAlarmTriggered()
+then
+	System.out.println("Device alarm detected.");
+	eventBus.onAlarm(e);
+end
+
+rule "Detect device alarm test"
+when
+    e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, processed == false, value >= 1)
+then
+	System.out.println("IT WORKS REQUEST RECIEVED *********************************");
 end
 
 rule "Detect device alarm Camera_0"
