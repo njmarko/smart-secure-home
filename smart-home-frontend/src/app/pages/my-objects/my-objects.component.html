@@ -5,11 +5,17 @@
   </mat-card-title>
   <mat-card-content>
     <mat-list>
-      <mat-list-item *ngFor="let s of obj.stakeholders"> {{ s.role }}: {{ s.firstName }} {{s.lastName}} </mat-list-item>
+      <mat-list-item *ngFor="let s of obj.stakeholders">
+        {{ s.role }}: {{ s.firstName }} {{ s.lastName }}
+      </mat-list-item>
     </mat-list>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button color="primary" (click)="viewMessages(obj)">View messages</button>
-    <button mat-button color="primary">Do something else</button>
+    <button mat-button color="primary" (click)="viewMessages(obj)">
+      View messages
+    </button>
   </mat-card-actions>
 </mat-card>
+<div>
+  <a mat-button color="primary" routerLink="/report">View Report</a>
+</div>

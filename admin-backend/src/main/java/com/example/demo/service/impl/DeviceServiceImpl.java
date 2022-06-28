@@ -1,15 +1,20 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.SearchDeviceReport;
 import com.example.demo.model.Device;
 import com.example.demo.model.RealEstate;
 import com.example.demo.repository.DeviceRepository;
 import com.example.demo.service.DeviceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -31,5 +36,16 @@ public class DeviceServiceImpl implements DeviceService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find device with given id.");
         }
         return deviceOptional.get();
+    }
+
+    @Override
+    public Page<Device> read(SearchDeviceReport report, Pageable pageable){
+        report.setRegex("%" + report.getRegex().toLowerCase(Locale.ROOT) + "%");
+        return deviceRepository.getAllPageable(report.getRegex(), pageable);
+    }
+
+    @Override
+    public List<Device> read(){
+        return deviceRepository.getAllByIsActive(true);
     }
 }

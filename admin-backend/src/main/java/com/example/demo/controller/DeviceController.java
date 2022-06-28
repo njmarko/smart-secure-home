@@ -1,13 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DeviceDTO;
 import com.example.demo.dto.ReadDeviceResponse;
+import com.example.demo.dto.SearchDeviceReport;
+import com.example.demo.model.Device;
 import com.example.demo.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/devices")
@@ -20,5 +29,16 @@ public class DeviceController {
     public ReadDeviceResponse read(@PathVariable Integer id) {
         var device = deviceService.read(id);
         return mapper.map(device, ReadDeviceResponse.class);
+    }
+
+    @GetMapping
+    public List<DeviceDTO> read(SearchDeviceReport report, Pageable pageable) {
+        var devices = deviceService.read();
+        return devices.stream().map(new Function<Device, DeviceDTO>() {
+            @Override
+            public DeviceDTO apply(Device device) {
+                return new DeviceDTO(device);
+            }
+        }).collect(Collectors.toList());
     }
 }

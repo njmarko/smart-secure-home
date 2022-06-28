@@ -1,0 +1,80 @@
+<app-toolbar></app-toolbar>
+<div class="centeringDiv">
+    <h2>Device Reports</h2>
+    <div class="tableWrapper mat-elevation-z8">
+        <form [formGroup]="form" (reset)="onReset()" (ngSubmit)="onSubmit()">
+            <mat-grid-list cols="3" rowHeight="4:1">
+                <mat-grid-tile>
+                    <mat-form-field class="full-width-input">
+                        <input matInput placeholder="Search devices..." formControlName="regex" />
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field class="full-width-input">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
+                            <input matStartDate formControlName="from" placeholder="Start date" />
+                            <input matEndDate formControlName="to" placeholder="End date"
+                                (dateInput)="onDateRangeSubmit()" />
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+
+                        <mat-error *ngIf="dateForm.controls['from'].hasError('matStartDateInvalid')">Invalid start date.
+                        </mat-error>
+                        <mat-error *ngIf="dateForm.controls['to'].hasError('matEndDateInvalid')">Invalid end date.
+                        </mat-error>
+                        <mat-error *ngIf="dateForm.controls['from'].hasError('required')">Please provide start date.
+                        </mat-error>
+                        <mat-error *ngIf="dateForm.controls['to'].hasError('required')">Please provide end date.
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <button type="reset" id="reset" mat-flat-button color="basic">
+                        Reset
+                    </button>
+                    <button id="search" type="submit" mat-flat-button color="primary" [disabled]="!form.valid">
+                        Search
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="realEstateName">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Real Estate Name</th>
+                <td mat-cell *matCellDef="let item">
+                    {{ item.deviceId }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="deviceName">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Device Name</th>
+                <td mat-cell *matCellDef="let item">
+                    {{ item.estateId }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="alarmNumber">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Number of alarms</th>
+                <td mat-cell *matCellDef="let item">
+                    {{ item.alarmNumber }}
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <div *ngIf="dataSource.data.length === 0">
+            <app-such-empty></app-such-empty>
+        </div>
+        <div id="pagination-row">
+            <div id="spinner-box">
+                <mat-spinner [diameter]="40" [hidden]="!waitingResults" id="loading-spinner"></mat-spinner>
+            </div>
+            <mat-paginator [pageSizeOptions]="[1, 5, 10, 20]" [pageSize]="pageSize" [pageIndex]="pageNum"
+                [length]="totalElements" showFirstLastButtons aria-label="Select page" (page)="onSelectPage($event)">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

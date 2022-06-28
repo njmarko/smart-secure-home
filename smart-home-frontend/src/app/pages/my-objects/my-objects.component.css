@@ -11,3 +11,8 @@ mat-form-field {
 button {
     margin-top: 30px;
 }
+
+div {
+  display: grid;
+  place-items: center;
+}

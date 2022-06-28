@@ -13,6 +13,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { MessageViewComponent } from './pages/message-view/message-view.component';
 import { SuchEmptyComponent } from './components/such-empty/such-empty.component';
+import { ReportViewComponent } from './pages/report-view/report-view.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { SuchEmptyComponent } from './components/such-empty/such-empty.component
     MyObjectsComponent,
     ToolbarComponent,
     SuchEmptyComponent,
-    MessageViewComponent
+    MessageViewComponent,
+    ReportViewComponent
   ],
   imports: [
     BrowserModule,
