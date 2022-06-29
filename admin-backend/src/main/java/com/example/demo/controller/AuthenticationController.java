@@ -80,6 +80,7 @@ public class AuthenticationController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Set-Cookie", cookie);
+            headers.add("Strict-Transport", "max-age=1000000000");
 
             // authorities
             List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
