@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class DeviceReportController {
     }
 
     @GetMapping
-    public List<DeviceReport> read(SearchDeviceReport report, Pageable pageable) {
+    public List<DeviceReport> read(@Valid SearchDeviceReport report, Pageable pageable) {
         return deviceService.read(report, pageable);
     }
 }

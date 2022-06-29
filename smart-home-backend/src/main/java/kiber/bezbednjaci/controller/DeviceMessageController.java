@@ -31,12 +31,12 @@ public class DeviceMessageController {
 //    }
 //
     @GetMapping
-    public Page<DeviceMessage> read(SearchMessagesRequest request, Pageable pageable) {
+    public Page<DeviceMessage> read(@Valid SearchMessagesRequest request, Pageable pageable) {
         return deviceMessageService.read(request, pageable);
     }
 
     @RabbitListener(queues = "DEVICE_MESSAGES")
-    public void publishPaperListener(DeviceMessageRequest msg){
+    public void deviceMessagesListener(DeviceMessageRequest msg){
         System.out.println(msg);
         try {
             deviceMessageService.save(msg.getObjectId(), msg);

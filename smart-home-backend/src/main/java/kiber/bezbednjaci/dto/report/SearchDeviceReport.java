@@ -2,7 +2,9 @@ package kiber.bezbednjaci.dto.report;
 
 import kiber.bezbednjaci.model.MessageType;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,8 +13,14 @@ import java.time.format.DateTimeFormatter;
 public class SearchDeviceReport {
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    @NotNull(message = "regex is required.")
+    @Length(max = 2000)
     private String regex = "";
+    @NotNull(message = "Date from is required.")
+    @Length(max = 2000)
     private String from = null;
+    @NotNull(message = "Date to is required.")
+    @Length(max = 2000)
     private String to = null;
 
     public LocalDateTime fromTimestamp() {
