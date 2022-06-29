@@ -5,21 +5,39 @@ then
 message
 
 package bseprules;
-
 global kiber.bezbednjaci.bus.EventBus eventBus;
-
 import kiber.bezbednjaci.events.*;
 import kiber.bezbednjaci.logging.*;
+import kiber.bezbednjaci.dto.message.*;
+import kiber.bezbednjaci.model.*;
 
 template "device-alarm-template"
 
-rule "Detect device alarm @{name}_@{row.rowNumber}"
+rule "Detect device alarm Camera"
 when
-	@{when}
+    e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, value >= 1)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 1, realEstateId == 1,value >= 1,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
 then
-    @{then}
-	System.out.println("Detected: @{message}");
-	eventBus.onAlarm(new AlarmOccurred("@{message}"));
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Sensor value too high"));
+	System.out.println("Detected: Camera detection happened");
 end
 
 end template
+
+rule "Log alarm detected"
+when
+	e: DeviceAlarmTriggered()
+then
+	System.out.println("Device alarm triggered.");
+	eventBus.onAlarm(e);
+end

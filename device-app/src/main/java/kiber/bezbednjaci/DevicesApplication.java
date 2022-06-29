@@ -63,8 +63,8 @@ public class DevicesApplication {
                 Arrays.stream(new MessageState[]{
                         new MessageState(stateid3, 0.0, 1.0, 4, "Door opened", null),
                         new MessageState(stateid3, 1.0, 2.0, 6, "Door closed", null),
-                        new MessageState(stateid3, 2.0, 3.0, 1, "Door handle pulled while doors were locked", null),
-                        new MessageState(stateid3, 3.0, 4.0, 1, "Unsuccessful unlock attempt", null)
+                        new MessageState(stateid3, 2.0, 3.0, 3, "Door handle pulled while doors were locked", null),
+                        new MessageState(stateid3, 3.0, 4.0, 3, "Unsuccessful unlock attempt", null)
                 }).collect(Collectors.toList())
                 , msgSer
         );
@@ -75,7 +75,7 @@ public class DevicesApplication {
                 4,
                 Arrays.stream(new MessageState[]{
                         new MessageState(stateid4, 35.0, 55.0, 5, "Air Humidity Meter Measured Humidity at", "%"),
-                        new MessageState(stateid4, 55.0, 100.0, 1, "Air Humidity Meter Measured Humidity at", "%"),
+                        new MessageState(stateid4, 55.0, 100.0, 3, "Air Humidity Meter Measured Humidity at", "%"),
                         new MessageState(stateid4, 0.0, 35.0, 1, "Air Humidity Meter Measured Humidity at", "%")
                 }).collect(Collectors.toList())
                 , msgSer
@@ -86,9 +86,9 @@ public class DevicesApplication {
         var df5 = new DefaultRunnable(
                 5,
                 Arrays.stream(new MessageState[]{
-                        new MessageState(stateid5, 18.0, 22.0, 4, "Thermometer measured Temperature at", " Degrees Celsius"),
-                        new MessageState(stateid5, 10.0, 18.0, 6, "Thermometer measured Temperature at", " Degrees Celsius"),
-                        new MessageState(stateid5, 22.0, 35.0, 1, "Thermometer measured Temperature at", " Degrees Celsius")
+                        new MessageState(stateid5, 18.0, 22.0, 3, "Thermometer measured Temperature at", " Degrees Celsius"),
+                        new MessageState(stateid5, 10.0, 18.0, 3, "Thermometer measured Temperature at", " Degrees Celsius"),
+                        new MessageState(stateid5, 22.0, 35.0, 3, "Thermometer measured Temperature at", " Degrees Celsius")
                 }).collect(Collectors.toList())
                 , msgSer
         );
@@ -98,9 +98,9 @@ public class DevicesApplication {
         var df6 = new DefaultRunnable(
                 6,
                 Arrays.stream(new MessageState[]{
-                        new MessageState(stateid6, 1000.0, 1030.0, 4, "Barometer measured Air pressure at", "mb"),
-                        new MessageState(stateid6, 900.0, 1000.0, 6, "Barometer measured Air pressure at", "mb"),
-                        new MessageState(stateid6, 1030.0, 1100.0, 1, "Barometer measured Air pressure at", "mb")
+                        new MessageState(stateid6, 1000.0, 1030.0, 3, "Barometer measured Air pressure at", "mb"),
+                        new MessageState(stateid6, 900.0, 1000.0, 3, "Barometer measured Air pressure at", "mb"),
+                        new MessageState(stateid6, 1030.0, 1100.0, 3, "Barometer measured Air pressure at", "mb")
                 }).collect(Collectors.toList())
                 , msgSer
         );
@@ -110,9 +110,9 @@ public class DevicesApplication {
         var df7 = new DefaultRunnable(
                 7,
                 Arrays.stream(new MessageState[]{
-                        new MessageState(stateid7, 70.0, 90.0, 4, "Heart rate monitor measured Heart rate at", "bpm"),
-                        new MessageState(stateid7, 90.0, 170.0, 6, "Heart rate monitor measured Heart rate at", " bpm"),
-                        new MessageState(stateid7, 170.0, 220.0, 1, "Heart rate monitor measured Heart rate at", " bpm"),
+                        new MessageState(stateid7, 70.0, 90.0, 3, "Heart rate monitor measured Heart rate at", "bpm"),
+                        new MessageState(stateid7, 90.0, 170.0, 3, "Heart rate monitor measured Heart rate at", " bpm"),
+                        new MessageState(stateid7, 170.0, 220.0, 3, "Heart rate monitor measured Heart rate at", " bpm"),
                         new MessageState(stateid7, 20.0, 70.0, 1, "Heart rate monitor measured Heart rate at", " bpm")
                 }).collect(Collectors.toList())
                 , msgSer

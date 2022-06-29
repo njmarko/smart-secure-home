@@ -28,7 +28,6 @@ public class DeviceController {
     private final ModelMapper mapper;
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('READ_REAL_ESTATE_DEVICES')")
     public ReadDeviceResponse read(@PathVariable Integer id) {
         var device = deviceService.read(id);
         return mapper.map(device, ReadDeviceResponse.class);
