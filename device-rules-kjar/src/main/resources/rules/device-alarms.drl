@@ -5,7 +5,7 @@ import kiber.bezbednjaci.logging.*;
 import kiber.bezbednjaci.dto.message.*;
 import kiber.bezbednjaci.model.*;
 
-rule "Detect device alarm Sensor_1"
+rule "Detect device alarm Camera detection"
 when
     e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, value >= 1)
     Number(intValue >= 3) from accumulate(
@@ -20,16 +20,149 @@ when
         DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
     )
 then
-	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Sensor value too high"));
-	System.out.println("Detected: Sensor value too high");
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Camera detection"));
+	System.out.println("Detected: Camera detection happened");
 end
 
 rule "Log alarm detected"
 when
 	e: DeviceAlarmTriggered()
 then
-	System.out.println("Device alarm detected.");
+	System.out.println("Device alarm triggered.");
 	eventBus.onAlarm(e);
+end
+
+rule "Detect device alarm Light switch"
+when
+    e1: DeviceMessageReceived(deviceId == 2, realEstateId == 1, value >= 1)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 2, realEstateId == 1,value >= 1,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Light switch turned on"));
+	System.out.println("Detected: Light switch turned on");
+end
+
+rule "Detect device alarm Unsuccessfull unlock attempt"
+when
+    e1: DeviceMessageReceived(deviceId == 3, realEstateId == 2, value >= 3, value < 4)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 3, realEstateId == 2,value >= 3, value < 4,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Unsuccessfull unlock attempt"));
+	System.out.println("Detected: Unsuccessfull unlock attempt");
+end
+
+rule "Detect device alarm Door handle pulled while doors were locked"
+when
+    e1: DeviceMessageReceived(deviceId == 3, realEstateId == 2, value >= 2, value < 3)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 3, realEstateId == 2,value >= 2, value < 3,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Door handle pulled while doors were locked"));
+	System.out.println("Detected: Door handle pulled while doors were locked");
+end
+
+rule "Detect device alarm Air Humidity Meter Measured Humidity that is too high"
+when
+    e1: DeviceMessageReceived(deviceId == 4, realEstateId == 3, value >= 55, value < 200)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 4, realEstateId == 3,value >= 55, value < 200,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Air Humidity Meter Measured Humidity that is too high"));
+	System.out.println("Detected: Air Humidity Meter Measured Humidity that is too high");
+end
+
+rule "Detect device alarm Thermometer measured Temperature that is too high"
+when
+    e1: DeviceMessageReceived(deviceId == 5, realEstateId == 3, value >= 22, value < 200)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 5, realEstateId == 3,value >= 22, value < 200,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Thermometer measured Temperature that is too high"));
+	System.out.println("Detected: Thermometer measured Temperature that is too high");
+end
+
+rule "Detect device alarm Barometer measured Air pressure that is too high"
+when
+    e1: DeviceMessageReceived(deviceId == 6, realEstateId == 1, value >= 1030, value < 10000)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 6, realEstateId == 1,value >= 1030, value < 10000,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Barometer measured Air pressure that is too high"));
+	System.out.println("Detected: Barometer measured Air pressure that is too high");
+end
+
+rule "Detect device alarm Heart rate monitor measured Heart rate that is too high"
+when
+    e1: DeviceMessageReceived(deviceId == 7, realEstateId == 1, value >= 170, value < 300)
+    Number(intValue >= 3) from accumulate(
+        e2: DeviceMessageReceived(
+        deviceId == 7, realEstateId == 1,value >= 170, value < 300,
+            this != e1,
+            this meets[5m] e1
+        ),
+        count(e2)
+    )
+    not(
+        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
+    )
+then
+	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Heart rate monitor measured Heart rate that is too high"));
+	System.out.println("Detected: Heart rate monitor measured Heart rate that is too high");
 end
 
 rule "Detect device alarm test"
@@ -37,14 +170,6 @@ when
     e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, processed == false, value >= 1)
 then
 	System.out.println("IT WORKS REQUEST RECIEVED *********************************");
-end
-
-rule "Detect device alarm Camera_0"
-when
-	String(this == "This should never happen.")
-then
-
-	System.out.println("Detected: I told you this should never happen.");
 end
 
 
