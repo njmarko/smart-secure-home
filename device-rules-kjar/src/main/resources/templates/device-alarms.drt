@@ -13,25 +13,13 @@ import kiber.bezbednjaci.model.*;
 
 template "device-alarm-template"
 
-rule "Detect device alarm Camera"
+rule "Detect alarm @{name}_@{row.rowNumber}"
 when
-    e1: DeviceMessageReceived(deviceId == 1, realEstateId == 1, value >= 1)
-    Number(intValue >= 3) from accumulate(
-        e2: DeviceMessageReceived(
-        deviceId == 1, realEstateId == 1,value >= 1,
-            this != e1,
-            this meets[5m] e1
-        ),
-        count(e2)
-    )
-    not(
-        DeviceAlarmTriggered(realEstateId == e1.getRealEstateId(), deviceId == e1.getDeviceId())
-    )
+	@{when}
 then
-	insert(new DeviceAlarmTriggered(e1.getRealEstateId(), e1.getDeviceId(), "Detected: Sensor value too high"));
-	System.out.println("Detected: Camera detection happened");
+    @{then}
+	System.out.println("Detected: @{message}");
 end
-
 end template
 
 rule "Log alarm detected"
@@ -41,3 +29,5 @@ then
 	System.out.println("Device alarm triggered.");
 	eventBus.onAlarm(e);
 end
+
+

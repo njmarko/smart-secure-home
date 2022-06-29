@@ -22,10 +22,11 @@ public class AlarmTemplateServiceImpl implements AlarmTemplateService {
     @Override
     public AlarmTemplate createAlarmRule(AlarmTemplate alarmTemplate) {
         AlarmTemplate created = alarmTemplateRepository.save(alarmTemplate);
-
         instantiateTemplates();
         return created;
     }
+
+
 
     @Override
     public void deleteAlarmRule(String id) {
@@ -39,6 +40,11 @@ public class AlarmTemplateServiceImpl implements AlarmTemplateService {
     @Override
     public Page<AlarmTemplate> read(Pageable pageable) {
         return alarmTemplateRepository.findActive(pageable);
+    }
+
+    @Override
+    public void deleteAll() {
+        alarmTemplateRepository.deleteAll();
     }
 
     private void instantiateTemplates() {

@@ -11,4 +11,6 @@ public interface DeviceAlarmTemplateService {
     void deleteAlarmRule(String id);
 
     Page<DeviceAlarmTemplate> read(Pageable pageable);
+
+    void deleteAll();
 }

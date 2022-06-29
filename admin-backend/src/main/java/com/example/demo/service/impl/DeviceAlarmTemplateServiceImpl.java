@@ -42,6 +42,11 @@ public class DeviceAlarmTemplateServiceImpl implements DeviceAlarmTemplateServic
         return alarmTemplateRepository.findActive(pageable);
     }
 
+    @Override
+    public void deleteAll() {
+        alarmTemplateRepository.deleteAll();
+    }
+
     private void instantiateTemplates() {
         List<DeviceAlarmTemplate> alarmTemplates = alarmTemplateRepository.findActive();
         try {
