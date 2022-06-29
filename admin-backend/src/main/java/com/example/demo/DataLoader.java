@@ -102,7 +102,8 @@ public class DataLoader implements ApplicationRunner {
         );
         Role tenantRole = createRole("ROLE_TENANT", 98,
                 readMyRealEstatesPrivilege,
-                readUsersPaginated
+                readUsersPaginated,
+                readRealEstateDevicesPrivilege
         );
         roleRepository.saveAll(List.of(
                 superAdminRole, adminRole, ownerRole, tenantRole
