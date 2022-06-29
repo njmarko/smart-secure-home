@@ -6,8 +6,11 @@ import * as moment from 'moment';
 import { Observer } from 'rxjs';
 import { DeviceReport } from 'src/app/model/DeviceReport';
 import { SearchDeviceReportRequest } from 'src/app/model/SearchDeviceReportRequest';
+import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { CurrentUserService } from 'src/app/services/currrent-user-service/current-user.service';
 import { DeviceReportService } from 'src/app/services/device-report-service/device-report.service';
 import { ErrorService } from 'src/app/services/error-service/error.service';
+import { UserService } from 'src/app/services/user-service/user.service';
 
 @Component({
   selector: 'app-report-view',
@@ -34,12 +37,14 @@ export class ReportViewComponent implements OnInit {
   dateForm: FormGroup;
   form: FormGroup;
   realEstateId: number;
+  loggedInUser : any
 
   constructor(
     private deviceReportService: DeviceReportService,
     private errorService: ErrorService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private currUserSer: CurrentUserService,
   ) {
     this.dateForm = this.formBuilder.group({
       from: [new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), Validators.required],
@@ -50,6 +55,7 @@ export class ReportViewComponent implements OnInit {
       type: ['INFO', Validators.required]
     });
     this.realEstateId = this.route.snapshot.params['id'];
+    this.loggedInUser = currUserSer.getCurrentUser();
   }
 
   ngOnInit(): void {
