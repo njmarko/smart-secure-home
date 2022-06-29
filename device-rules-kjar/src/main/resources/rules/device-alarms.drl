@@ -110,10 +110,10 @@ end
 
 rule "Detect device alarm Thermometer measured Temperature that is too high"
 when
-    e1: DeviceMessageReceived(deviceId == 5, realEstateId == 3, value >= 55, value < 200)
+    e1: DeviceMessageReceived(deviceId == 5, realEstateId == 3, value >= 22, value < 200)
     Number(intValue >= 3) from accumulate(
         e2: DeviceMessageReceived(
-        deviceId == 5, realEstateId == 3,value >= 55, value < 200,
+        deviceId == 5, realEstateId == 3,value >= 22, value < 200,
             this != e1,
             this meets[5m] e1
         ),

@@ -29,7 +29,7 @@ public class DeviceService {
                 DeviceReport dr = new DeviceReport();
                 dr.setDeviceId(deviceDTO.getName());
                 dr.setEstateId(deviceDTO.getRealEstateName());
-                List<DeviceAlarmModel> alarms = deviceAlarmModelRepository.search(deviceDTO.getDeviceId(), deviceDTO.getEstateId(), deviceReport.fromTimestamp(), deviceReport.toTimestamp());
+                List<DeviceAlarmModel> alarms = deviceAlarmModelRepository.search(deviceDTO.getEstateId(), deviceDTO.getDeviceId(), deviceReport.fromTimestamp(), deviceReport.toTimestamp());
                 dr.setAlarmNumber(alarms.size());
                 return dr;
             }
