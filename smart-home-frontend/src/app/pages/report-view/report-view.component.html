@@ -41,15 +41,15 @@
             </mat-grid-list>
         </form>
         <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="realEstateName">
-                <th scope="col" mat-header-cell *matHeaderCellDef>Real Estate Name</th>
+            <ng-container matColumnDef="deviceName">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Device Name</th>
                 <td mat-cell *matCellDef="let item">
                     {{ item.deviceId }}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="deviceName">
-                <th scope="col" mat-header-cell *matHeaderCellDef>Device Name</th>
+            <ng-container matColumnDef="realEstateName">
+                <th scope="col" mat-header-cell *matHeaderCellDef>Real Estate Name</th>
                 <td mat-cell *matCellDef="let item">
                     {{ item.estateId }}
                 </td>

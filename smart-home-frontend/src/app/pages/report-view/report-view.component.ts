@@ -20,8 +20,8 @@ import { UserService } from 'src/app/services/user-service/user.service';
 export class ReportViewComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'realEstateName',
     'deviceName',
+    'realEstateName',
     'alarmNumber',
   ];
 
