@@ -2,7 +2,9 @@ package com.example.demo.dto;
 
 import com.example.demo.logging.LogType;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,8 +14,14 @@ public class SearchLogsRequest {
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private LogType type = LogType.INFO;
+    @NotNull(message = "regex is required.")
+    @Length(max = 2000)
     private String regex = "";
+    @NotNull(message = "Date from is required.")
+    @Length(max = 2000)
     private String from = null;
+    @NotNull(message = "Date to is required.")
+    @Length(max = 2000)
     private String to = null;
 
     public LocalDateTime fromTimestamp() {

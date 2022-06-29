@@ -11,28 +11,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("api/logs")
 @RequiredArgsConstructor
 public class LogController {
-	private final LogService logService;
-	private final AlarmService alarmService;
-	
-	@PreAuthorize("hasAuthority('READ_LOGS')")
-	@GetMapping
-	public Page<LogModel> readLogs(SearchLogsRequest searchLogsRequest, Pageable pageable) {
-		return logService.read(searchLogsRequest, pageable);
-	}
-	
-	@PreAuthorize("hasAuthority('READ_ALARMS')")
-	@GetMapping("/alarms")
-	public Page<AlarmModel> readAlarms(Pageable pageable) {
-		return alarmService.read(pageable);
-	}
+    private final LogService logService;
+    private final AlarmService alarmService;
 
-	@PreAuthorize("hasAuthority('ACKNOWLEDGE_ALARMS')")
-	@DeleteMapping("/alarms/{id}")
-	public void acknowledgeAlarm(@PathVariable String id) {
-		alarmService.acknowledge(id);
-	}
+    @PreAuthorize("hasAuthority('READ_LOGS')")
+    @GetMapping
+    public Page<LogModel> readLogs(@Valid SearchLogsRequest searchLogsRequest, Pageable pageable) {
+        return logService.read(searchLogsRequest, pageable);
+    }
+
+    @PreAuthorize("hasAuthority('READ_ALARMS')")
+    @GetMapping("/alarms")
+    public Page<AlarmModel> readAlarms(Pageable pageable) {
+        return alarmService.read(pageable);
+    }
+
+    @PreAuthorize("hasAuthority('ACKNOWLEDGE_ALARMS')")
+    @DeleteMapping("/alarms/{id}")
+    public void acknowledgeAlarm(@PathVariable String id) {
+        alarmService.acknowledge(id);
+    }
 }
