@@ -1,6 +1,6 @@
 <app-toolbar></app-toolbar>
 <div class="centeringDiv">
-    <h2>Device Reports</h2>
+    <h2>Device Reports - Requested by {{loggedInUser.name}} {{loggedInUser.surname}}</h2>
     <div class="tableWrapper mat-elevation-z8">
         <form [formGroup]="form" (reset)="onReset()" (ngSubmit)="onSubmit()">
             <mat-grid-list cols="3" rowHeight="4:1">
